@@ -1,6 +1,6 @@
 /*
 
- MetalMouth - A voice browser extension for Chrome
+ Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
  Copyright (C) 2011 - Alistair Garrison
  
  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 */
 {
   "name": "MetalMouth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MetalMouth - A voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
