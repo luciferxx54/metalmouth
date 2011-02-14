@@ -1,2 +1,6 @@
 #labels Phase-Deploy
 Step-by-step guidance on getting started...
+
+1) Download the dev channel for Google chrome browser.
+
+2) Launch this browser with the following flag 
