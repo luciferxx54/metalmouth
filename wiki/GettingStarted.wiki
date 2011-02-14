@@ -11,6 +11,6 @@ Step-by-step guidance on getting started...
 
 5) In the same page, choose to load an unpackaged extension and then select the directory you downloaded the source code to.
 
-6) After a successful load, the logo button for MetalMouth should appear in the extension menu.
+6) After a successful load, the button for the "Project metalMouth" extension should appear in the extension menu.
 
-7) Open a new tab, go to the url of your choice and click the MetalMouth button to start. 
+7) Go to the url of your choice and click the button to start the extension. 
