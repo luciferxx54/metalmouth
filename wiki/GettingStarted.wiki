@@ -1,7 +1,7 @@
 #labels Phase-Deploy
 Step-by-step guidance on getting started...
 
-1) Download the dev channel for Google chrome browser.
+1) Download the dev channel version of the Google chrome browser - see [http://www.chromium.org/getting-involved/dev-channel http://www.chromium.org/getting-involved/dev-channel].
 
 2) Launch this browser with the following flag "--enable-experimental-extension-apis" allowing google's experimental text-to-speech engine to work.
 
