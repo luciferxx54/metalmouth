@@ -18,10 +18,6 @@
 
 */
 
-// console.log("loaded");
-
-// --enable-experimental-extension-apis
-
 function init(id) 
 {
   	chrome.tabs.executeScript(id, {file: "MetalMouth.js"}, function(){ 		
@@ -89,11 +85,9 @@ chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.spe
 chrome.omnibox.onInputEntered.addListener(function(text){
 	chrome.tabs.getSelected(null, function(tab)
 	{
-		chrome.tabs.update(tab.id, {'url': 'http://www.google.com', 'selected': true}, function(tab){test(tab.id);});
+		chrome.tabs.update(tab.id, {'url': 'http://www.google.com', 'selected': true}, function(tab){test(tab.id);}); // have to set a start page as permission for chrome://newtab/ is denied
 	});
-});// );
-
-// chrome.omnibox.onInputStarted.addListener(function() {console.log("mm started");chrome.tabs.getSelected(null, function(tab){test(tab.id);});});// );
+});
 
 // Following enqueue does not appear to work - error raised (which cannot be caught) when utterance is stopped prematurely - also tried .stop() and it also did not work
 
