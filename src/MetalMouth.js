@@ -140,7 +140,16 @@ function resetSVB()
 
 function readPageTitle()
 {
-	getAudio(osm.getPageTitle(), true, function(){document.getElementById("_mm_ControlPanelFocus").focus();});
+	getAudio(osm.getPageTitle(), true, bringFocus());
+}
+
+function bringFocus()
+{
+	var mmControlPanelFocus = document.getElementById("_mm_ControlPanelFocus");
+	if (mmControlPanelFocus != null)
+	{
+		mmControlPanelFocus.click();
+	}
 }
 
 //--------------
@@ -178,7 +187,7 @@ function ControlPanelModel()
 		mmControlPanelFocus.style.cssText = "float:left;";
 		mmControlPanelFocus.setAttribute("accesskey", "c");
 		mmControlPanelFocus.setAttribute("title", "Control panel");
-		mmControlPanelFocus.addEventListener("focus", function(e){cpHasFocus(e);}, false);
+		mmControlPanelFocus.addEventListener("click", function(e){cpHasFocus(e);}, false);
 		mmInfoArea.appendChild(mmControlPanelFocus);
 		
 		var mmUrlText = document.createElement("input");
@@ -1487,18 +1496,22 @@ function OSMModel() // setUp
 				}
 				break; 
 			case "INPUT":
-				var typeValue = liveElement.getAttribute("type").toLowerCase();
-				if ((typeValue == "text")||(typeValue == "password"))
+				var typeValue = liveElement.getAttribute("type");
+				if (typeValue != null)
 				{
-					elementSwitch = "_mm_Text_Box";
-				}
-				if ((typeValue == "button")||(typeValue == "image")||(typeValue == "submit")||(typeValue == "reset"))
-				{
-					elementSwitch = "_mm_Button"; 
-				}
-				if ((typeValue == "checkbox")||(typeValue == "radio"))
-				{
-					elementSwitch = "_mm_Check_Button";
+					typeValue = typeValue.toLowerCase();
+					if ((typeValue == "text")||(typeValue == "password"))
+					{
+						elementSwitch = "_mm_Text_Box";
+					}
+					if ((typeValue == "button")||(typeValue == "image")||(typeValue == "submit")||(typeValue == "reset"))
+					{
+						elementSwitch = "_mm_Button"; 
+					}
+					if ((typeValue == "checkbox")||(typeValue == "radio"))
+					{
+						elementSwitch = "_mm_Check_Button";
+					}
 				}
 				break;
 			case "BUTTON":
