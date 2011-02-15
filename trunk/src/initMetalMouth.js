@@ -82,6 +82,19 @@ function test(id)
 
 chrome.browserAction.onClicked.addListener(function(tab){test(tab.id);});
 
+// Listen for omnibox keyword 
+
+chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start Project metalmouth extension")});
+
+chrome.omnibox.onInputEntered.addListener(function(text){
+	chrome.tabs.getSelected(null, function(tab)
+	{
+		chrome.tabs.update(tab.id, {'url': 'http://www.google.com', 'selected': true}, function(tab){test(tab.id);});
+	});
+});// );
+
+// chrome.omnibox.onInputStarted.addListener(function() {console.log("mm started");chrome.tabs.getSelected(null, function(tab){test(tab.id);});});// );
+
 // Following enqueue does not appear to work - error raised (which cannot be caught) when utterance is stopped prematurely - also tried .stop() and it also did not work
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -99,7 +112,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			{
 				enqueue = false;
 			}
-									   
+
 			chrome.experimental.tts.speak(voice.utterance, {'locale':voice.locale,'rate':parseFloat(voice.rate),'enqueue':enqueue}, function(){
 				sendResponse({spoken: "true"});
 			});
