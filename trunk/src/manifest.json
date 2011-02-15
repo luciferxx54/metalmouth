@@ -19,12 +19,16 @@
 */
 {
   "name": "MetalMouth",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "MetalMouth - A voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
      "default_icon": "MetalMouthLogo.png",
      "default_title": "Metal Mouth"
    },
-  "permissions": ["tabs", "http://*/*", "https://*/*", "experimental"]
+   "omnibox": { "keyword" : "mm" },
+   "icons": {
+    "16": "MetalMouthLogo.png"
+   },
+   "permissions": ["tabs", "http://*/*", "https://*/*", "experimental"]
 }
