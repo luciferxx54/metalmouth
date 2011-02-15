@@ -160,7 +160,7 @@ function ControlPanelModel()
 		
 	var headElement = document.getElementsByTagName("head")[0];
 	myStyleArea = document.createElement("style");
-	myStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 1) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 3) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 2) + ";border:2px solid #FF8C00;}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
+	myStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 1) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 3) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 2) + ";}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
 	headElement.appendChild(myStyleArea);
 		
 	var mmPushDown = document.createElement("div");
@@ -979,9 +979,9 @@ function getElementFromOriginalId(originalId)
 function restoreHighlighter()
 {
 	var highlighter = document.getElementById("_mm_Highlighter");
+	highlighter.style.cssText = "display:none;";
 	highlighter.children[0].innerText = ""; // reset legend
 	highlighter.children[1].innerText = ""; // reset text
-	highlighter.style.cssText = "display:none;";
 }
 
 function drawCurrentElementHighlighterArea(osmNodeToHighlight)
@@ -1009,11 +1009,13 @@ function drawRectangleFromCoords(legendValue, x, y, width, height, includeCircle
 	if (highlighter != null)
 	{
 		highlighter.style.cssText = "left:" + x + "px;top:" + y + "px;width:" + width + "px;height:" + height + "px;";
-		highlighter.children[0].innerText = legendValue;
 		highlighter.scrollIntoView();
 		// amend scroll position due to metal mouth control panel 
 		var scrollPosY = window.scrollY;
 		window.scrollTo(0, scrollPosY - 40);
+		// paint following after scroll otherwise their paint might be disrupted
+		highlighter.children[0].innerText = legendValue;
+		highlighter.style.border = "2px solid #FF8C00"; 
 	}
 }
 
@@ -1023,12 +1025,14 @@ function drawOffscreenWarning(legendValue, y)
 	if (highlighter != null)
 	{
 		highlighter.style.cssText = "left:10px;top:" + y + "px;width:150px;height:20px;background:#FFFFFF;"; 
-		highlighter.children[0].innerText = legendValue;
-		highlighter.children[1].innerText = "<<< OFFSCREEN";
 		highlighter.scrollIntoView();
 		// amend scroll position due to metal mouth control panel 
 		var scrollPosY = window.scrollY;
 		window.scrollTo(0, scrollPosY - y);
+		// paint following after scroll otherwise their paint might be disrupted
+		highlighter.children[0].innerText = legendValue;
+		highlighter.children[1].innerText = "<<< OFFSCREEN";
+		highlighter.style.border = "2px solid #FF8C00";
 	}
 }
 
