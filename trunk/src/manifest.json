@@ -18,13 +18,13 @@
 
 */
 {
-  "name": "MetalMouth",
+  "name": "Project metalmouth",
   "version": "1.1.1",
-  "description": "MetalMouth - A voice browser extension for Chrome",
+  "description": "Project metalmouth - Developing a voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
      "default_icon": "MetalMouthLogo.png",
-     "default_title": "Metal Mouth"
+     "default_title": "Project metalmouth"
    },
    "omnibox": { "keyword" : "mm" },
    "icons": {
