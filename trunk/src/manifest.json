@@ -19,7 +19,7 @@
 */
 {
   "name": "MetalMouth",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "MetalMouth - A voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
