@@ -1,17 +1,25 @@
 #labels Featured,Phase-Deploy
 =Project metalmouth extension user guide=
 
+(It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.)
+
 ==Starting the extension in the Chrome browser==
 
-=== Starting: Method 1 (Four key strokes only) ===
+With recent support for interaction with the extension from the Chrome browser's omnibox/url area two methods for starting the extension are possible.  Omnibox support was added due to a worry about how a user would navigate to the voice browser extension - as Chrome browser is not self-voicing (and, without the need for an external screen-reader).
 
-=== Starting: Method 2 ===
+=== Omnibox Method (Four key strokes only) ===
+
+
+
+=== Extension Button Method ===
 
 [http://2.bp.blogspot.com/-ryOCz-ML_MI/TVvQ75WhCYI/AAAAAAAAAAk/x0T3lN0u_b4/s1600/controlPanelInSituLarge.png]
-
+----
 ==Extension Control Panel==
 
 [http://2.bp.blogspot.com/-EXrGkXSqCFM/TVvGoazv3ZI/AAAAAAAAAAc/_XXyR3JKkq8/s1600/controlPanel.png]
+
+===Overview===
 
   #  Url entry area;
   # Go button;
@@ -27,6 +35,6 @@
   #  Stop reading button;
 
 
-===Overview===
+
 
 ===Function x===
