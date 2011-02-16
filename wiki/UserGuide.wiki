@@ -3,6 +3,8 @@
 
 ==Starting the extension in the Chrome browser==
 
+[http://2.bp.blogspot.com/-ryOCz-ML_MI/TVvQ75WhCYI/AAAAAAAAAAk/x0T3lN0u_b4/s1600/controlPanelInSituLarge.png]
+
 ==Extension Control Panel==
 
 [http://2.bp.blogspot.com/-EXrGkXSqCFM/TVvGoazv3ZI/AAAAAAAAAAc/_XXyR3JKkq8/s1600/controlPanel.png]
