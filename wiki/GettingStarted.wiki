@@ -1,4 +1,4 @@
-#labels Phase-Deploy
+#labels Featured,Phase-Deploy
 Step-by-step guidance on getting started...
 
 1) Download the dev channel version of the Google chrome browser - see [http://www.chromium.org/getting-involved/dev-channel http://www.chromium.org/getting-involved/dev-channel].
