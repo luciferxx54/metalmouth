@@ -1,3 +1,10 @@
 #labels Featured,Phase-Deploy
+=Project metalmouth extension user guide=
 
-User guide...
+==Starting the extension in the Chrome browser==
+
+==Extension Control Panel==
+
+===Overview===
+
+===Function x===
