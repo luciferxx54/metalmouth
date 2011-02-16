@@ -5,7 +5,21 @@
 
 ==Extension Control Panel==
 
-[controlPanel.png]
+[http://2.bp.blogspot.com/-EXrGkXSqCFM/TVvGoazv3ZI/AAAAAAAAAAc/_XXyR3JKkq8/s1600/controlPanel.png]
+
+  #  Url entry area;
+  # Go button;
+  #  Back button;
+  #  Navigate by item drop-down (available items: all, section, form, link, skip link);
+  # Read again button;
+  #  Read previous item button;
+  #  Read next item button;
+  #  Interact button;
+  #  Speaking rate drop-down (available items: slow, normal, fast);
+  # Read from start button;
+  #  Continue reading button;
+  #  Stop reading button;
+
 
 ===Overview===
 
