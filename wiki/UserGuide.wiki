@@ -5,7 +5,7 @@
 
 ==Extension Control Panel==
 
-
+[controlPanel.png]
 
 ===Overview===
 
