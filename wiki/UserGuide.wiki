@@ -15,13 +15,13 @@ It is assumed that the Chrome browser has just been started and that the home pa
   #  Press the space bar.
   #  Press enter.  
 
-The Project metalmouth extension will start - taking the user to "http://www.google.com" and displaying the control panel.
+The Project metalmouth extension will start - taking the user to the "http://www.google.com" web page and displaying the control panel.
 
 === Extension Button Method ===
 
+  #  Click on the Project metalmouth button (made from the Project metalmouth logo) in the Chrome browser's toolbar.  
 
-
-
+This method is not really intended for use by actual users.  It is doubtful that a user will be able to navigate to the button without voice - Chrome browser is not self-voicing - or, without the need for an external screen-reader.
 ----
 ==Extension Control Panel==
 
