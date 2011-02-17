@@ -80,7 +80,7 @@ When 'all' is selected all objects can be navigated to one by one - this would i
   *  text box;
   *  button;
   *  check button;
-  *  single select menu;
+  *  single select (drop-down menu with one selectable option);
   *  section;
   *  paragraph;
   *  static text;
@@ -104,19 +104,29 @@ By pressing enter when the Read next button is focused the next object in the 'o
 
 By pressing enter when the Interact button is focused the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
 
-  *  skip link - interaction will move the user to the identified skip target.
-  *  link - interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
-  *  text box - interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' object which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
-  *  button - interaction will click the live button corresponding to the 'off-screen model' object which was read out.
-  *  check button - interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a 'Cancel' button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' object which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
-  *  single select menu - interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' object which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' object which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
+  *  *skip link*: Interaction will move the user to the identified skip target.
+  *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
+  *  *text box*: Interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' object which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
+  *  *button*: Interaction will click the live button corresponding to the 'off-screen model' object which was read out.
+  *  *check button*: Interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a Cancel button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' object which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
+  *  *single select*: Interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' object which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' object which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
 
 If the object which has just been read out cannot be interacted with the button will be disabled.
 
 ===Speaking rate===
 
+When this drop-down has focus a user can press enter and the tab through a set of speaking rates which they can choose.  So far Project metalmouth supports slow, normal, fast (more will follow in time). 
+
+Project metalmouth automatically changes the pronunciation being used by the voice according to the specified page language i.e. if a page specified en-US the pronunciation should change correspondingly.  The experimental nature of Chrome's text-to-speech api means that this functionality at present does not appear to be working as intended. 
+
 ===Read from start===
+
+By pressing enter when the 'Read from start' button is focused the Project metalmouth extension will start automatically reading the contents of the page from the start.  If a user has selected an option other than 'all' in the 'Navigate by drop-down' they will be read out-loud objects of the selected type one-by-one. 
 
 ===Continue reading===
 
+By pressing enter when the 'Continue' button is focused the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  If a user has selected an option other than 'all' in the 'Navigate by drop-down' they will be read out-loud objects of the selected type one-by-one. The 'Continue' button is disabled until the 'Stop' button is pressed.
+
 ===Stop reading===
+
+By pressing enter when the 'Stop' button is focused the Project metalmouth extension will stop automatically reading the contents of the page.  The 'Stop' button is disabled until either the 'Read from start' button or the 'Continue' button is pressed.
