@@ -56,4 +56,67 @@ A close-up of the control panel is shown below.  All functionality provided by t
   #  Continue reading button;
   #  Stop reading button;
 
-===Function x===
+===Url entry area===
+
+When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
+
+===Go===
+
+When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+===Back===
+
+By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+===Navigate by item===
+
+When this drop-down has focus a user can press enter and the tab through a set of items which they can choose to navigate the page by.  So far Project metalmouth supports navigation by all, section, form, link and skip link (more will follow in time).  It should be noted that, other than the 'all' option, the options in the Navigate by item drop-down will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists.
+
+When 'all' is selected all objects can be navigated to one by one - this would include the following 'off-screen model' object types: 
+
+  *  skip link;
+  *  skip target;
+  *  link;
+  *  text box;
+  *  button;
+  *  check button;
+  *  single select menu;
+  *  section;
+  *  paragraph;
+  *  static text;
+  *  form;
+  *  semantic image;
+  *  unsupported.   
+
+===Read again===
+
+By pressing enter when the Read again button is focused the object which has just been read out will be read out again.   
+
+===Read previous===
+
+By pressing enter when the Read previous button is focused the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
+
+===Read next===
+
+By pressing enter when the Read next button is focused the next object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the next object of this type.  If no next object exists this button will be disabled.
+
+===Interact===
+
+By pressing enter when the Interact button is focused the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
+
+  *  skip link - interaction will move the user to the identified skip target.
+  *  link - interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
+  *  text box - interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' object which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
+  *  button - interaction will click the live button corresponding to the 'off-screen model' object which was read out.
+  *  check button - interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a 'Cancel' button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' object which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
+  *  single select menu - interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' object which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' object which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
+
+If the object which has just been read out cannot be interacted with the button will be disabled.
+
+===Speaking rate===
+
+===Read from start===
+
+===Continue reading===
+
+===Stop reading===
