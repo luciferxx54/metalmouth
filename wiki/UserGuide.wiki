@@ -31,9 +31,9 @@ The control panel is displayed at the top of the page, just under Chrome browser
 
 The control panel can be brought into focus at any time by using the access key 'c'.
 
-  *  On windows an accesskey is called by pressing and 'c'.
-  *  On mac an accesskey is called by pressing and 'c'.
-  *  On linux an accesskey is called by pressing and 'c'.
+  *  On windows this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
+  *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
+  *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
 
 All buttons and drop-downs are then accessible by tabbing.  Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
 
@@ -55,8 +55,5 @@ A close-up of the control panel is shown below.  All functionality provided by t
   # Read from start button;
   #  Continue reading button;
   #  Stop reading button;
-
-
-
 
 ===Function x===
