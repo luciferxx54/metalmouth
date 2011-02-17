@@ -1,7 +1,7 @@
 #labels Featured,Phase-Deploy
 =Project metalmouth extension user guide=
 
-(It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.)
+This short guide is intended to assist first time users of the Project metalmouth extension.  It is incomplete and will be added to over time.
 
 ==Starting the extension in the Chrome browser==
 
@@ -9,13 +9,35 @@ With recent support for interaction with the extension from the Chrome browser's
 
 === Omnibox Method (Four key strokes only) ===
 
+It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.
 
+  #  Press the m key twice.  The keyword 'mm' activates the extension. The extension will ask you to "press the space bar and then press enter".
+  #  Press the space bar.
+  #  Press enter.  
+
+The Project metalmouth extension will start - taking the user to "http://www.google.com" and displaying the control panel.
 
 === Extension Button Method ===
 
-[http://2.bp.blogspot.com/-ryOCz-ML_MI/TVvQ75WhCYI/AAAAAAAAAAk/x0T3lN0u_b4/s1600/controlPanelInSituLarge.png]
+
+
+
 ----
 ==Extension Control Panel==
+
+The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
+
+[http://2.bp.blogspot.com/-ryOCz-ML_MI/TVvQ75WhCYI/AAAAAAAAAAk/x0T3lN0u_b4/s1600/controlPanelInSituLarge.png] 
+
+The control panel can be brought into focus at any time by using the access key 'c'.
+
+  *  On windows an accesskey is called by pressing and 'c'.
+  *  On mac an accesskey is called by pressing and 'c'.
+  *  On linux an accesskey is called by pressing and 'c'.
+
+All buttons and drop-downs are then accessible by tabbing.  Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
+
+A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
 
 [http://2.bp.blogspot.com/-EXrGkXSqCFM/TVvGoazv3ZI/AAAAAAAAAAc/_XXyR3JKkq8/s1600/controlPanel.png]
 
