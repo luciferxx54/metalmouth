@@ -27,7 +27,7 @@ function init(id)
 		
 			if (tabId != id)
 			{
-				return; // to prevent metalmouth running when other tabs (not this one) are updated 
+				return; // to prevent Project metalmouth running when other tabs (not this one) are updated 
 			}
 			if (changedProps.status != "complete")
 			{
@@ -74,7 +74,7 @@ function test(id)
 	codeToRun();
 }
 
-// Listen for a click on the osm icon.  
+// Listen for a click on the Project metalmouth icon.  
 
 chrome.browserAction.onClicked.addListener(function(tab){test(tab.id);});
 
@@ -122,6 +122,3 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	   sendResponse({}); // snub them.
 	}
 });
-
-
-

@@ -159,20 +159,26 @@ function ControlPanelModel()
 	var highestZIndex = calcHighestZIndex();
 		
 	var headElement = document.getElementsByTagName("head")[0];
-	myStyleArea = document.createElement("style");
-	myStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 1) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 3) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 2) + ";}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
-	headElement.appendChild(myStyleArea);
+	var mmStyleArea = document.createElement("style");
+	mmStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 3) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 4) + ";}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
+	headElement.appendChild(mmStyleArea);
 		
 	var mmPushDown = document.createElement("div");
 	mmPushDown.style.width = "100%"; 
 	mmPushDown.style.height = "22px";
 	document.body.insertBefore(mmPushDown, document.body.firstChild);
+
+	var mmShieldImage = new Image();
+	mmShieldImage.id = "_mm_ShieldImage";
+	mmShieldImage.style.cssText = "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;";
+	document.body.insertBefore(mmShieldImage, document.body.children[1]);
+
 		
 	var mmContainer = document.createElement("div")
-	mmContainer.id = "svbContainer";
+	mmContainer.id = "_mm_Container";
 	document.body.appendChild(mmContainer);
 		
-	mmContainer = document.getElementById("svbContainer");
+	mmContainer = document.getElementById("_mm_Container");
 		
 	if (mmContainer != null)
 	{
