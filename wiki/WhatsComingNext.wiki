@@ -15,43 +15,43 @@
 
 ===1.2) Interaction objects===
 
-*Text Box* (IN): Notes - handles certain types - Text state, Search state.
+*Text Box* (IN): Notes - handles INPUT elements with certain type values - text, search.
 
-*Button* (IN): Notes - handles certain types - Submit Button state, Image Button state, Reset Button state, Button state.
+*Button* (IN): Notes - handles INPUT elements with certain type values - submit, image, reset, button.
 
-*Check Button* (IN): Notes - handles certain types - Checkbox state, Radio Button state.
+*Check Button* (IN): Notes - handles INPUT elements with certain type values - checkbox, radio.
 
 _The following require stating the expected formatting for the box._
 
-*Number Box* (MISSING): Notes - handles certain types - Number state. 
+*Number Box* (MISSING): Notes - handles INPUT elements with certain type values - number. 
 
-*Telephone Box* (MISSING): Notes - handles certain types - Telephone state.
+*Telephone Box* (MISSING): Notes - handles INPUT elements with certain type values - telephone.
 
-*Url Box* (MISSING): Notes - handles certain types - Url state.
+*Url Box* (MISSING): Notes - handles INPUT elements with certain type values - url.
 
-*Email Box* (MISSING): Notes - handles certain types - Email state.
+*Email Box* (MISSING): Notes - handles INPUT elements with certain type values - email.
 
-*Date Time Box* (MISSING): Notes - handles certain types - Date Time state.
+*Date Time Box* (MISSING): Notes - handles INPUT elements with certain type values - date-time.
 
-*Date Time Local Box* (MISSING): Notes - handles certain types - date time-local state.
+*Date Time Local Box* (MISSING): Notes - handles INPUT elements with certain type values - date-time-local.
 
-*Date Box* (MISSING): Notes - handles certain types - date state.
+*Date Box* (MISSING): Notes - handles INPUT elements with certain type values - date.
 
-*Month Box* (MISSING): Notes - handles certain types - month state.
+*Month Box* (MISSING): Notes - handles INPUT elements with certain type values - month.
 
-*Week Box* (MISSING): Notes - handles certain types - week state.
+*Week Box* (MISSING): Notes - handles INPUT elements with certain type values - week.
 
-*Time Box* (MISSING): Notes - handles certain types - time state.
+*Time Box* (MISSING): Notes - handles INPUT elements with certain type values - time.
 
 _The following require more than just stating the expected formatting for the box._
 
-*Password Box* (MISSING): Notes - handles certain types - password state.
+*Password Box* (MISSING): Notes - handles INPUT elements with certain type values - password.
 
-*Range Box* (MISSING): Notes - handles certain types - range state.
+*Range Box* (MISSING): Notes - handles INPUT elements with certain type values - range.
 
-*File Box* (MISSING): Notes - handles certain types - file state.
+*File Box* (MISSING): Notes - handles INPUT elements with certain type values - file.
 
-*Color Box* (MISSING): Notes - handles certain types - color state. As yet this is not seemingly supported by Chrome browser.
+*Color Box* (MISSING): Notes - handles INPUT elements with certain type values - color. As yet this is not seemingly supported by Chrome browser.
 
 *Single Select* (IN):
 
