@@ -5,7 +5,7 @@
 
 ===Interaction containers===
 
-Skip_Link (IN):
+*Skip_Link* (IN):
 
 Skip_Target (IN):
 
