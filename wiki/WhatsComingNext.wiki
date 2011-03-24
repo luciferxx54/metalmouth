@@ -5,11 +5,11 @@
 
 ===Interaction containers===
 
-\Skip_Link\ (IN):
+Skip Link (IN):
 
-*Skip_Target* (IN):
+Skip Target (IN):
 
-*Link* (IN):
+Link (IN):
 
 Iframe (MISSING): Notes - what about opening the iframe in a new page - which could then be explored.
 
