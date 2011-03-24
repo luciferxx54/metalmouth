@@ -1,0 +1,127 @@
+#labels Featured,Phase-Requirements
+=What's coming next...=
+
+==Moving toward a more complete off-screen model...== 
+
+===Interaction containers===
+
+Skip_Link (IN):
+
+Skip_Target (IN):
+
+Link (IN):
+
+Iframe (MISSING): Notes - what about opening the iframe in a new page - which could then be explored.
+
+===Interaction objects===
+
+Text_Box (IN): Notes - handles certain types - Text state, Search state.
+
+Button (IN): Notes - handles certain types - Submit Button state, Image Button state, Reset Button state, Button state.
+
+Check_Button (IN): Notes - handles certain types - Checkbox state, Radio Button state.
+
+_The following require stating the expected formatting for the box._
+
+Number_Box (MISSING): Notes - handles certain types - Number state. 
+
+Telephone_Box (MISSING): Notes - handles certain types - Telephone state.
+
+Url_Box (MISSING): Notes - handles certain types - Url state.
+
+Email_Box (MISSING): Notes - handles certain types - Email state.
+
+DateTime_Box (MISSING): Notes - handles certain types - DateTime state.
+
+DateTimeLocal_Box (MISSING): Notes - handles certain types - datetime-local state.
+
+Date_Box (MISSING): Notes - handles certain types - date state.
+
+Month_Box (MISSING): Notes - handles certain types - month state.
+
+Week_Box (MISSING): Notes - handles certain types - week state.
+
+Time_Box (MISSING): Notes - handles certain types - time state.
+
+_The following require more than just stating the expected formatting for the box._
+
+Password_Box (MISSING): Notes - handles certain types - password state.
+
+Range_Box (MISSING): Notes - handles certain types - range state.
+
+File_Box (MISSING): Notes - handles certain types - file state.
+
+Color_Box (MISSING): Notes - handles certain types - color state. As yet this is not seemingly supported by Chrome browser.
+
+Single_Select (IN):
+
+Multi_Select (MISSING):
+
+User_Amendable_Select (MISSING): Notes - handles datalist element.
+
+===Semantic containers=== 
+Main_Content_Area (MISSING): Notes - wai-aria role = main.  (Feature request) Would be good to have a start reading at start of main content area button.
+
+Section (IN): Notes - should it role in article??? 
+
+Nav_Block (MISSING):
+
+Paragraph (IN):
+
+Static_Text (IN):
+
+Address (MISSING):
+
+Form (IN):
+
+Input_Group (MISSING): Notes - Fieldset elements / wai-aria landmark roles???
+
+Footer (MISSING):
+
+Bulleted_List (MISSING):
+
+Numbered_List (MISSING):
+
+Map (MISSING):
+
+Table (MISSING):
+
+===Semantic objects=== 
+Semantic_Image (IN): Notes - semantic image if alt is not null or ""
+
+Canvas (MISSING):
+
+Video (MISSING):
+
+Audio (MISSING):
+
+App_Object (MISSING):
+
+Meter (MISSING): Notes - would this include Progress element.
+
+Abbreviation (MISSING): Notes - abbreviations would otherwise sound strange. Are there any other things which might sound strange???  Urls in the text might need to be recognised otherwise they might be spoken out strangely.
+
+Quote (MISSING):
+
+Insertion (MISSING):
+
+Deletion (MISSING):
+
+Time (MISSING): Notes - times would otherwise sound strange???
+
+Different_Language_Text (MISSING): Notes - text in a different language would otherwise sound strange???
+
+Code (MISSING): Notes - code would otherwise sound strange??? 
+
+===Unsupported===
+unsupported (IN): Notes - this covers all / every other element which is not mentioned above.
+
+==Try to handle DOM Mutation Events in an elegant manner==
+
+If nodes are added / removed from the DOM structure the user needs to be informed.  Concentration would initially be placed into the following three DOM mutation events:
+
+  * DOMSubtreeModified (onsubtreemodified): Fires when the subtree is modified (bubbles)
+
+  * DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
+
+  * DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
