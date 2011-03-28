@@ -105,8 +105,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			else
 			{
 				enqueue = false;
+				chrome.experimental.tts.stop();
 			}
-
+							
 			chrome.experimental.tts.speak(voice.utterance, {'locale':voice.locale,'rate':parseFloat(voice.rate),'enqueue':enqueue}, function(){
 				sendResponse({spoken: "true"});
 			});
