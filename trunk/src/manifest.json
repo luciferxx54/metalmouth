@@ -19,7 +19,7 @@
 */
 {
   "name": "Project metalmouth",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Project metalmouth - Developing a voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
