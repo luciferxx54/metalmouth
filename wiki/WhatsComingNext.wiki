@@ -5,6 +5,8 @@
 
 Several functions currently sit outside main objects, it would be better if this could be tidied up.
 
+_(Completed: 28th - moved to version 1.2.0.)_
+
 ==2) Moving toward a more complete off-screen model...== 
 
 ===2.1) Interaction containers===
