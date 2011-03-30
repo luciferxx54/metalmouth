@@ -7,9 +7,13 @@ Several functions currently sit outside main objects, it would be better if this
 
 _(Completed: 28th - moved to version 1.2.0.)_
 
-==2) Moving toward a more complete off-screen model...== 
+==2) Keystroke commands== 
 
-===2.1) Interaction containers===
+(Doing a little research on an idea I have...)
+
+==3) Moving toward a more complete off-screen model...== 
+
+===3.1) Interaction containers===
 
 *Skip Link* (IN):
 
@@ -19,7 +23,7 @@ _(Completed: 28th - moved to version 1.2.0.)_
 
 *Iframe* (MISSING): Notes - what about opening the iframe in a new page - which could then be explored.
 
-===2.2) Interaction objects===
+===3.2) Interaction objects===
 
 *Text Box* (IN): Notes - handles INPUT elements with certain type values - text, search.
 
@@ -65,7 +69,7 @@ _The following require more than just stating the expected formatting for the bo
 
 *User Amendable Select* (MISSING): Notes - handles datalist element.
 
-===2.3) Semantic containers=== 
+===3.3) Semantic containers=== 
 *Main Content Area* (MISSING): Notes - wai-aria role = main.  (Feature request) Would be good to have a start reading at start of main content area button.
 
 *Section* (IN): Notes - should it role in article??? 
@@ -92,7 +96,7 @@ _The following require more than just stating the expected formatting for the bo
 
 *Table* (MISSING):
 
-===2.4) Semantic objects=== 
+===3.4) Semantic objects=== 
 *Semantic Image* (IN): Notes - semantic image if alt is not null or ""
 
 *Canvas* (MISSING):
@@ -119,10 +123,10 @@ _The following require more than just stating the expected formatting for the bo
 
 *Code* (MISSING): Notes - code would otherwise sound strange??? 
 
-===2.5) Unsupported===
+===3.5) Unsupported===
 *unsupported* (IN): Notes - this covers all / every other element which is not mentioned above.
 
-==3) Try to handle DOM Mutation Events in an elegant manner==
+==4) Try to handle DOM Mutation Events in an elegant manner==
 
 If nodes are added / removed from the DOM structure the user needs to be informed.  Concentration would initially be placed into the following three DOM mutation events:
 
