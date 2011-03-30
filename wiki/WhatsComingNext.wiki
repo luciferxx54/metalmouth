@@ -9,7 +9,27 @@ _(Completed: 28th - moved to version 1.2.0.)_
 
 ==2) Keystroke commands...== 
 
-(Doing a little research on an idea I have...)
+I have decided to try out the following solution for keystroke access to the most commonly used functions in the toolbar. I shall assign the following keys to following functions:
+
+Most used...
+
+g - Prev
+h - Next
+Space - interact
+
+Next most used... 
+
+f - Navigate by
+j - Re-read
+k - close the Interaction Area
+
+Other functions that are not so often used I shall leave just for the moment.
+
+Holding down these keys for more than one second should then active the relevant functions (if they are enabled in the toolbar), and state "action no possible - due to xyz" otherwise. 
+
+(Comments both good / bad on the above would most gratefully be received.) 
+
+Also, it should be noted that the "Reading speed" box could be moved to the right end of the toolbar.
 
 ==3) Moving toward a more complete off-screen model...== 
 
