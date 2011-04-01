@@ -1,34 +1,9 @@
 #labels Featured,Phase-Requirements
 =What's coming next...=
 
-==1) Tidy Up...==
+==1) Moving toward a more complete off-screen model...== 
 
-Several functions currently sit outside main objects, it would be better if this could be tidied up.
-
-_(Completed: 28th - moved to version 1.2.0.)_
-
-==2) Keystroke commands...== 
-
-I have decided to try out the following solution for keystroke access to the most commonly used functions in the toolbar. I shall assign the following keys to following functions:
-
-Most used...
-
-  * g - Prev
-  * h - Next
-  * j - Re-read
-  * Space - interact
-
-Other functions that are not so often used I shall leave just for the moment.
-
-Holding down these keys for more than one second should then active the relevant functions (if they are enabled in the toolbar), and state "action no possible - due to xyz" otherwise. 
-
-(Comments both good / bad on the above would most gratefully be received.) 
-
-Also, it should be noted that the "Reading speed" box could be moved to the right end of the toolbar.
-
-==3) Moving toward a more complete off-screen model...== 
-
-===3.1) Interaction containers===
+===1.1) Interaction containers===
 
 *Skip Link* (IN):
 
@@ -38,7 +13,7 @@ Also, it should be noted that the "Reading speed" box could be moved to the righ
 
 *Iframe* (MISSING): Notes - what about opening the iframe in a new page - which could then be explored.
 
-===3.2) Interaction objects===
+===1.2) Interaction objects===
 
 *Text Box* (IN): Notes - handles INPUT elements with certain type values - text, search.
 
@@ -84,7 +59,7 @@ _The following require more than just stating the expected formatting for the bo
 
 *User Amendable Select* (MISSING): Notes - handles datalist element.
 
-===3.3) Semantic containers=== 
+===1.3) Semantic containers=== 
 *Main Content Area* (MISSING): Notes - wai-aria role = main.  (Feature request) Would be good to have a start reading at start of main content area button.
 
 *Section* (IN): Notes - should it role in article??? 
@@ -111,7 +86,7 @@ _The following require more than just stating the expected formatting for the bo
 
 *Table* (MISSING):
 
-===3.4) Semantic objects=== 
+===1.4) Semantic objects=== 
 *Semantic Image* (IN): Notes - semantic image if alt is not null or ""
 
 *Canvas* (MISSING):
@@ -138,10 +113,10 @@ _The following require more than just stating the expected formatting for the bo
 
 *Code* (MISSING): Notes - code would otherwise sound strange??? 
 
-===3.5) Unsupported===
+===1.5) Unsupported===
 *unsupported* (IN): Notes - this covers all / every other element which is not mentioned above.
 
-==4) Try to handle DOM Mutation Events in an elegant manner==
+==2 Try to handle DOM Mutation Events in an elegant manner==
 
 If nodes are added / removed from the DOM structure the user needs to be informed.  Concentration would initially be placed into the following three DOM mutation events:
 
