@@ -13,15 +13,10 @@ I have decided to try out the following solution for keystroke access to the mos
 
 Most used...
 
-g - Prev
-h - Next
-Space - interact
-
-Next most used... 
-
-f - Navigate by
-j - Re-read
-k - close the Interaction Area
+  * g - Prev
+  * h - Next
+  * j - Re-read
+  * Space - interact
 
 Other functions that are not so often used I shall leave just for the moment.
 
