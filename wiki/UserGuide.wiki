@@ -41,7 +41,7 @@ All buttons and drop-downs are then accessible by tabbing.  Buttons will be disa
 
 A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
 
-[http://2.bp.blogspot.com/-EXrGkXSqCFM/TVvGoazv3ZI/AAAAAAAAAAc/_XXyR3JKkq8/s1600/controlPanel.png]
+[http://2.bp.blogspot.com/-i_iRM2HjZps/TZrap5Q-_vI/AAAAAAAAAA0/cIR6vOXjLqc/s1600/toolbar.png]
 
 ===Overview===
 
