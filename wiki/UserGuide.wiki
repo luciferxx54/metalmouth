@@ -19,13 +19,13 @@ The Project metalmouth extension will start - taking the user to the "http://www
 
 === Extension Button Method ===
 
-IMPORTANT: This control panel, and some functions, changed with Version 1.4.0 - an updated user guide should be available shortly.
-
   #  Click on the Project metalmouth button (made from the Project metalmouth logo) in the Chrome browser's toolbar.  
 
 This method is not really intended for use by actual users.  It is doubtful that a user will be able to navigate to the button without voice - Chrome browser is not self-voicing - or, without the need for an external screen-reader.
 ----
 ==Extension Control Panel==
+
+IMPORTANT: This control panel, and some functions, changed with Version 1.4.0 - an updated user guide should be available shortly.
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
