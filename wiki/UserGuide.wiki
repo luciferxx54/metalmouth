@@ -45,19 +45,17 @@ A close-up of the control panel is shown below.  All functionality provided by t
 
 ===Overview===
 
-  #  Url entry area;
-  # Go button;
-  #  Back button;
-  #  Navigate by item drop-down (available items: all, section, form, link, skip link);
-  # Read again button;
-  #  Read previous item button;
-  #  Read next item button;
-  #  Interact button;
-  #  Speaking rate drop-down (available items: slow, normal, fast);
-  # Read from start button;
-  #  Continue reading button;
-  #  Stop reading button;
-
+  # *Back to start* button;
+  # *Jump* button;
+  # *Read previous item* button;
+  # *Read next item* button;
+  # *Interact* button;
+  # *Read on* button;
+  # *Stop reading* button;
+  # *Change location* button;
+  # *Navigate by* button;
+  # *Options* button;
+ 
 ===Url entry area===
 
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
