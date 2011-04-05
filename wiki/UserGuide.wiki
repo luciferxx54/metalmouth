@@ -76,7 +76,23 @@ By pressing enter when the Read previous button is focused the previous object i
 
 ===Read next===
 
-By pressing enter when the Read next button is focused the next object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the next object of this type.  If no next object exists this button will be disabled.
+By pressing enter when the Read next button is focused the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
+
+Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
+
+  *  skip link;
+  *  skip target;
+  *  link;
+  *  text box;
+  *  button;
+  *  check button;
+  *  single select (drop-down menu with one selectable option);
+  *  section;
+  *  paragraph;
+  *  static text;
+  *  form;
+  *  semantic image;
+  *  unsupported.  
 
 ===Interact===
 
@@ -91,9 +107,9 @@ By pressing enter when the Interact button is focused the object which has just 
 
 If the object which has just been read out cannot be interacted with the button will be disabled.
 
-===Continue reading===
+===Read on===
 
-By pressing enter when the 'Continue' button is focused the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  If a user has selected an option other than 'all' in the 'Navigate by drop-down' they will be read out-loud objects of the selected type one-by-one. The 'Continue' button is disabled until the 'Stop' button is pressed.
+By pressing enter when the 'Read on' button is focused the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
 
 ===Stop reading===
 
@@ -101,41 +117,42 @@ By pressing enter when the 'Stop' button is focused the Project metalmouth exten
 
 ===Navigate by item===
 
-When this drop-down has focus a user can press enter and the tab through a set of items which they can choose to navigate the page by.  So far Project metalmouth supports navigation by all, section, form, link and skip link (more will follow in time).  It should be noted that, other than the 'all' option, the options in the Navigate by item drop-down will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists.
+By pressing enter when the 'Navigate by' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
 
-When 'all' is selected all objects can be navigated to one by one - this would include the following 'off-screen model' object types: 
-
-  *  skip link;
-  *  skip target;
-  *  link;
-  *  text box;
-  *  button;
-  *  check button;
-  *  single select (drop-down menu with one selectable option);
-  *  section;
-  *  paragraph;
-  *  static text;
-  *  form;
-  *  semantic image;
-  *  unsupported.   
+So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
 
 ===Change location button===
 
-===Sub menu item - Go===
+By pressing enter when the 'Change location' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
+
+*Sub menu item - Back*
+
+By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+*Sub menu item - New url*
+
+By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
 When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-===Sub menu item - Back===
-
-By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
-
 ===Options button===
 
+By pressing enter when the 'Options' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
 
-===Sub menu item - Speaking rate===
+*Sub menu item - Speak at slow speed*
 
-When this drop-down has focus a user can press enter and the tab through a set of speaking rates which they can choose.  So far Project metalmouth supports slow, normal, fast (more will follow in time). 
+By pressing enter when the 'Speak at slow speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a slow rate. 
+
+*Sub menu item - Speak at normal speed*
+
+By pressing enter when the 'Speak at normal speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a normal rate. 
+
+*Sub menu item - Speak at fast speed*
+
+By pressing enter when the 'Speak at fast speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a fast rate. 
+
+So far Project metalmouth supports slow, normal, fast (more might follow in time). 
 
 Project metalmouth automatically changes the pronunciation being used by the voice according to the specified page language i.e. if a page specified en-US the pronunciation should change correspondingly.  The experimental nature of Chrome's text-to-speech api means that this functionality at present does not appear to be working as intended. 
