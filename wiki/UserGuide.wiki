@@ -29,7 +29,7 @@ IMPORTANT: This control panel, and some functions, changed with Version 1.4.0 - 
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
-[http://2.bp.blogspot.com/-ryOCz-ML_MI/TVvQ75WhCYI/AAAAAAAAAAk/x0T3lN0u_b4/s1600/controlPanelInSituLarge.png] 
+[http://2.bp.blogspot.com/-w1dXbXcgREU/TZrobmGvqAI/AAAAAAAAAA8/PI8nYIx9OQc/s1600/screenshotMetalmouth.png] 
 
 The control panel can be brought into focus at any time by using the access key 'c'.
 
