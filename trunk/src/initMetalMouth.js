@@ -79,7 +79,11 @@ chrome.browserAction.onClicked.addListener(function(tab){test(tab.id);});
 
 // Listen for omnibox keyword 
 
-chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start Project metalmouth extension")});
+// temp experimental.tts replacement
+var audioStack = new AudioStackModel(); // added
+
+// chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start Project metalmouth extension")}); temporarily commented out
+chrome.omnibox.onInputStarted.addListener(function(){audioStack.speakDirectly("Press space bar then enter to start Project metalmouth extension", null)});
 
 chrome.omnibox.onInputEntered.addListener(function(text){
 	chrome.tabs.getSelected(null, function(tab)
@@ -88,7 +92,96 @@ chrome.omnibox.onInputEntered.addListener(function(text){
 	});
 });
 
-// Following enqueue does not appear to work - error raised (which cannot be caught) when utterance is stopped prematurely - also tried .stop() and it also did not work
+// temp experimental.tts replacement
+
+// AUDIO
+
+function AudioStackModel()
+{
+	// constructor
+	
+	var audio = document.createElement("audio");
+	audio.autoplay = true; 
+	audio.addEventListener("ended", ended, false);
+	
+	var callbackFunction;
+	var spoken = true; 
+	
+	var utterances = [];
+	var callbacks = [];
+	
+	this.speakEnqueue = function(utterance, callback)
+	{
+		queueSpeak(utterance, callback);
+		speakNextInQueue();
+	}
+	
+	this.speakNext = function()
+	{
+		speakNextInQueue();
+	}
+	
+	this.speakDirectly = function(utterance, callback)
+	{
+		clearStack();
+		speak(utterance, callback);
+	}
+	
+	function speak(utterance, callback)
+	{
+		callbackFunction = callback;
+		
+		if (utterance != null)
+		{
+			audio.src = getSourceUrl(utterance);
+		}
+	}
+	
+	function getSourceUrl(utterance)
+	{
+		var foundationUrl = "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=";
+		return foundationUrl + escape(utterance);
+	}
+	
+	function clearStack()
+	{
+		utterances = [];
+		callbacks = [];
+	}
+	
+	function queueSpeak(utterance, callback)
+	{
+		utterances[utterances.length] = utterance;
+		callbacks[callbacks.length] = callback;
+	}
+	
+	function speakNextInQueue()
+	{
+		console.log("speakNextInQueue");
+		if (utterances.length > 0) 
+		{
+			var utterance = utterances[0]; // returns first item in array 
+			utterances = utterances.slice(1); // removes first;
+			var callback = callbacks[0];
+			callbacks = callbacks.slice(1);
+			speak(utterance, callback);	  
+		} 
+	}
+	
+	// Event handlers
+	
+	function ended()
+	{
+		if (callbackFunction != null)
+		{
+			callbackFunction();
+		}
+	}
+} 
+
+// chrome.experimental.tts enqueue does not appear to work - error raised (which cannot be caught) when utterance is stopped prematurely - also tried .stop() and it also did not work
+
+// chrome.experimental.tts has been commented out temporarily as it has become delayed in being taken out of experimental.
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	if (request.tts != "")
@@ -104,12 +197,36 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			else
 			{
 				enqueue = false;
-				chrome.experimental.tts.stop();
+				// chrome.experimental.tts.stop(); temporarily commented out
 			}
-							
+									   
+			// temp experimental.tts replacement - start
+			if (enqueue == true)
+			{  
+				var callbackEnqueue = function()
+				{
+					audioStack.speakNext();
+					sendResponse({spoken: "true"}); 		   
+				}
+									   
+				audioStack.speakEnqueue(voice.utterance, callbackEnqueue);
+			}
+			else
+			{			
+				var callbackDirect = function()
+				{
+					sendResponse({spoken: "true"}); 		   
+				}
+									   
+				audioStack.speakDirectly(voice.utterance, callbackDirect);
+			}
+			// end 
+									   
+			/* temporarily commented out
 			chrome.experimental.tts.speak(voice.utterance, {'locale':voice.locale,'rate':parseFloat(voice.rate),'enqueue':enqueue}, function(){
 				sendResponse({spoken: "true"});
 			});
+			*/
 		}
 		catch(err)
 		{

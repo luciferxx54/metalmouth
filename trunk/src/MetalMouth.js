@@ -1671,7 +1671,7 @@ function MMControlPanelModel()
 		
 		function openChangeLocationMenu()
 		{		
-			getAudio("Change location menu drop-down entered 4 options available", false, changeFocus);
+			getAudio("Change location menu drop-down entered 3 options available", false, changeFocus);
 			
 			function changeFocus()
 			{
