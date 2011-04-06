@@ -18,7 +18,7 @@
 */
 {
   "name": "Project metalmouth",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Project metalmouth - Developing a voice browser extension for Chrome",
   "background_page": "background.html",
   "browser_action": {
@@ -29,5 +29,5 @@
    "icons": {
     "16": "MetalMouthLogo.png"
    },
-   "permissions": ["tabs", "http://*/*", "https://*/*", "experimental"]
+   "permissions": ["tabs", "http://*/*", "https://*/*"]
 }
