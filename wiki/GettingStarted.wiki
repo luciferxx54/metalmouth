@@ -1,0 +1,11 @@
+=Getting started=
+
+An installable version of the Project metalmouth extension can now be downloaded from the [https://chrome.google.com/webstore/detail/bmogbhmnbehfapbmjlaoflagfobahfli Project metalmouth extension page] on Google's Web Store.
+
+If you want to instead run the unpacked version of this extension, all you have to do is follow the step-by-step instructions below:
+
+  # Download the five files in the 'src' directory to a local directory. 
+  # In the Chrome browser navigate to the "chrome://extensions" page and choose the developers menu. 
+  # In the same page, choose to load an unpackaged extension and then select the directory you downloaded the source code to. 
+  # After a successful load, the "Project metalmouth" extension should appear in the list of extensions on the "chrome://extensions" page. 
+  # See UserGuide for information on starting, and using, the extension.
