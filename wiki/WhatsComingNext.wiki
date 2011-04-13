@@ -16,9 +16,9 @@ If nodes are added / removed from the DOM structure the user needs to be informe
 
   * (12/4/2011 Now dropped from research) DOMSubtreeModified (onsubtreemodified): Fires when the subtree is modified (bubbles) - This is a general event which fires for many reasons, although it does not appear to be possible to isolate those reasons.
 
-  * DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
+  * DOMNodeInserted: Fires when a node has been added as a child of another node (bubbles)
 
-  * DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
+  * DOMNodeRemoved: Fires when a node has been removed from a DOM-tree (bubbles)
 
 ==2) Moving toward a more complete off-screen model...== 
 
