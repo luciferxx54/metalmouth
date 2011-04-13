@@ -7,7 +7,7 @@ Many pages contain dynamic areas in which certain content is revolved or in whic
 
 So, research will be undertaken into either:
 
-  # creating an item ("DynamicArea") in the off-screen model which can be used to represent a "dynamic area"; or
+  # creating an item ("Dynamic Area") in the off-screen model which can be used to represent a "dynamic area"; or
   # marking each off-screen model item that forms a dynamic area as "dynamicArea".  
 
 Dynamic areas can then be handled accordingly.
@@ -16,9 +16,9 @@ If nodes are added / removed from the DOM structure the user needs to be informe
 
   * DOMSubtreeModified (onsubtreemodified): Fires when the subtree is modified (bubbles)
 
-  * DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
+  * (12/4/2011 Now dropped from research) DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
 
-  * DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
+  * (12/04/2011 Now dropped from research) DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
 
 ==2) Moving toward a more complete off-screen model...== 
 
