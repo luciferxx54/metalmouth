@@ -14,11 +14,11 @@ Dynamic areas can then be handled accordingly.
 
 If nodes are added / removed from the DOM structure the user needs to be informed.  So, efforts will also be placed into how best to implement the following three DOM mutation events:
 
-  * DOMSubtreeModified (onsubtreemodified): Fires when the subtree is modified (bubbles)
+  * (12/4/2011 Now dropped from research) DOMSubtreeModified (onsubtreemodified): Fires when the subtree is modified (bubbles) - This is a general event which fires for many reasons, although it does not appear to be possible to isolate those reasons.
 
-  * (12/4/2011 Now dropped from research) DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
+  * DOMNodeInserted (onnodeinserted): Fires when a node has been added as a child of another node (bubbles)
 
-  * (12/04/2011 Now dropped from research) DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
+  * DOMNodeRemoved (onnoderemoved): Fires when a node has been removed from a DOM-tree (bubbles)
 
 ==2) Moving toward a more complete off-screen model...== 
 
