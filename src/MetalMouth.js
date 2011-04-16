@@ -31,7 +31,9 @@ chrome.extension.onRequest.addListener(
 	}
 });
 
-var sequencerFunctions = 
+// start sequencer
+
+var startSequencerFunctions = 
 [
  initMmId,
  initBodyDOM,
@@ -40,12 +42,26 @@ var sequencerFunctions =
  initOSM,
  initSVB,
  updateOSM,
+ updateSVB,
  resetSVB,
+ attachDOMChangeEventHandler,
  bringFocus
- ];
+];
+
+// change sequencer - Node Added / Node Removed
+
+var changeSequencerFunctions = 
+[
+ initMmId,
+ initBodyDOM,
+ updateOSM,
+ updateSVB,
+ doNothing
+];
 
 var sequencerNextItem;
 var sequencerCurrentItem;
+var sequencerFunctions;
 
 function sequencer()
 {
@@ -63,31 +79,78 @@ function start()
 {
 	sequencerNextItem = 0;
 	sequencerCurrentItem = 0;
+	sequencerFunctions = startSequencerFunctions;
+	sequencer();
+}
+
+function uponDomChange()
+{
+	sequencerNextItem = 0;
+	sequencerCurrentItem = 0;
+	sequencerFunctions = changeSequencerFunctions;
 	sequencer();
 }
 
 function initMmId()
 {
 	var htmlElement = document.all;
+	var numberingOn = true;
+	var count = 0; 
+	var elementsToAvoid = ["_mm_StyleArea", "_mm_PushDown", "_mm_ShieldImage"]; // elements which Project metalmouth extension adds
 	
 	for (var i = 0; i < htmlElement.length; i++)
 	{
-		if (htmlElement[i].tagName != null)
+		if (elementsToAvoid.indexOf(htmlElement[i].id) == -1)
 		{
-			htmlElement[i].setAttribute("_mm_Id", i); // give all a _mm_Id attribute in advance
+			if (htmlElement[i].id == "_mm_Container") // element which Project metalmouth extension adds, and all its contents
+			{
+				numberingOn = false; 
+			}
+			if (numberingOn == true)
+			{
+				if (htmlElement[i].tagName != null)
+				{
+					htmlElement[i].setAttribute("_mm_Id", count); // give all a _mm_Id attribute in advance
+					count++;
+				}
+			}
+			if (htmlElement[i].id == "_mm_ContainerEnd")
+			{
+				numberingOn = true;
+			}
 		}
 	}
 	sequencer();
 }
 
-function BodyDOM(dom)
+function BodyDOM(bodyElement)
 {
-	this.dom = dom;
+	var domFromPage; 
+	if (bodyElement.getElementsByClassName("_mm_Container").length > 0)
+	{
+		var bodyClone = bodyElement.cloneNode(true);
+		var elementsToRemoveFromBody = ["_mm_PushDown", "_mm_ShieldImage", "_mm_Container"]; // _mm_StyleArea is in the head, and untouched
+		for (var i in elementsToRemoveFromBody)
+		{
+			var mmElementInClone = bodyClone.getElementsByClassName(elementsToRemoveFromBody[i])[0];
+			bodyClone.removeChild(mmElementInClone);
+		}
+		domFromPage = bodyClone.innerHTML; // this is to remove control panel from OSM
+	}
+	else
+	{
+		domFromPage = bodyElement.innerHTML;
+	}
+	
+	this.dom = function()
+	{
+		return domFromPage;
+	}
 }
 
 function initBodyDOM()
 {
-	bodyDOM = new BodyDOM(document.body.innerHTML);
+	bodyDOM = new BodyDOM(document.body);
 	sequencer();
 }
 
@@ -125,9 +188,15 @@ function initSVB()
 	sequencer();
 }
 
-function updateOSM(dom)
+function updateOSM()
 {
-	osm.update(bodyDOM.dom);
+	osm.update(bodyDOM.dom());
+	sequencer();
+}
+
+function updateSVB()
+{
+	svb.update();
 	sequencer();
 }
 
@@ -137,6 +206,40 @@ function resetSVB()
 	sequencer();
 }
 
+function attachDOMChangeEventHandler()
+{
+	document.body.addEventListener("DOMNodeInserted", addNode = function(e){nodeAddedUpdateOSM(e);}, false);
+	document.body.addEventListener("DOMNodeRemoved", removeNode = function(e){nodeAddedUpdateOSM(e);}, false);
+	
+	// we want events being raised from our own code area to be captured and stopped
+	var mmContainer = document.getElementById("_mm_Container");
+	mmContainer.addEventListener("DOMNodeInserted", function(e){doNothingCapture(e);}, false);
+    mmContainer.addEventListener("DOMNodeRemoved", function(e){doNothingCapture(e);}, false);
+	sequencer();
+}
+
+var x = 0; 
+
+function nodeAddedUpdateOSM(e)
+{
+	uponDomChange();
+}
+
+function nodeRemovedUpdateOSM(e)
+{
+	uponDomChange();
+}
+
+function doNothing()
+{
+	return;
+}
+
+function doNothingCapture(e) // stops any events from our code being interpreted as a change to the dom of the page being viewed
+{
+	e.stopPropagation();
+}
+
 function bringFocus()
 {
 	var mmControlPanelFocus = document.getElementById("_mm_ControlPanelFocus");
@@ -144,6 +247,13 @@ function bringFocus()
 	{
 		mmControlPanelFocus.click();
 	}
+}
+
+function removeMM()
+{
+	var mmContainer = document.getElementById("_mm_Container");
+	document.body.removeChild(mmContainer);
+	sequencer();
 }
 
 //--------------
@@ -156,21 +266,26 @@ function MMControlPanelModel()
 		
 	var headElement = document.getElementsByTagName("head")[0];
 	var mmStyleArea = document.createElement("style");
+	mmStyleArea.id = "_mm_StyleArea"; // needs to be removed in initMmId upon dom change _mm_StyleArea, _mm_PushDown and _mm_ShieldImage
 	mmStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
 	headElement.appendChild(mmStyleArea);
 		
 	var mmPushDown = document.createElement("div");
+	mmPushDown.id = "_mm_PushDown"; // needs to be removed in initMmId upon dom change
+	mmPushDown.className = "_mm_PushDown"; // for removal from DOM clone
 	mmPushDown.style.width = "100%"; 
 	mmPushDown.style.height = "22px";
 	document.body.insertBefore(mmPushDown, document.body.firstChild);
 
 	var mmShieldImage = new Image();
-	mmShieldImage.id = "_mm_ShieldImage";
+	mmShieldImage.id = "_mm_ShieldImage"; // needs to be removed in initMmId upon dom change
+	mmShieldImage.className = "_mm_ShieldImage"; // for removal from DOM clone
 	mmShieldImage.style.cssText = "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;";
 	document.body.insertBefore(mmShieldImage, document.body.children[1]);
 		
 	var mmContainer = document.createElement("div")
 	mmContainer.id = "_mm_Container";
+	mmContainer.className = "_mm_Container"; 
 	document.body.appendChild(mmContainer);
 		
 	mmContainer = document.getElementById("_mm_Container");
@@ -248,6 +363,11 @@ function MMControlPanelModel()
 		mmInteractArea.id = "_mm_InteractArea";
 		mmInteractArea.style.cssText = "display:none;"; 
 		mmContainer.appendChild(mmInteractArea);
+		
+		var mmContainerEnd = document.createElement("div"); // added so we know where the container ends, for use in initMmId
+		mmContainerEnd.id = "_mm_ContainerEnd";
+		mmContainerEnd.style.cssText = "display:none;"; 
+		mmContainer.appendChild(mmContainerEnd);
 	}
 	 
 	this.update = function()
@@ -522,6 +642,7 @@ function MMControlPanelModel()
 			var setValueFunction = function(liveElementToUpdate, enteredValue)
 			{
 				liveElementToUpdate.selectedIndex = enteredValue;
+				fireChangeEvt(liveElementToUpdate);
 				return liveElementToUpdate[enteredValue].innerText;
 			}
 			updateLiveAndOSM(selectElement, e.srcElement.id, setValueFunction, "SELECT");
@@ -1792,7 +1913,7 @@ function MMControlPanelModel()
 			var urlEnterButton = iap_Button.template();
 			urlEnterButton.id = "_mm_UrlEnterButton";
 			urlEnterButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACmElEQVQ4Ee2VXUgUURTH/3fmzu66O21qayKVUREYhlFCpghRJFFUhoREpr1F+VxB0AfRm5APRS9aZFBQEok+lG8GQlFZgfSmFlGiJJqtu7Ozzsft3BXWXMe1hx49A8Pce+b+zse951wmhICUgoaefXu3hW7k6loJhHAY2Jwipc3+YgzqjOl8H/gSaxlqO9op/2YSXH2ht66uIr+9coue79cYcbODMrWMJmwX+PTNMLoGpi713qy5y0LHnpVdP7n+VUNVJC9J2hw/h6qqmWuzjl3XhWFayPEp6P7wy2l9OX6CV2wPny8rDuY55KZpCzx/+wPR6AwURfqxvLi0LhgM4VB5ERTmYkdxUCXeZb7KzwoCmpIKX3AdHY/v4POLNiJSbP8kDBuq6nHgfgslNg7OGfQcNcLJoHQ2JYx2gVtR+PMK0XSxFTq3QFF6igwoiQAe3b4CnpxKRyhZwoXDPVf5wmg8UonStUDC8ib7uILRGQ1P7uVC0JMp3mAymUgkEDMAcwmwRWAjYZN30vDi/VAyLf2v8Qo4ncmVVKRT4X2O6VwGAxrCQQZtiXPsp3P8W9YXVauXeIBlJ7bQNziOwYAN21lcVRKkUk3H3QCEM0vsxXAum/Tf8xY4zIkhXGvcT8u9y3neQ7n3BvQ1temilj2EXOF8MuaMxEyXPKAJM46Dh2uxc1c5eb0cdA4vmIrV+YVQrBgUH4ORdDEdt0YYKh+uu3p2a/+Z6sgm6vFQuA8q11Jm5z3L8kUeurYF25pN5fvpm8nora6xGi5eN42WnOuppyuqY/dmvTTkT6bDyoJboJIZls2Krqav3R+nmsc6j79L3XnyL1b0oGDPqaLmSJhvpJ7qvWMLcPMDBUyZNuyf/e8n2kXf6WGp+QP1tPFu71qjGQAAAABJRU5ErkJggg=="; 
-			urlEnterButton.setAttribute("title", "Go button");
+			urlEnterButton.setAttribute("title", "Go");
 			urlEnterButton.addEventListener("click", functionToRun, false);
 			
 			this.add = function()
@@ -2130,7 +2251,7 @@ function MMControlPanelModel()
 		element_coordinates[3] = height;
 		return element_coordinates; 
 	}
-	
+		
 	function getElementFromOriginalId(originalId)
 	{
 		var element = null;
@@ -2348,6 +2469,26 @@ function OSMModel() // setUp
 	{
 		return osmIndex;
 	} 
+	 
+	this.getOSMFromMMId = function(mmId)
+	{		
+		var element = null;
+		var allDivElements = document.getElementsByTagName("div");
+		
+		for (var i in allDivElements)
+		{
+			if (allDivElements[i].tagName != null)
+			{
+				var originalId = allDivElements[i].getAttribute("originalid");
+				if (parseInt(originalId) == parseInt(mmId))
+				{
+					element = allDivElements[i];
+					break;
+				}
+			}
+		}
+		return element;
+	}
 	
 	this.update = function(bodyDOMCode)
 	{
@@ -2571,7 +2712,6 @@ function OSMModel() // setUp
 	function messAbout(element)
 	{
 		osmIndex = 0;
-		
 		
 		var createModelElement = function(liveElement, model)
 		{
@@ -3558,6 +3698,12 @@ function SVBModel()
 	var highlightedOSMNodeIndex = 0;
 	var availableReadableNodes;
 	var jumpableNodeTypes = ["_mm_Section"]; // default value
+	var osmElementCount;
+	
+	this.update = function()
+	{
+		osmElementCount = osm.elementCount();
+	}
 	
 	this.setAvailableReadableNodes = function(availableNodes)
 	{
@@ -3639,7 +3785,7 @@ function SVBModel()
 		currentOSMNodeIndex = nextOSMNodeIndex;
 		nextOSMNodeIndex = nextOSMNodeIndex + 1;
 		
-		if (currentOSMNodeIndex <= osm.elementCount())
+		if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
 		{
 			var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
 			if (node != null)
@@ -3679,7 +3825,7 @@ function SVBModel()
 		currentOSMNodeIndex = nextOSMNodeIndex;
 		nextOSMNodeIndex = nextOSMNodeIndex + 1;
 		
-		if (currentOSMNodeIndex <= osm.elementCount())
+		if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
 		{
 			var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
 			if (node != null)
