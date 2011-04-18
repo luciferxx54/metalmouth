@@ -19,7 +19,7 @@
 
 {
   "name": "Project metalmouth",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Project metalmouth extension - giving Chrome a voice",
   "background_page": "background.html",
   "browser_action": {

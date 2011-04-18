@@ -83,12 +83,25 @@ function start()
 	sequencer();
 }
 
-function uponDomChange()
+function change()
 {
 	sequencerNextItem = 0;
 	sequencerCurrentItem = 0;
 	sequencerFunctions = changeSequencerFunctions;
 	sequencer();
+}
+
+var changeEventTimer;
+
+function uponDomChange()
+{
+	// Each new element added or removed in the dom fires UponDomChange - if this is a group of 16 new options - then it fires 16 times.  It could however be fired once after the 16th event - 
+	// so, if the events are tightly packed each event resets the timer and only the last event in the series fires
+	
+	var functionToRun = function(){change()};
+	
+	clearTimeout(changeEventTimer);
+	changeEventTimer = window.setTimeout(functionToRun, 250); 
 }
 
 function initMmId()
@@ -338,7 +351,7 @@ function MMControlPanelModel()
 		
 		var mmOptionsButton = new OptionsButtonModel(); // shortkey L
 		mmOptionsButton.add();
-		 
+		
 		// Areas
 		
 		var mmOSMArea = document.createElement("div");
@@ -359,11 +372,9 @@ function MMControlPanelModel()
 		mmHighlighterText.id = "_mm_HighlighterText";
 		mmHighlighter.appendChild(mmHighlighterText);
 		
-		var mmInteractArea = document.createElement("div");
-		mmInteractArea.id = "_mm_InteractArea";
-		mmInteractArea.style.cssText = "display:none;"; 
-		mmContainer.appendChild(mmInteractArea);
-		
+		var mmInteractArea = new CP_InteractArea();
+		mmInteractArea.add();
+		 
 		var mmContainerEnd = document.createElement("div"); // added so we know where the container ends, for use in initMmId
 		mmContainerEnd.id = "_mm_ContainerEnd";
 		mmContainerEnd.style.cssText = "display:none;"; 
@@ -603,8 +614,10 @@ function MMControlPanelModel()
 	
 	this.drawSelectMenuInteract = function(selectInputElement)
 	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.innerHTML = "";
+		mmInteractArea.clear();
+		
+		var mmCloseMenuButton = new CloseMenuButtonModel("select", "_mm_ReadNextButton"); // new OptionCloseButtonModel();
+		
 		// get all options and add them as buttons
 		var options = selectInputElement.children;
 		
@@ -618,20 +631,19 @@ function MMControlPanelModel()
 				mmOptionButton.id = count;
 				mmOptionButton.setAttribute("value", options[i].innerText);
 				mmOptionButton.setAttribute("title", options[i].innerText);
-				mmOptionButton.addEventListener("click", function(e){cancelSelect();optionSelected(e, selectInputElement)}, false); // mirror this above in text input for enter
-				mmInteractionArea.appendChild(mmOptionButton);
+				mmOptionButton.addEventListener("click", function(e){mmCloseMenuButton.click();optionSelected(e, selectInputElement)}, false); // mirror this above in text input for enter
+				mmInteractArea.addOptionToThisMenu(mmOptionButton);
 				count++;
 			}
 		}
 		
-		var mmOptionCloseButton = new OptionCloseButtonModel();
-		mmOptionCloseButton.add();
+		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 		 
-		mmInteractionArea.style.display = "";
+		mmInteractArea.show();
 		
 		function cancelSelect()
 		{
-			getAudio("drop-down menu closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			getAudio("select menu closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
@@ -641,29 +653,13 @@ function MMControlPanelModel()
 			// setting value by javascript should not fire original events which is good
 			var setValueFunction = function(liveElementToUpdate, enteredValue)
 			{
+				liveElementToUpdate.setAttribute("_mm_selectedindex", enteredValue); // problem is that we take dom innerHTML which does not keep live variable values like selectedIndex
 				liveElementToUpdate.selectedIndex = enteredValue;
 				fireChangeEvt(liveElementToUpdate);
-				return liveElementToUpdate[enteredValue].innerText;
+				return liveElementToUpdate[liveElementToUpdate.getAttribute("_mm_selectedindex")].innerText;
 			}
 			updateLiveAndOSM(selectElement, e.srcElement.id, setValueFunction, "SELECT");
 			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
-		}
-		
-		function OptionCloseButtonModel()
-		{
-			var iap_Button = new IAP_ButtonModel();
-			var optionCloseButton = iap_Button.template();
-			optionCloseButton.id = "_mm_CloseButton";
-			optionCloseButton.setAttribute("value", "Close");
-			optionCloseButton.setAttribute("title", "Close drop-down menu");
-			optionCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII="; 
-			optionCloseButton.addEventListener("click", function(){cancelSelect()}, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.appendChild(optionCloseButton);
-			}
 		}
 	}
 	
@@ -698,25 +694,25 @@ function MMControlPanelModel()
 		}
 		
 		// change value in model
-		osmNode.children[2].innerText = "Current value: " + valueToSay; 
+		osmNode.children[3].innerText = "Current value: " + valueToSay; // the node which holds the current value is in 4th position
 	}
 	
 	// Control Panel (CP) Base Models
 	
-	function CP_InfoArea()
+	function CP_InfoArea() // should have a this.addButton function - see CP_InteractArea
 	{
-		var mmInfoArea = document.createElement("div");
-		mmInfoArea.id = "_mm_InfoArea";
+		var infoArea = document.createElement("div");
+		infoArea.id = "_mm_InfoArea";
 		addHandlers();
 		
 		this.add = function()
 		{
-			mmContainer.appendChild(mmInfoArea);
+			mmContainer.appendChild(infoArea);
 		}
 		
 		this.appendChild = function(elementToAppend)
 		{
-			mmInfoArea.appendChild(elementToAppend);
+			infoArea.appendChild(elementToAppend);
 		}
 		
 		function changeHotKeyStatus()
@@ -744,14 +740,14 @@ function MMControlPanelModel()
 		function addHandlers()
 		{
 			alreadyBusy = false;
-			mmInfoArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
-			mmInfoArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
+			infoArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
+			infoArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
 		}
 		
 		function removeHandlers()
 		{
-			mmInfoArea.removeEventListener("keydown", hotKeyDown, false);
-			mmInfoArea.removeEventListener("keyup", hotKeyUp, false);
+			infoArea.removeEventListener("keydown", hotKeyDown, false);
+			infoArea.removeEventListener("keyup", hotKeyUp, false);
 		}
 		
 		var hotKeyTimer;
@@ -772,65 +768,214 @@ function MMControlPanelModel()
 				{
 					case "U+0047": // g - ReadPrevButton
 						selected = true;
-						keyBeingTimed = "U+0047"; 
+						keyBeingTimed = e.keyIdentifier.toString(); 
 						buttonName = mmReadPrevButton; 
 						textIfButtonDisabled = "Read previous Button is currently disabled"; 
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+0048": // h - ReadNextButton
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmReadNextButton; 
 						textIfButtonDisabled = "Read next button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+0046": // f - jump 
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmJumpButton; 
 						textIfButtonDisabled = "Jump button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+004A": // j - interact
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmInteractButton; 
 						textIfButtonDisabled = "Interact button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+0042": // b - change location 
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmChangeLocationButton; 
 						textIfButtonDisabled = "Change location button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+004B": // k - read on
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmReadOnButton; 
 						textIfButtonDisabled = "Read on button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+0044": // d - start of page
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmBackToStartButton; 
 						textIfButtonDisabled = "Back to start button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+004C": // l - options
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmOptionsButton; 
 						textIfButtonDisabled = "Options button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					case "U+0053": // s - jump item selector
 						selected = true;
-						keyBeingTimed = "U+0048";
+						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = mmNavigateByButton; 
 						textIfButtonDisabled = "Navigate by button is currently disabled";
+						hotKeyTimer = window.setTimeout(functionToRun, 500);
+						break;
+					default: 
+						// if this is not one of the above we need to set alreadybusy to false... 
+						if (selected == false)
+						{
+							setAlreadyBusy(false);
+						}
+						break;
+				}
+			}
+		}
+		
+		function hotKeyUp_Handler(e)
+		{
+			// cancels timer
+			if (e.keyIdentifier.toString() == keyBeingTimed)
+			{
+				clearTimeout(hotKeyTimer);
+				setAlreadyBusy(false);
+			}
+		}
+		
+		function functionToRun()
+		{
+			// running function
+			buttonName.focus();
+			if (buttonName.enabled() == true)
+			{
+				buttonName.focus();
+				setAlreadyBusy(false);
+			}
+			else
+			{
+				getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
+			}
+		}
+		
+		function setAlreadyBusy(value)
+		{
+			alreadybusy = value;
+		}
+	}
+	
+	function CP_InteractArea()
+	{
+		var closeMenuButton;
+		var interactArea = document.createElement("div");
+		interactArea.id = "_mm_InteractArea";
+		interactArea.style.cssText = "display:none;";
+		addHandlers();
+		
+		this.clear = function()
+		{
+			interactArea.innerHTML = ""; 
+		}
+		
+		this.show = function()
+		{
+			interactArea.style.cssText = "";
+		}
+		
+		this.add = function()
+		{
+			mmContainer.appendChild(interactArea);
+		}
+		
+		this.addButtonToThisMenu = function(button)
+		{
+			interactArea.appendChild(button.asHtml());
+		}
+		
+		this.addCloseButtonToThisMenu = function(closeButton)
+		{
+			var divider = document.createElement("span");
+			divider.innerText = "|";
+			divider.style.cssText = "float:left;margin-left:5px;margin-right:5px;";
+			interactArea.appendChild(divider);
+			
+			interactArea.appendChild(closeButton.asHtml());
+			closeMenuButton = closeButton;
+		}
+		
+		this.addOptionToThisMenu = function(option)
+		{
+			interactArea.appendChild(option);
+		}
+		
+		this.appendChild = function(elementToAppend)
+		{
+			interactArea.appendChild(elementToAppend);
+		}
+		
+		function changeHotKeyStatus()
+		{
+			if (hotKeysHolder.value == "hotkeys on")
+			{
+				addHandlers();
+			}
+			else
+			{
+				removeHandlers();
+			}
+		}
+		
+		this.enableHotkeys = function()
+		{
+			addHandlers();
+		}
+		
+		this.disableHotkeys = function()
+		{
+			removeHandlers();
+		}
+		
+		function addHandlers()
+		{
+			alreadyBusy = false;
+			interactArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
+			interactArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
+		}
+		
+		function removeHandlers()
+		{
+			interactArea.removeEventListener("keydown", hotKeyDown, false);
+			interactArea.removeEventListener("keyup", hotKeyUp, false);
+		}
+		
+		var hotKeyTimer;
+		var keyBeingTimed;
+		var buttonName; 
+		var textIfButtonDisabled;
+		var alreadyBusy; 
+		
+		function hotKeyDown_Handler(e)
+		{
+			if (alreadyBusy == false)
+			{
+				setAlreadyBusy(true);
+				
+				var selected = false; 
+				
+				switch(e.keyIdentifier.toString())
+				{
+					case "U+001B":
+						selected = true;
+						keyBeingTimed = e.keyIdentifier.toString();
+						buttonName = closeMenuButton; 
+						textIfButtonDisabled = "Close menu button is currently disabled";
 						hotKeyTimer = window.setTimeout(functionToRun, 500);
 						break;
 					default: 
@@ -1078,8 +1223,10 @@ function MMControlPanelModel()
 		function drawSubMenu(readOnlyElement) // for mm menu items
 		{
 			var iap_Button = new IAP_OptionButtonModel();
-			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-			mmInteractionArea.innerHTML = "";
+			
+			mmInteractArea.clear();
+			
+			var mmCloseMenuButton = new CloseMenuButtonModel(menuName, menuButtonName);
 			
 			// get all options and add them as buttons
 			
@@ -1091,14 +1238,13 @@ function MMControlPanelModel()
 				optionButton.id = i;
 				optionButton.setAttribute("value", readOnlyElementItems[i].replace("_mm_", ""));
 				optionButton.setAttribute("title", readOnlyElementItems[i].replace("_mm_", ""));
-				optionButton.addEventListener("click", function(e){closeMenu();optionSelected(e, readOnlyElement, optionSelectedFunction)}, false); // mirror this above in text input for enter
-				mmInteractionArea.appendChild(optionButton);
+				optionButton.addEventListener("click", function(e){mmCloseMenuButton.click();optionSelected(e, readOnlyElement, optionSelectedFunction)}, false); // mirror this above in text input for enter
+				mmInteractArea.addOptionToThisMenu(optionButton);
 			}
 			
-			var mmCloseMenuButton = new CloseMenuButtonModel(menuName, menuButtonName);
-			mmCloseMenuButton.add();
+			mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 			
-			mmInteractionArea.style.display = "";
+			mmInteractArea.show();
 			
 			function optionSelected(e, selectElement, optionSelectedFunction)
 			{
@@ -1106,14 +1252,6 @@ function MMControlPanelModel()
 				optionSelectedFunction(e.srcElement.value);
 				// then refocus 
 				selectElement.focus();
-			}
-			
-			function closeMenu()
-			{
-				getAudio(menuName + " menu closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.innerHTML = ""; 
-				mmInteractionArea.style.display = "none";
 			}
 		}
 	}
@@ -1148,7 +1286,7 @@ function MMControlPanelModel()
 		{
 			if (e.srcElement.getAttribute("title") != "")
 			{
-				getAudio(e.srcElement.getAttribute("title") + " button has focus", false, null);
+				getAudio(e.srcElement.getAttribute("title") + " option has focus", false, null);
 			}
 		}
 		
@@ -1342,16 +1480,16 @@ function MMControlPanelModel()
 	{
 		// constructor
 		var iap_Button = new IAP_ButtonModel();
-		var mmCloseMenuButton = iap_Button.template();
-		mmCloseMenuButton.id = "_mm_CloseMenuButton";
-		mmCloseMenuButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
-		mmCloseMenuButton.setAttribute("title", "Close menu");
-		mmCloseMenuButton.addEventListener("click", function(){closeMenu()}, false);
+		var closeMenuButton = iap_Button.template();
+		closeMenuButton.id = "_mm_CloseMenuButton";
+		closeMenuButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
+		closeMenuButton.setAttribute("title", "Close menu");
+		closeMenuButton.style.opacity = "1"; 
+		closeMenuButton.addEventListener("click", function(){closeMenu()}, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(mmCloseMenuButton);
+			return closeMenuButton;
 		}
 		
 		function closeMenu()
@@ -1360,6 +1498,21 @@ function MMControlPanelModel()
 			var mmInteractionArea = document.getElementById("_mm_InteractArea");
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
+		}
+		
+		this.focus = function()
+		{
+			closeMenuButton.focus();
+		}
+		
+		this.enabled = function() // for hotkeys
+		{
+			return iap_Button.isEnabled(closeMenuButton);
+		}
+		
+		this.click = function()
+		{
+			closeMenu();
 		}
 	}
 	
@@ -1621,7 +1774,13 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawSelectMenuInteract(osmNode);
 			
-			getAudio("single select drop-down menu entered", false, changeFocus);
+			getAudio("single select drop-down menu entered", false, numberOfItems);
+			
+			function numberOfItems()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				getAudio((mmInteractionArea.children.length - 2)  + " selectable options, first option", false, changeFocus); // -2 takes into account the divider and the close button
+			}
 			
 			function changeFocus()
 			{
@@ -1805,22 +1964,18 @@ function MMControlPanelModel()
 		
 		function drawChangeLocationSubMenu() // node ref needed so enter can set the values in the model and in the live site
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-			mmInteractionArea.innerHTML = "";
+			mmInteractArea.clear();
 			
 			var mmBackButton = new BackButtonModel();
-			mmBackButton.add();
+			mmInteractArea.addButtonToThisMenu(mmBackButton);
 			
 			var mmNewUrlButton = new NewUrlButtonModel();
-			mmNewUrlButton.add();
+			mmInteractArea.addButtonToThisMenu(mmNewUrlButton);
 			
-			var iapDivider = new IAP_Divider();
-			iapDivider.add();
+			var mmCloseMenuButton = new CloseMenuButtonModel("Change location", "_mm_ChangeLocationButton");
+			mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 			
-			var mmCloseChangeLocationMenuButton = new CloseMenuButtonModel("Change location", "_mm_ChangeLocationButton");
-			mmCloseChangeLocationMenuButton.add();
-			
-			mmInteractionArea.style.display = "";
+			mmInteractArea.show();
 		}
 	}
 	
@@ -1831,14 +1986,13 @@ function MMControlPanelModel()
 		var backButton = iap_Button.template();
 		backButton.id = "_mm_BackButton";
 		backButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADQUlEQVQ4EZWVW0iUURDH/+e77LfrulaLq5llZgVdoItdIIkiTIOgKLq8SSQEQVAEQVEI9RJGFCEY9dKLFdSjEUEWgXiBHnoQESxLrDSzB8XU9bueZlZddL9d08Oe71vmzPxmzpwz8wkpJXjknm8q31cgrmTrKJICbkK40IeEOmrJnqZBpXbiUXk7mwkGl19vqjpZIuvK8uTSgAJMuVoolSCkGncFmgcx9KJPnGu/XdEoCi+8La/ZJl9XrZPGhAN4i6VO+1eJHlCBJ91i+EaLsl/blYvru2PSiBPU9hYeZaqmSwEpBN8Zw7KyYnFJi+jID5InXkgdvMWwLiAE/8s0JOK2BP3g0MzSJCKGV6CRVTpmwjvv4t2AJKdeIo/p0C6d9K4YkB+aWk3cBTLR0imzjHM2oYRR0/AUPz+9QiAY9qm6tgl9+SY8r7mKorAJc1YqfWDOiEE3Q6cppIqANQwxMgARMnxgYZnQcqLQKLmpmZwD5sVsknSNBeE6FkqilAJFhUIyRQv4wNJzoai6T84CimtqMJQOEn1WGFcaO9D8W8FXeykZzvE9o/7fd9KKC6N7zMDlZ2/wsbEOve1bUa9nwfzTA93I+i8oVSEJ1jUNDZ2jaHn1GCF7DENdrYm6DhkqNCMbkm7GYkYyFZbj4OKOJThRXQM3Uoi1e09hc0U1clZshGtPLoaZ0E1GzFUXVeO4f2w77OAdHNxQiMr1uTh+6y6Gf3QikObw5vOWBHNtcSOJELz2wApM2haCzig8x57PPuNaEswaU3AgFrCoIIB+csRgyhJUK+6DOKZDaTJ9chbMAbOA4TPNSLoO1OhqRNaU0s2YrllWmh4e7UqNrYPr+Q+WeoVU0/UYh3QjGEf9mcOQ6lFq0qm1RXQy9AhaHDIxSZ8G7m4cGD1UbcQUPyZsbM6jip3djRijk2ZplHOcOc8MMgnKnY1bwZgjMDwp+pS2797N1iHxlwuE26dGb+4TPPk/Rz7f5LTxjrPIloNp+4NfH/qVe4lP055rb4+cXoOHu3OxMkRZT7drssk4hJAYtwUowG/PP8uzHQ8qmxNgthBn3m85uFKejwSxitD+08iIpQVPKCMWej98cevky0M9rPoPklM6C19DN6sAAAAASUVORK5CYII=";
-		backButton.setAttribute("alt", "Back");
-		backButton.setAttribute("title", "Back"); 
+		backButton.setAttribute("alt", "Previous u r l");
+		backButton.setAttribute("title", "Previous u r l"); 
 		backButton.addEventListener("click", back, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(backButton);
+			return backButton;
 		}
 		
 		function back()
@@ -1857,10 +2011,9 @@ function MMControlPanelModel()
 		newUrlButton.setAttribute("title", "Enter new url"); 
 		newUrlButton.addEventListener("click", newUrl, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(newUrlButton);
+			return newUrlButton;
 		}
 		
 		function newUrl()
@@ -1892,7 +2045,7 @@ function MMControlPanelModel()
 			var textBox = new CP_TextBoxModel();
 			var uRLTextEntry = textBox.template();
 			uRLTextEntry.id = "_mm_URLTextEntry";
-			uRLTextEntry.setAttribute("title", "Url text entry area");
+			uRLTextEntry.setAttribute("title", "u r l entry");
 			
 			this.add = function()
 			{
@@ -1966,25 +2119,21 @@ function MMControlPanelModel()
 		
 		function drawOptionsSubMenu() // node ref needed so enter can set the values in the model and in the live site
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-			mmInteractionArea.innerHTML = "";
+			mmInteractArea.clear();
 			
 			var mmSpeakSlowButton = new SpeakSlowButtonModel();
-			mmSpeakSlowButton.add();
+			mmInteractArea.addButtonToThisMenu(mmSpeakSlowButton);
 			
 			var mmSpeakNormalButton = new SpeakNormalButtonModel();
-			mmSpeakNormalButton.add();
+			mmInteractArea.addButtonToThisMenu(mmSpeakNormalButton);
 			
 			var mmSpeakFastButton = new SpeakFastButtonModel();
-			mmSpeakFastButton.add();
+			mmInteractArea.addButtonToThisMenu(mmSpeakFastButton);
 			
-			var iapDivider = new IAP_Divider();
-			iapDivider.add();
-			
-			var mmCloseOptionsMenuButton = new CloseMenuButtonModel("Options", "_mm_OptionsButton");
-			mmCloseOptionsMenuButton.add();
-			
-			mmInteractionArea.style.display = "";
+			var mmCloseMenuButton = new CloseMenuButtonModel("Options", "_mm_OptionsButton");
+			mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
+
+			mmInteractArea.show();
 		}
 	}
 	
@@ -2000,10 +2149,9 @@ function MMControlPanelModel()
 		speakSlowButton.setAttribute("value", "Slow");
 		speakSlowButton.addEventListener("click", speakSlow, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(speakSlowButton);
+			return speakSlowButton;
 		}
 		
 		this.enable = function()
@@ -2042,10 +2190,9 @@ function MMControlPanelModel()
 		speakNormalButton.setAttribute("title", "Speak at normal speed"); 
 		speakNormalButton.addEventListener("click", speakNormal, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(speakNormalButton);
+			return speakNormalButton;
 		}
 		
 		this.enable = function()
@@ -2084,10 +2231,9 @@ function MMControlPanelModel()
 		speakFastButton.setAttribute("title", "Speak at fast speed"); 
 		speakFastButton.addEventListener("click", speakFast, false);
 		
-		this.add = function()
+		this.asHtml = function()
 		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.appendChild(speakFastButton);
+			return speakFastButton;
 		}
 		
 		this.enable = function()
@@ -2669,6 +2815,10 @@ function OSMModel() // setUp
 			case "SELECT":
 				if (liveElement.getAttribute("multiple") == null)
 				{
+					if (liveElement.hasAttribute("_mm_selectedindex") == false)
+					{
+						liveElement.setAttribute("_mm_selectedindex", liveElement.selectedIndex); // need to preserve values which are not writted into the dom - as UponDomChange takes the text from the dom, rather than virtually held values (i.e. selectedIndex)
+					}
 					elementSwitch = "_mm_Single_Select";
 				}
 				break;
@@ -2892,6 +3042,14 @@ function OSMModel() // setUp
 			walkDOM(baseElement);
 			return originalIds;
 		}
+		
+		// next is only for select elements
+		
+		this.selectedTextValue = function()
+		{
+			return baseElement[baseElement.getAttribute("_mm_selectedindex")].innerText;
+		}
+		
 	}
 	
 	// all OSM object models extends element obj
@@ -2946,7 +3104,7 @@ function OSMModel() // setUp
 				}
 			}
 			
-			element.innerHTML = whatAmI() + titleValue() + element.innerHTML;
+			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
 			
 			return element;
 		}
@@ -2959,6 +3117,11 @@ function OSMModel() // setUp
 		function whatAmI()
 		{
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Skip Link</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function titleValue()
@@ -3087,7 +3250,7 @@ function OSMModel() // setUp
 				}
 			}
 			
-			element.innerHTML = whatAmI() + titleValue() + element.innerHTML;
+			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
 			
 			return element;
 		}
@@ -3100,6 +3263,11 @@ function OSMModel() // setUp
 		function whatAmI()
 		{
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Link</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function titleValue()
@@ -3166,7 +3334,7 @@ function OSMModel() // setUp
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
 			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
-			element.innerHTML = labelValue() + whatAmI() + stateValue();
+			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
 			return element;
 		}
 		
@@ -3177,7 +3345,12 @@ function OSMModel() // setUp
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Text Box:</span>";
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Text Box</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function labelValue()
@@ -3230,7 +3403,7 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
-			element.innerHTML = labelValue() + whatAmI();
+			element.innerHTML = labelValue() + interactable() + whatAmI();
 			return element;
 		}
 		
@@ -3242,6 +3415,11 @@ function OSMModel() // setUp
 		function whatAmI()
 		{
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Button</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function labelValue()
@@ -3288,7 +3466,7 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
-			element.innerHTML = labelValue() + whatAmI() + stateValue();
+			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
 			return element;
 		}
 		
@@ -3314,6 +3492,11 @@ function OSMModel() // setUp
 			}
 			
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function stateValue()
@@ -3395,7 +3578,7 @@ function OSMModel() // setUp
 			}
 			
 			// finally
-			element.innerHTML = whatAmI() + labelValue() + stateValue() + element.innerHTML;
+			element.innerHTML = interactable() + whatAmI() + labelValue() + stateValue() + element.innerHTML;
 			return element;
 		}
 		
@@ -3407,6 +3590,11 @@ function OSMModel() // setUp
 		function whatAmI()
 		{
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Single select drop-down</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
 		}
 		
 		function labelValue()
@@ -3427,7 +3615,7 @@ function OSMModel() // setUp
 		{
 			// state forms part of the text to read out
 
-			var state = baseElement.value(); 
+			var state = baseElement.selectedTextValue();
 			
 			if (state == null)
 			{
