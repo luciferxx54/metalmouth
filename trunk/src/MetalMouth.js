@@ -139,9 +139,31 @@ function initMmId()
 function BodyDOM(bodyElement)
 {
 	var domFromPage; 
-	if (bodyElement.getElementsByClassName("_mm_Container").length > 0)
+	
+	var bodyClone = bodyElement.cloneNode(true);
+	
+	// remove script elements 
+	
+	var scriptElements = bodyClone.getElementsByTagName("script");
+	
+	for (var x = 0; x < scriptElements.length; x++)
 	{
-		var bodyClone = bodyElement.cloneNode(true);
+		scriptElements[x].innerText = ""; 
+	}
+	
+	// remove non script elements
+	
+	var noscriptElements = bodyClone.getElementsByTagName("noscript");
+	
+	for (var y = 0; y < noscriptElements.length; y++)
+	{
+		noscriptElements[y].innerText = ""; 
+	}
+	
+	// remove mm container
+	
+	if (bodyClone.getElementsByClassName("_mm_Container").length > 0)
+	{
 		var elementsToRemoveFromBody = ["_mm_PushDown", "_mm_ShieldImage", "_mm_Container"]; // _mm_StyleArea is in the head, and untouched
 		for (var i in elementsToRemoveFromBody)
 		{
@@ -152,7 +174,7 @@ function BodyDOM(bodyElement)
 	}
 	else
 	{
-		domFromPage = bodyElement.innerHTML;
+		domFromPage = bodyClone.innerHTML;
 	}
 	
 	this.dom = function()
@@ -2649,7 +2671,7 @@ function OSMModel() // setUp
 		controlPanel.updateNavigatableItems();
 	}
 	
-	function allFreeTextInSpan(bodyText)
+	function allFreeTextInSpan(bodyText) // <p>hello <span>there</span></p> should become <p><span>hello</span><span>there</span></p> so that the spans can become static text
 	{	
 		var newBodyText = ""; 
 		var switchOff = false;
@@ -2672,18 +2694,18 @@ function OSMModel() // setUp
 				{
 					if ((bodySplit[i].substring(0, 7).toUpperCase() != "/SCRIPT")&&(bodySplit[i].substring(0, 9).toUpperCase() != "/NOSCRIPT"))
 					{
-						var leftArrowIndex = bodySplit[i].indexOf(">");
+						var rightArrowIndex = bodySplit[i].indexOf(">");
 						
-						if (leftArrowIndex != -1)
+						if (rightArrowIndex != -1)
 						{
-							if (leftArrowIndex == bodySplit[i].length - 1)
+							if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
 							{
 								newBodyText = newBodyText + "<" + bodySplit[i];
 							}
 							else
 							{
-								var openingTag = bodySplit[i].substring(0, leftArrowIndex + 1);
-								var freeText = bodySplit[i].substring(leftArrowIndex + 1);
+								var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
+								var freeText = bodySplit[i].substring(rightArrowIndex + 1);
 								if (freeText.trim() != "")
 								{
 									newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
@@ -2860,7 +2882,7 @@ function OSMModel() // setUp
 	// MessAbout -
 	// DOM errors are generally to do with baseElement functions being called as non-functions in Models i.e. baseElement.value should be baseElement.value()
 	function messAbout(element)
-	{
+	{		
 		osmIndex = 0;
 		
 		var createModelElement = function(liveElement, model)
@@ -2873,7 +2895,6 @@ function OSMModel() // setUp
 			replacementElement.setAttribute("originalChildren", modelItem.allChildrenIds().toString());
 			liveElement.outerHTML = replacementElement.outerHTML;
 		}
-		
 		
 		var elements = element.getElementsByTagName("*"); // all 
 		
