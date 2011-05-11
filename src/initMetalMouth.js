@@ -42,6 +42,30 @@ function init(id)
 	});});
 }
 
+function runAugmentationScript(augmentationScriptRef)
+{
+	var req = new XMLHttpRequest();
+	req.open("GET", augmentationScriptRef, true);
+	req.onreadystatechange = statusListener;
+	req.send(null);
+	
+	function statusListener()
+	{
+		if (req.readyState == 4) {
+			if (req.status == 200) {
+				chrome.tabs.getSelected(null, function(tab) {
+					chrome.tabs.executeScript(tab.id, {code: "var mmAugmentationScript = document.getElementById('_mm_AugmentationScript');mmAugmentationScript.outerHTML='';"}, function(){ // removed link to augmentationScript 
+						var codeToRun = req.responseText;
+						chrome.tabs.executeScript(tab.id, {code: codeToRun}, function(){ 		
+							console.log("executed");
+						});
+					});
+				});
+			}
+		}
+	}
+}
+
 function test(id)
 {
 	// this ensures that the page is fully loaded before init runs
@@ -113,7 +137,18 @@ function AudioStackModel()
 	this.speakEnqueue = function(utterance, callback)
 	{
 		queueSpeak(utterance, callback);
-		speakNextInQueue();
+		
+		// if nothing is being played 
+		
+		if (audio.currentSrc == "") // no source set
+		{
+			speakNextInQueue();
+		}
+		
+		if (audio.currentTime == audio.duration) // audio played
+		{
+			speakNextInQueue();
+		}
 	}
 	
 	this.speakNext = function()
@@ -157,7 +192,6 @@ function AudioStackModel()
 	
 	function speakNextInQueue()
 	{
-		console.log("speakNextInQueue");
 		if (utterances.length > 0) 
 		{
 			var utterance = utterances[0]; // returns first item in array 
@@ -172,9 +206,16 @@ function AudioStackModel()
 	
 	function ended()
 	{
-		if (callbackFunction != null)
+		try
 		{
-			callbackFunction();
+			if (callbackFunction != null)
+			{
+				callbackFunction();
+			}
+		}
+		catch(err)
+		{
+			console.log(err);
 		}
 	}
 } 
@@ -184,7 +225,20 @@ function AudioStackModel()
 // chrome.experimental.tts has been commented out temporarily as it has become delayed in being taken out of experimental.
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-	if (request.tts != "")
+	if (request.augmentationScriptRef != undefined)
+	{
+		// there is an augmentation script present
+		runAugmentationScript(request.augmentationScriptRef); // signal to request.augmentationScriptComplete is held in augmentationScript						   
+	}
+	else if (request.augmentationScriptComplete == "true")
+	{
+		// the augmentation script complete
+		chrome.tabs.getSelected(null, function(tab)
+		{
+			chrome.tabs.sendRequest(tab.id, {augmentationScriptComplete: "true"});
+		});
+	}
+	else if (request.voice != undefined)
 	{
 		var voice = JSON.parse(request.voice);
 		try
@@ -208,7 +262,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 					audioStack.speakNext();
 					sendResponse({spoken: "true"}); 		   
 				}
-									   
 				audioStack.speakEnqueue(voice.utterance, callbackEnqueue);
 			}
 			else
@@ -217,7 +270,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 				{
 					sendResponse({spoken: "true"}); 		   
 				}
-									   
 				audioStack.speakDirectly(voice.utterance, callbackDirect);
 			}
 			// end 
