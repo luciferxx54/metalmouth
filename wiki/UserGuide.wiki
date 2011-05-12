@@ -39,6 +39,8 @@ All buttons and drop-downs are then accessible by tabbing.  Buttons will be disa
 
 All the buttons are also available via hot keys. Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
 
+Also, when in a sub menu a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
+
 The hope with the hot keys, and the changed control panel layout, is that less tabbing will be required for users.
 
 A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
