@@ -124,9 +124,7 @@ function AudioStackModel()
 {
 	// constructor
 	
-	var audio = document.createElement("audio");
-	audio.autoplay = true; 
-	audio.addEventListener("ended", ended, false);
+	var audio;
 	
 	var callbackFunction;
 	var spoken = true; 
@@ -140,12 +138,7 @@ function AudioStackModel()
 		
 		// if nothing is being played 
 		
-		if (audio.currentSrc == "") // no source set
-		{
-			speakNextInQueue();
-		}
-		
-		if (audio.currentTime == audio.duration) // audio played
+		if (audio == undefined)
 		{
 			speakNextInQueue();
 		}
@@ -168,6 +161,9 @@ function AudioStackModel()
 		
 		if (utterance != null)
 		{
+			audio = new Audio();
+			audio.autoplay = true; 
+			audio.addEventListener("ended", ended, false);
 			audio.src = getSourceUrl(utterance);
 		}
 	}
@@ -206,6 +202,7 @@ function AudioStackModel()
 	
 	function ended()
 	{
+		audio = undefined;
 		try
 		{
 			if (callbackFunction != null)
@@ -259,8 +256,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			{  
 				var callbackEnqueue = function()
 				{
+					sendResponse({spoken: "true"});
 					audioStack.speakNext();
-					sendResponse({spoken: "true"}); 		   
 				}
 				audioStack.speakEnqueue(voice.utterance, callbackEnqueue);
 			}
@@ -288,6 +285,6 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	}
 	else
 	{
-	   sendResponse({}); // snub them.
+	   sendResponse({});
 	}
 });
