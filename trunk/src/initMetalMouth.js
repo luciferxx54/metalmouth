@@ -124,7 +124,7 @@ function AudioStackModel()
 {
 	// constructor
 	
-	var audio;
+	var audio = null;
 	
 	var callbackFunction;
 	var spoken = true; 
@@ -138,7 +138,7 @@ function AudioStackModel()
 		
 		// if nothing is being played 
 		
-		if (audio == undefined)
+		if (audio == null)
 		{
 			speakNextInQueue();
 		}
@@ -161,6 +161,11 @@ function AudioStackModel()
 		
 		if (utterance != null)
 		{
+			if (audio != null)
+			{
+				audio.pause();
+				audio = null;
+			}
 			audio = new Audio();
 			audio.autoplay = true; 
 			audio.addEventListener("ended", ended, false);
@@ -202,7 +207,7 @@ function AudioStackModel()
 	
 	function ended()
 	{
-		audio = undefined;
+		audio = null;
 		try
 		{
 			if (callbackFunction != null)
