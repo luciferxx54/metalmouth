@@ -80,19 +80,65 @@ By pressing enter when the Read next button is focused the next object in the 'o
 
 Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
 
+  *  page header area;
+  *  site navigation area;
+  *  menu;
+  *  menu item;
+  *  main content area;
+  *  page footer area;
+  *  page contact details;
   *  skip link;
   *  skip target;
   *  link;
   *  text box;
+  *  search box;
+  *  password box;
   *  button;
   *  check button;
   *  single select (drop-down menu with one selectable option);
   *  section;
   *  paragraph;
-  *  static text;
+  *  sentence;
+  *  quote;
+  *  quote link;
+  *  insertion;
+  *  deletion;
+  *  code;
   *  form;
+  *  input group;
+  *  telephone box;
+  *  url box;
+  *  email box;
+  *  number box;
+  *  datetime box;
+  *  date box;
+  *  month box;
+  *  week box;
+  *  time box;
+  *  range input;
+  *  bulleted list;
+  *  numbered list;
+  *  list item;
+  *  map;
+  *  map area;
+  *  data table;
+  *  header cell; 
+  *  data cell;
+  *  audio;
+  *  video;
   *  semantic image;
   *  unsupported.  
+
+The following items exist in the off-screen model but cannot be navigated to.
+
+  *  static text;
+  *  layout division;
+  *  layout table;
+  *  layout header cell;
+  *  layout data cell;
+
+
+
 
 ===Interact===
 
