@@ -112,7 +112,7 @@ chrome.omnibox.onInputStarted.addListener(function(){audioStack.speakDirectly("P
 chrome.omnibox.onInputEntered.addListener(function(text){
 	chrome.tabs.getSelected(null, function(tab)
 	{
-		chrome.tabs.update(tab.id, {'url': 'http://www.google.com', 'selected': true}, function(tab){test(tab.id);}); // have to set a start page as permission for chrome://newtab/ is denied
+		chrome.tabs.update(tab.id, {'url': 'http://labs.google.com/accessible/', 'selected': true}, function(tab){test(tab.id);}); // have to set a start page as permission for chrome://newtab/ is denied
 	});
 });
 
@@ -125,6 +125,9 @@ function AudioStackModel()
 	// constructor
 	
 	var audio = null;
+
+	var audioTimer;
+	var audioInUse = false;
 	
 	var callbackFunction;
 	var spoken = true; 
@@ -138,7 +141,7 @@ function AudioStackModel()
 		
 		// if nothing is being played 
 		
-		if (audio == null)
+		if (audioInUse == false)
 		{
 			speakNextInQueue();
 		}
@@ -161,15 +164,40 @@ function AudioStackModel()
 		
 		if (utterance != null)
 		{
-			if (audio != null)
+			if (audioInUse == true)
 			{
 				audio.pause();
-				audio = null;
+				clearTimeout(audioTimer);
 			}
 			audio = new Audio();
-			audio.autoplay = true; 
-			audio.addEventListener("ended", ended, false);
+			// audio.addEventListener("ended", ended, false); // commented out as an unbounded audio stream does not fire the ended event
+			audio.addEventListener("play", onPlay, false);
 			audio.src = getSourceUrl(utterance);
+			audio.play();
+		}
+		
+		function onPlay()
+		{	
+			audioInUse = true;
+			
+			var currentTimeTracker;
+			
+			var functionToRun = function()
+			{
+				if ((audio.currentTime == audio.duration)||(audio.currentTime == currentTimeTracker))
+				{
+					ended();
+				}
+				else
+				{
+					if (audio.currentTime > 0)
+					{
+						currentTimeTracker = audio.currentTime;
+					}
+					audioTimer = window.setTimeout(functionToRun, 250);
+				}
+			};
+			audioTimer = window.setTimeout(functionToRun, 250);
 		}
 	}
 	
@@ -207,7 +235,8 @@ function AudioStackModel()
 	
 	function ended()
 	{
-		audio = null;
+		audioInUse = false;
+		
 		try
 		{
 			if (callbackFunction != null)
@@ -267,7 +296,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 				audioStack.speakEnqueue(voice.utterance, callbackEnqueue);
 			}
 			else
-			{			
+			{								   
 				var callbackDirect = function()
 				{
 					sendResponse({spoken: "true"}); 		   

@@ -173,45 +173,220 @@ function BodyDOM(bodyElement)
 	var domFromPage; 
 	
 	var bodyClone = bodyElement.cloneNode(true);
-	
-	// remove script elements 
-	
-	var scriptElements = bodyClone.getElementsByTagName("script");
-	
-	for (var x = 0; x < scriptElements.length; x++)
-	{
-		scriptElements[x].innerText = ""; 
-	}
-	
-	// remove non script elements
-	
-	var noscriptElements = bodyClone.getElementsByTagName("noscript");
-	
-	for (var y = 0; y < noscriptElements.length; y++)
-	{
-		noscriptElements[y].innerText = ""; 
-	}
-	
-	// remove mm container
-	
-	if (bodyClone.getElementsByClassName("_mm_Container").length > 0)
-	{
-		var elementsToRemoveFromBody = ["_mm_PushDown", "_mm_ShieldImage", "_mm_Container"]; // _mm_StyleArea is in the head, and untouched
-		for (var i in elementsToRemoveFromBody)
-		{
-			var mmElementInClone = bodyClone.getElementsByClassName(elementsToRemoveFromBody[i])[0];
-			bodyClone.removeChild(mmElementInClone);
-		}
-		domFromPage = bodyClone.innerHTML; // this is to remove control panel from OSM
-	}
-	else
-	{
-		domFromPage = bodyClone.innerHTML;
-	}
+
+	removeScriptElements();
+	removeNonScriptElements();
+	removeLabelElements();
+	removeAbbrElements();
+	markSpecialCaseSpans();
+	addHeaderCellValuesToDataCells();
+	removeMMContainer();
 	
 	this.dom = function()
 	{
 		return domFromPage;
+	}
+	
+	function removeScriptElements()
+	{
+		var scriptElements = bodyClone.getElementsByTagName("script");
+		if (scriptElements.length > 0)
+		{
+			for (var x = 0; x < scriptElements.length; x++)
+			{
+				scriptElements[x].innerText = ""; 
+			}
+		}
+	}
+	
+	function removeNonScriptElements()
+	{
+		var noscriptElements = bodyClone.getElementsByTagName("noscript");
+		if (noscriptElements.length > 0)
+		{
+			for (var x = 0; x < noscriptElements.length; x++)
+			{
+				noscriptElements[x].innerText = ""; 
+			}
+		}
+	}
+	
+	function removeLabelElements()
+	{
+		// remove labels and add their contents to the relevant elements as label attributes - label attributes are not specified in html
+		
+		var labels = bodyClone.getElementsByTagName("label");  // this step is needed as you are removing elements, otherwise labels is reduced when the labels are removed
+		if (labels.length > 0)
+		{
+			var labelsHolder = [];
+			for(var a in labels)
+			{
+				if (labels[a].tagName != null)
+				{
+					labelsHolder[labelsHolder.length] = labels[a];
+				}
+			}
+			
+			if (labelsHolder.length > 0)
+			{
+				var forAttributes = [];
+				var labelValues = [];
+				
+				for (var i in labelsHolder)
+				{
+					if (labelsHolder[i].tagName != null)
+					{
+						forAttributes[forAttributes.length] = labelsHolder[i].getAttribute("for");
+						labelValues[labelValues.length] = labelsHolder[i].innerText;
+						labelsHolder[i].outerHTML = ""; // remove label elements
+					}
+				}
+				
+				var elements = bodyClone.getElementsByTagName("*"); // all elements
+				for (var j in elements)
+				{
+					var forIndex = forAttributes.indexOf(elements[j].id);
+					if (forIndex != -1)
+					{
+						if (elements[j].tagName != null)
+						{
+							elements[j].setAttribute("label", labelValues[forIndex]);
+						}
+					}
+				}
+			}	
+		}
+	}
+	
+	function removeAbbrElements()
+	{
+		// remove abbr elements - replacing their content with the title value for the abbr element
+		
+		var abbrs = bodyClone.getElementsByTagName("abbr");
+		if (abbrs.length > 0)
+		{
+			var abbrsHolder = [];
+			for(var a in abbrs)
+			{
+				if (abbrs[a].tagName != null)
+				{
+					abbrsHolder[abbrsHolder.length] = abbrs[a];
+				}
+			}
+			
+			for (var i = 0; i < abbrsHolder.length; i++)
+			{
+				var replacementSpan = document.createElement("span");
+				replacementSpan.setAttribute("_mm_Id", abbrsHolder[i].getAttribute("_mm_Id"));
+				
+				if (abbrsHolder[i].getAttribute("title") != null)
+				{
+					replacementSpan.innerText = abbrsHolder[i].getAttribute("title");
+				}
+				else
+				{
+					replacementSpan.innerText = abbrsHolder[i].innerText;
+				}
+				
+				if (replacementSpan.innerText != "")
+				{
+					abbrsHolder[i].outerHTML = replacementSpan.outerHTML;
+				}
+				else
+				{
+					abbrsHolder[i].outerHTML = "";
+				}
+			}			
+		}
+	}
+	
+	function markSpecialCaseSpans()
+	{
+		// mark span elements which have a parent of body or div - special cases 
+		
+		var spanElements = bodyClone.getElementsByTagName("span");
+		if (spanElements.length > 0)
+		{
+			for (var x = 0; x < spanElements.length; x++)
+			{
+				if ((spanElements[x].parentElement.tagName == "BODY")||(spanElements[x].parentElement.tagName == "DIV"))
+				{
+					spanElements[x].setAttribute("parentElement", spanElements[x].parentElement.tagName); 
+				}
+			}
+		}
+	}
+	
+	function addHeaderCellValuesToDataCells()
+	{
+		// collect all th element ids and texts
+		
+		var headerCells = bodyClone.getElementsByTagName("th");
+		
+		if (headerCells.length > 0)
+		{
+			var idAttributes = [];
+			var headerCellValues = [];
+			
+			for (var i in headerCells)
+			{
+				if (headerCells[i].tagName != null)
+				{
+					if (headerCells[i].getAttribute("id") != null)
+					{
+						idAttributes[idAttributes.length] = headerCells[i].getAttribute("id");
+						headerCellValues[headerCellValues.length] = headerCells[i].innerText; 
+					}
+				}
+			}
+			
+			var elements = bodyClone.getElementsByTagName("td"); // all elements
+			for (var j in elements)
+			{
+				if (elements[j].tagName != null)
+				{
+					var headersAttributeValue = elements[j].getAttribute("headers");
+					if (headersAttributeValue != null)
+					{
+						var headerTexts = [];
+						var headersAttributeValueArray = headersAttributeValue.split(',');
+						for (var k in headersAttributeValueArray)
+						{
+							var trimmedValue = headersAttributeValueArray[k].trim();
+							if (trimmedValue != "")
+							{
+								var indexOfId = idAttributes.indexOf(trimmedValue);
+								if (indexOfId != -1)
+								{
+									headerTexts[headerTexts.length] = headerCellValues[indexOfId];
+								}
+							}
+						}
+						elements[j].setAttribute("headerCellTitles", JSON.stringify(headerTexts));
+					}
+				}
+			}
+		}
+	}
+	
+	function removeMMContainer()
+	{
+		// remove mm container
+		
+		if (bodyClone.getElementsByClassName("_mm_Container").length > 0)
+		{
+			var elementsToRemoveFromBody = ["_mm_PushDown", "_mm_ShieldImage", "_mm_Container"]; // _mm_StyleArea is in the head, and untouched
+			for (var i in elementsToRemoveFromBody)
+			{
+				var mmElementInClone = bodyClone.getElementsByClassName(elementsToRemoveFromBody[i])[0];
+				bodyClone.removeChild(mmElementInClone);
+			}
+			domFromPage = bodyClone.innerHTML; // this is to remove control panel from OSM
+		}
+		else
+		{
+			domFromPage = bodyClone.innerHTML;
+		}
 	}
 }
 
@@ -334,7 +509,7 @@ function MMControlPanelModel()
 	var headElement = document.getElementsByTagName("head")[0];
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.id = "_mm_StyleArea"; // needs to be removed in initMmId upon dom change _mm_StyleArea, _mm_PushDown and _mm_ShieldImage
-	mmStyleArea.innerText = "body{background-position:0px 22px;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}#_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:8pt;}"; 
+	mmStyleArea.innerText = "body{background-position:0px 22px;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}"; // #_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:80px;} 
 	headElement.appendChild(mmStyleArea);
 		
 	var mmPushDown = document.createElement("div");
@@ -406,6 +581,12 @@ function MMControlPanelModel()
 		var mmOptionsButton = new OptionsButtonModel(); // shortkey L
 		mmOptionsButton.add();
 		
+		var mmDivider4 = new CP_Divider();
+		mmDivider4.add();
+		
+		var mmCurrentItemDisplay = new CurrentItemDisplayModel();
+		mmCurrentItemDisplay.add();
+		
 		// Areas
 		
 		var mmOSMArea = document.createElement("div");
@@ -417,15 +598,7 @@ function MMControlPanelModel()
 		mmHighlighter.id = "_mm_Highlighter";
 		mmHighlighter.style.cssText = "display:none;"; 
 		mmContainer.appendChild(mmHighlighter);
-		
-		var mmHighlighterLegend = document.createElement("span");
-		mmHighlighterLegend.id = "_mm_HighlighterLegend";
-		mmHighlighter.appendChild(mmHighlighterLegend);
-		
-		var mmHighlighterText = document.createElement("span");
-		mmHighlighterText.id = "_mm_HighlighterText";
-		mmHighlighter.appendChild(mmHighlighterText);
-		
+		 
 		var mmInteractArea = new CP_InteractArea();
 		mmInteractArea.add();
 		 
@@ -448,6 +621,7 @@ function MMControlPanelModel()
 		
 		if (svb.prevOSMNode() <= 0)
 		{
+			mmCurrentItemDisplay.setValue("");
 			mmReadPrevButton.disable();
 		}
 		else
@@ -469,12 +643,10 @@ function MMControlPanelModel()
 		{
 			mmInteractButton.disable();
 
-			var interactionItems = ["Link", "Skip_Link", "Text_Box", "Button", "Check_Button", "Single_Select"];
-			
-			if (interactionItems.indexOf(osmNodeToRead.className.replace("_mm_", "")) != -1)
+			if (osmNodeToRead.hasAttribute("mmInteractable"))
 			{
 				mmInteractButton.enable();
-			} 
+			}
 		}
 		else
 		{
@@ -489,9 +661,14 @@ function MMControlPanelModel()
 		mmNavigateByButton.setAttribute("_mm_items", svb.getJumpableNodes().toString());
 	}
 	
+	this.changeDisplayedCurrentItem = function(currentItemName)
+	{
+		mmCurrentItemDisplay.setValue(currentItemName);
+	}
+	
 	// interact actions
 	
-	this.drawTextBoxInteract = function(textInputElement) // node ref needed so enter can set the values in the model and in the live site
+	this.drawTextBoxInteract = function(textInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
 	{
 		var iap_Button = new IAP_ButtonModel();
 		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
@@ -501,15 +678,15 @@ function MMControlPanelModel()
 		 
 		var mmTBEnterButton = new TBEnterButton();
 		mmTBEnterButton.add();
-		
-		var mmTBCloseButton = new TBCloseButton();
-		mmTBCloseButton.add();
-		 
-		mmInteractionArea.style.display = "";
 	
+		var mmCloseMenuButton = new CloseMenuButtonModel(enteredDataType, "_mm_ReadNextButton");
+		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
+		
+		mmInteractArea.show();
+		
 		function cancelInput()
 		{
-			getAudio("text entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			getAudio(enteredDataType + " entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
@@ -533,7 +710,7 @@ function MMControlPanelModel()
 			var textBox = new CP_TextBoxModel();
 			var tBTextEntry = textBox.template();
 			tBTextEntry.id = "_mm_TBTextEntry";
-			tBTextEntry.setAttribute("title", "Form");
+			tBTextEntry.setAttribute("title", enteredDataType);
 			
 			this.add = function()
 			{
@@ -557,22 +734,6 @@ function MMControlPanelModel()
 				mmInteractionArea.appendChild(tBEnterButton);
 			}
 		}
-		
-		function TBCloseButton()
-		{
-			var tBCloseButton = iap_Button.template();
-			tBCloseButton.id = "_mm_CancelButton";
-			tBCloseButton.setAttribute("value", "Close");
-			tBCloseButton.setAttribute("title", "Close text entry area");
-			tBCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII="; 
-			tBCloseButton.addEventListener("click", function(){cancelInput()}, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.appendChild(tBCloseButton);
-			}
-		}
 	}
 		
 	this.drawCheckButtonInteract = function(checkInputElement) // - services radio button and checkboxes
@@ -586,10 +747,10 @@ function MMControlPanelModel()
 		var mmUncheckButton = new UncheckButtonModel();
 		mmUncheckButton.add();
 		
-		var mmCNCCloseButton = new CNCCloseButtonModel();
-		mmCNCCloseButton.add();
-		 
-		mmInteractionArea.style.display = "";
+		var mmCloseMenuButton = new CloseMenuButtonModel("check button", "_mm_ReadNextButton");
+		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
+		
+		mmInteractArea.show();
 		
 		function cancelInput()
 		{
@@ -648,22 +809,6 @@ function MMControlPanelModel()
 				mmInteractionArea.appendChild(uncheckButton);
 			}
 		}
-		
-		function CNCCloseButtonModel()
-		{
-			var cNCCloseButton = iap_Button.template();
-			cNCCloseButton.id = "_mm_CloseButton";
-			cNCCloseButton.setAttribute("value", "Close");
-			cNCCloseButton.setAttribute("title", "Close check button entry area");
-			cNCCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
-			cNCCloseButton.addEventListener("click", function(){cancelInput()}, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.appendChild(cNCCloseButton);
-			}
-		}
 	}
 	
 	this.drawSelectMenuInteract = function(selectInputElement)
@@ -692,7 +837,7 @@ function MMControlPanelModel()
 		}
 		
 		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
-		 
+		
 		mmInteractArea.show();
 		
 		function cancelSelect()
@@ -714,6 +859,163 @@ function MMControlPanelModel()
 			}
 			updateLiveAndOSM(selectElement, e.srcElement.id, setValueFunction, "SELECT");
 			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
+		}
+	}
+	
+	this.drawRangeInputInteract = function(inputElement) // - services input elements with a type attribute set to range
+	{
+		var iap_Button = new IAP_ButtonModel();
+		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+		var min = inputElement.getAttribute("mmMin");
+		var max = inputElement.getAttribute("mmMax");
+		var step = inputElement.getAttribute("mmStep");
+		var currentValue = extractCurrentValue();
+		var changedStep = calculateSteps();
+		
+		var mmIncreaseValueButton = new IncreaseValueButtonModel(); // increase value
+		mmIncreaseValueButton.add();
+		
+		var mmDecreaseValueButton = new DecreaseValueButtonModel(); // decrease value
+		mmDecreaseValueButton.add();
+		
+		var mmRangeEnterButton = new RangeEnterButton();
+		mmRangeEnterButton.add();
+		
+		var mmCloseMenuButton = new CloseMenuButtonModel("range input", "_mm_ReadNextButton");
+		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
+		
+		mmInteractArea.show();
+		
+		function cancelInput()
+		{
+			getAudio("range input entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			mmInteractionArea.innerHTML = ""; 
+			mmInteractionArea.style.display = "none";
+		}
+		
+		function enter(inputElement)
+		{
+			// setting value by javascript should not fire original events which is good
+			var setValueFunction = function(liveElementToUpdate, enteredValue)
+			{
+				liveElementToUpdate.value = enteredValue;
+				return null;
+			}
+			
+			updateLiveAndOSM(inputElement, currentValue, setValueFunction, "INPUT");
+			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
+		}
+		
+		function extractCurrentValue()
+		{
+			var text = inputElement.children[3].innerText; 
+			var colonPosition = text.indexOf(": ") + 2;
+			text = text.substring(colonPosition);
+			return text;
+		}
+		
+		function calculateSteps()
+		{
+			// to calculate steps (max - min / step * x) increasing x by 1 until answer > 20 remembering value usually starts in the middle
+			var x = 1; 
+			
+			while (((parseInt(max) - parseInt(min))/(parseInt(step) * x)) > 20)
+			{
+				x++;
+			}
+			
+			return step * x; 
+		}
+		
+		function changeValue(action)
+		{
+			switch(action)
+			{
+				case "increase":
+					if (parseInt(currentValue) + parseInt(changedStep) <= max)
+					{
+						currentValue = parseInt(currentValue) + parseInt(changedStep);
+						getAudio("value to enter increased to " + currentValue, false, null);
+					}
+					else
+					{
+						getAudio("maximum value " + currentValue + " reached", false, null);
+					}
+					break;
+				case "decrease":
+					if (parseInt(currentValue) - parseInt(changedStep) >= min)
+					{
+						currentValue = parseInt(currentValue) - parseInt(changedStep);
+						getAudio("value to enter decreased to " + currentValue, false, null);
+					}
+					else
+					{
+						getAudio("minimum value " + currentValue + " reached", false, null);
+					}
+					break;
+			}
+		}
+		
+		function IncreaseValueButtonModel()
+		{
+			var increaseValueButton = iap_Button.template();
+			increaseValueButton.id = "_mm_IncreaseButton";
+			increaseValueButton.setAttribute("title", "Increase value");
+			increaseValueButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADkklEQVQ4EZ2Va2gcVRTH/3fu7Ozsbma3brXEhihCSqFNLCLYqokopTUWrH4JgdI2/ZC2WBobTAilFRMMSmoVDfhCC35oPii1SEvQBUGCNKVv2jSt9mUU62OladLsksxOZuZ6zppduybZ2lx25nL3nvu75z1CKQUepesTK59eEnhrflSroqUnFP7ZyO7e6aVk2lHJM0P+noH3V33A0oLBj7d8u7Z+uf5ZzSI9HgwAU3fdiZbfFwLwfWDgNy/z1WnvjYOvruwUePZQxZ4NVn9DtbHAcRU8EpjLYHhJEEgMenjnm8w2fUVluKGqXC7wfIVJby7IqTPkuHQGqCzTUPWg3K3NCyNuSDKliEd5S9foIbkiYlkXSpKzDBHXSNIrKkxQQyqk3CBGMyGEOAZFDOP40M8jfvHB1iBgof3TE3jpzV4k7Sj5UhSFM1EvhtU1Bd200NlzGQe7d5EeY9iasdH92jpUxFJI2bNHelaNNUpkMxRB9+Hr+Oj15iyUlTj5ZRca2z7GwF8liIbZnJnHjGCGlkRC2PfdCN7eTdDxPwpOX0x8iM3Ne3H0FxOxyMxGTwNTOsIKB/H5MRudba/AG7lWAM0thvp7sGV7BxI/SIIb4Dy+fUwDR0mD3vMKu1p3wv5zIC8bK1+Gx+rbaf2vhsmzh7F9WxsOnHJhRYLQboMXgNlnfVcDaG1tR2qoPw+FVY6Wji707F2PF5vfpUYQzu+NXulDU2MjPkkkEaR+kIPLiqc2PvdEhVxeFpf4/qrA1h1dGB7szR9EqAwvd76HHS+Uw/Ru4pkVizEceRiDF65QxsRgxEqp4UzixKVR6Pc/gqVlAqd+9pysXZJMSNsKRy6MYfWqGsyrWwPTNKHrAdwbj6Guej4mJ9JwPIFgYAwdm5ahtnofVSNlDmlpcEn6DjS6YNLlmptyGJeeTtXVssZCwKiZ0lYhWwbKx7idgaNENkAZl+pFy2D1EgaQhO/STA+VnIDEjTTBmJezmf3O3c1x7dxfBXMuLjxzB0zPUBw5//JBja/5b6oUEO9ywSxWWPt9xLucIiUDsxfR/0ZzZ5twgOG0uiSTN9b++MDSUG3lQllqmZRJdCML3O3DzYrPJM6741/0Oxt1da3u1n0NX9f7ntr/5CL5qGUKOZdPk0NBPXfd/enQGa/p1/21fdlvHtsqxAGjqumeLQuj6iElhJi9b033jFS+GJ0QN48fsXvU8eeHWOJv971DmIZVuAUAAAAASUVORK5CYII="; 
+			increaseValueButton.addEventListener("click", function(){changeValue("increase");}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(increaseValueButton);
+			}
+		}
+		
+		function DecreaseValueButtonModel()
+		{
+			var decreaseValueButton = iap_Button.template();
+			decreaseValueButton.id = "_mm_DecreaseButton";
+			decreaseValueButton.setAttribute("title", "Decrease value");
+			decreaseValueButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADbUlEQVQ4EaWVWUhUURjH/3eZOzOalJpaUmFlVmL5oEF7Ly22QFRWJvVQRlqjUASB5FhRmdhLRZIZLW8VEfZQYETLU7YYREmQJRJE24M5zujs9/R9d+aOaWlZ5+Hec77zfb/zLWeRhBDgNn333W1zJivOMXFKBgRChvAvP0KC6urV37V0hKo7GlfcZDOJwQXOe47CfO1kfoZsVxUgutZfYgkiAcEw8LQj7LnxPFhx/8SyK9KUkubVB9ZYbxXmqarHP3KoubpM8DgrcPVJyFvb5Fuuzpqk7s+doKh9ASCsm2oj/+uUUV8QmD1RtudmWhxyvA2JmgXgif9tOjlms0iItyJZFkIKjzSnwznALF2IsMpK7KyVvFZkmXpStHiREPxBHQEqDKUw1jQqsKKQhCj9gbJd/8gAa6TU2qmj83MPEig3iqJApmrokJE9wYb0BB+4Bgy3a8BHtx1fXICFrLlohIS3rxeTkmRyLrK+AeZJu92GxqbHaLt1CpJNgyQrBnhuQRHqDxUh3d5DiwHtXQlwOC+h/cUDqOwA7TUfRTV/4z6c3DmDxuQBNQPsCwnkpgfRULkUZe4PaGtuiIX45HoNyiUZF44Wwe3TsbvyPM3XR9yKfvPW7kVtSTYyEgN49zUiNMAcoscvMC3Zj8a6PShTrXh1+3TMuOXaMVRQRB5X1y/QeUVVFNFmisiFXmIwi5sB5g4L3D6BqaN7cO54CcqoEK/vnOEpoz28XGV2Y//5W5yor96E8QRlxyzR/LLCT91+eOYYgtfsRM6q8hhkcGdB8aEBUNNTU28AmIVGWsjzLAO+CzkrHaZu7L9w62GCFmJc1NPBUFb8BWxac1qmJ7rJ81JkF+wxxVi07QjqneuRZu0ekNOYQrQTy/HgCR7zLshKZvgulPgCSE4Zi7MH1yFVo0JF9/Xv7Fg2LJgV3F6CJ3nQUFeKeItAivXPUANMh1Dl+3SoxlO8jWaM9RtH1jyBQ+qzgSQpcndvuN3tFVCHzHakoP6gQIDelWF8MI64i1hdHv2t+uCNv3rxNGXJ1FQtle+Bf72T2TE/LdzyPvTh0eO+OuNpynE0L9yQrzXSmzeT79OfLqmhIh4g51R6AxBPO0NtV5+Fd3Q0LGs1wKwlZTal5q0ZtT0lQUob0UtKtpzFbz349PLMt4tCFH9n3g9Gn08YtFwTeQAAAABJRU5ErkJggg=="; 
+			decreaseValueButton.addEventListener("click", function(){changeValue("decrease");}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(decreaseValueButton);
+			}
+		}
+		
+		function RangeEnterButton()
+		{
+			var rangeEnterButton = iap_Button.template();
+			rangeEnterButton.id = "_mm_rangeEnterButton";
+			rangeEnterButton.setAttribute("value", "Enter");
+			rangeEnterButton.setAttribute("title", "Enter");
+			rangeEnterButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACmElEQVQ4Ee2VXUgUURTH/3fmzu66O21qayKVUREYhlFCpghRJFFUhoREpr1F+VxB0AfRm5APRS9aZFBQEok+lG8GQlFZgfSmFlGiJJqtu7Ozzsft3BXWXMe1hx49A8Pce+b+zse951wmhICUgoaefXu3hW7k6loJhHAY2Jwipc3+YgzqjOl8H/gSaxlqO9op/2YSXH2ht66uIr+9coue79cYcbODMrWMJmwX+PTNMLoGpi713qy5y0LHnpVdP7n+VUNVJC9J2hw/h6qqmWuzjl3XhWFayPEp6P7wy2l9OX6CV2wPny8rDuY55KZpCzx/+wPR6AwURfqxvLi0LhgM4VB5ERTmYkdxUCXeZb7KzwoCmpIKX3AdHY/v4POLNiJSbP8kDBuq6nHgfgslNg7OGfQcNcLJoHQ2JYx2gVtR+PMK0XSxFTq3QFF6igwoiQAe3b4CnpxKRyhZwoXDPVf5wmg8UonStUDC8ib7uILRGQ1P7uVC0JMp3mAymUgkEDMAcwmwRWAjYZN30vDi/VAyLf2v8Qo4ncmVVKRT4X2O6VwGAxrCQQZtiXPsp3P8W9YXVauXeIBlJ7bQNziOwYAN21lcVRKkUk3H3QCEM0vsxXAum/Tf8xY4zIkhXGvcT8u9y3neQ7n3BvQ1temilj2EXOF8MuaMxEyXPKAJM46Dh2uxc1c5eb0cdA4vmIrV+YVQrBgUH4ORdDEdt0YYKh+uu3p2a/+Z6sgm6vFQuA8q11Jm5z3L8kUeurYF25pN5fvpm8nora6xGi5eN42WnOuppyuqY/dmvTTkT6bDyoJboJIZls2Krqav3R+nmsc6j79L3XnyL1b0oGDPqaLmSJhvpJ7qvWMLcPMDBUyZNuyf/e8n2kXf6WGp+QP1tPFu71qjGQAAAABJRU5ErkJggg==";
+			rangeEnterButton.addEventListener("click", function(){enter(inputElement);cancelInput();}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(rangeEnterButton);
+			}
+		}
+		
+		function RangeCloseButton()
+		{
+			var rangeCloseButton = iap_Button.template();
+			rangeCloseButton.id = "_mm_CancelButton";
+			rangeCloseButton.setAttribute("value", "Close");
+			rangeCloseButton.setAttribute("title", "Close range input entry area");
+			rangeCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII="; 
+			rangeCloseButton.addEventListener("click", function(){cancelInput()}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(rangeCloseButton);
+			}
 		}
 	}
 	
@@ -749,6 +1051,118 @@ function MMControlPanelModel()
 		
 		// change value in model
 		osmNode.children[3].innerText = "Current value: " + valueToSay; // the node which holds the current value is in 4th position
+	}
+	
+	this.drawMediaInteract = function(mediaElement, mediaType) // - services video and audio
+	{
+		var iap_Button = new IAP_ButtonModel();
+		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+		
+		var mmPlayButton = new PlayButtonModel();
+		mmPlayButton.add();
+		
+		var mmPauseButton = new PauseButtonModel();
+		mmPauseButton.add();
+		
+		var mmRewindButton = new RewindButtonModel();
+		mmRewindButton.add();
+		
+		var mmCloseMenuButton = new CloseMenuButtonModel(mediaType, "_mm_ReadNextButton");
+		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
+		
+		mmInteractArea.show();
+		
+		function controlMedia(actionName)
+		{
+			var mmStore = mediaElement.getAttribute("_mm_Store");
+			if (mmStore != "null") // null a string as it has been entered as a value into an attribute
+			{
+				switch(actionName)
+				{
+					case "play":
+						document.getElementById(mmStore).play();
+						getAudio(mediaType + " playing", false, function(){document.getElementById("_mm_PauseButton").focus();});
+						break;
+					case "pause":
+						document.getElementById(mmStore).pause();
+						getAudio(mediaType + " paused", false, function(){document.getElementById("_mm_PlayButton").focus();});
+						break;
+					case "rewind":
+						document.getElementById(mmStore).currentTime = 0;
+						document.getElementById(mmStore).pause();
+						getAudio(mediaType + " rewound", false, function(){document.getElementById("_mm_PlayButton").focus();});
+						break;
+				}
+			}
+		}
+		
+		function cancelInput()
+		{
+			getAudio(mediaType + " control area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			mmInteractionArea.innerHTML = ""; 
+			mmInteractionArea.style.display = "none";
+		}
+		
+		function PlayButtonModel()
+		{
+			var playButton = iap_Button.template();
+			playButton.id = "_mm_PlayButton";
+			playButton.setAttribute("title", "Play");
+			playButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADAElEQVQ4EZ2VW0gUURjH/2cuO7vuqmt0oQvipageAi2phCQQywK7gSRRJN7wgvWQSWaCYg+BLwWJ1oNgb1k9BYVKL0V0MSFJKURS8BJRpunqujs7s9N3ditH0XX1g7Nzzpnz/b7vfHPOf5lhGODG0p4lpKVKxU67sJmG/sBk+D/CL7cx/KZDbTZ6ssa4G+PgvVc6MrKT5fv74qQEmwwEQ4VPZbR0VgW6BrX+h91q3pfGY2+lmLPPk6pO2x5dTJVjOEoz5SqQhz/MKJII7Nlq2Sky9pgdbz8kpmfn3Tt3QE5yRjB4tCCIw3hTdQFWmcGrGYHxv/mlnpoOWGi3isyiRl2GIkTbWbzdyhZkyjO3SAxNnZNo79MRZbdAFPhsaPNRYg5irYtAosAMaH+/3wIvWbFhZKAPZSWVaOqYgKQ4KPuV689Z1LSQeSiKAs/Ye9ReKkBFYxfGfU5EWkO6/E8uvFXub2hrKEVuZQu6Rm2IptLwrYay8MABgh89T+8gt6gKra9mYLU5oEjLl2YV4GB+E587UVlSiOstvXAZ0XAobMlzv2owxxvTQ2itK8L5iha8GaQjRidosa0JHISo6O/twdBPDQK/SYuMqrQWE5F88jLqr13A/m1ezHjodiyy1YPtW5BTXocb+QexyeoiqEkDTPBVgaMS03C1pgb5GRvBfFNweUjFTDBzNzSYzbvtPlKMm9WFOLzDwOycC7qfLQvlAUKAST+8c4AYgxNltagtTUesw4XpWb71+YDmLM19yTAYKZ15KtjXNS8kZyzKbzWjMmcXZH0K0xRniaULnAMsAaLkVv3jqg90RQHzt/V6fSjNikPcBgl+1YU5SnQlKFdAj0ql8hg/hE+DRsPHYU21WRgkesEDCPRkFDphPemwpga0mM8t28hHJqG3UGF7Rvyu7gH9buCvKbO6s+BMiuV2SrwYyReElpcFOw8M+E5U0uJ3X/XJJx/U0pcNR9sCYP42Nr/jVOp2sYpkMY6SpWXhG+mv9NvtH3g9oNd/f5D5gnv+Ac3vF2uTPY7FAAAAAElFTkSuQmCC"; 
+			playButton.addEventListener("click", function(){controlMedia("play");}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(playButton);
+			}
+		}
+		
+		function PauseButtonModel()
+		{
+			var pauseButton = iap_Button.template();
+			pauseButton.id = "_mm_PauseButton";
+			pauseButton.setAttribute("title", "Pause");
+			pauseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAChElEQVQ4Ee1VS0hUURj+zn2Nd8bxwYhFk1BQbTIKhDIMC8yE9j1Aowymhe2aRYsWtYgoKKOFCAlFEQQ9qE0gRBlSKbZskUS2SKiF9iC1mbmvv/+/V8dJy127+Ye559zvP+c73/24fFcREaRWdw227Wk0r9RVolERfIaiRthd8aJIQZ+eobfPxv1TU7c6hmS1EuLm7NP9h3cYt1s3GamYAQRMqRT/+RfxKz4lOmcpJro0Xpb3gOFx7+vdMadrrLdjUKH1ccOFTNVI9y4z7bJOP4jUyQY9loDSNFAQwHfmwoZulWCFuVCANHQNMHXgxitv8kzf7E6jaZt9qHGtnhY9QiwVtxSG3/u4evMRdG8GrpbA6Uw75LBLAw9h0Rx8I4ns8Xa0bNSQcwgB7zWYeMsarWFrk3XQqK1EjcUAiyqWYh8KvobRB32A943xJPLde3kN4c39a3w/y/JScI7uYxsW7Io4RHWqCtUaQYmly0p80+KJCOcxvBcOO8KkF3Iu2Slc5KuAnfk/VSYu+lq2omxF0YHiZMW3gmgh6kqCZB4r9opUf04MDgpdIqC05N5jLnLnO64WxmkYqTyXIh5lzd/2clDoxudpmpgtRJFX4LCWcn3CqsoAJ89dhAEHLpmoT3Iuc272nL8MU7nwYKGe17j+IrXEJnPRl6lggtF7dra/7vmJ3WZzdVyFpEJusDC7IsaSRGGAXM4RGLZt8ZUxtiSXL4SqBTf5ub//Igy8cF739nxqM4gO5Go6n3RC2XdaNujbkxVKl0CPKrcwKRmXY6L5Zz7wX36g0f4h7wjRsXz4zZNdSl03N/esy6RrtfX8yIvPV0L5ryl/GGjyR/DxXd/IANHZ0NDffR//tvknLgsAAAAASUVORK5CYII="; 
+			pauseButton.addEventListener("click", function(){controlMedia("pause");}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(pauseButton);
+			}
+		}
+		
+		function RewindButtonModel()
+		{
+			var rewindButton = iap_Button.template();
+			rewindButton.id = "_mm_RewindButton";
+			rewindButton.setAttribute("title", "Rewind");
+			rewindButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADcElEQVQ4EZWVaUhUURTH//fd92beDM5ouBQFaaEZZeuXClsMKjAo+tCCUBFUFGVEfSjIFipCbIUkaYNCaCMoKIgK2vRDQdSHSkMjKsmw0FJHne29uZ0zk2E6T+x8mDnvLL977n3nnieUUmARSx9MLJ4m9w3zYgIEbDInHHGv848QFK0gf3apuvuvrMPqXnF9nMfgyZvvz1pZ6Lo2L1/PTnFTXB9kH9WRTnB0hxRqGuzPV17YJfVVC17oYvrNzAPbM6rXFRrZiUwBt+khVSEcCsGyFTjRSaQG2DFguE9gTKaWQ/HVIu9moV4wO7Vk2miZq1MAIfC4PoJ7NW/i+rL5+ZiT70IwMrBuXst0S7QGFLyGTXABrwuYmq3nTVo0bJWe5UOWKROruimwuTWIqxVbOA0zp9yGIT0IwvqnYF1T8Hg8uFr7C3VN3di7PAs2lc2Vuw0gI01laUoJ2mxC+Gx1Ga8FkGZc7/VxBOseSlSGH8dufcWOrdvQ+qUOuouPLiHMUDFh672Gofz7PRqaunw4WPUId88dBqI/4TLNpKlDAkuhkOJ1o+ajRNmRM3j/8FxSWF/joGDeupsiLG8KLjxpQ8WhI2j/8LRvvqPuDCYqv+WA8mPP+ZeoPrWfHpocQf0djmBJ0HctBi7tvIzaGycpz+6fO+gzda+DUHNw+4TDYQr4PygTHcE28aaOtHCjchNW7T5LfTbCoYLkZkcwXUJ0041L1ztxonQGDlReQkr2jOSUJFZnMAXzVQlFqStCAZQWp+P8xUrkFq1LghloGhTcG85zINAVxsJ8C9Wnd2DhhnI6RN8fNy8/UIYE5jTu6c6gjRxfJ86WLca2iouAfwyi4Z6BVLLoQijZOxb534oxIhRvCZv0/vX0RACX7EBZSS5GZVahobkbVoTi/wjH00SX+o8ONAcpWNKEi0ZtDE8zsWTLcfJqSE910zz+t9U4MWrTJ6anB2uL0tDS4ac8i2a2oKEFBOmdfG+3mwVybqft2Ztau3GuUcDX11YChumlvSvaZhAx3kH/srk6NpOdB71FaxsEDdF0vfAs8ra8vG2Orj4tax+7/sFqCrg+O0+O95tM6eLU+LnyGGTAYMLuAH+aGq33159H16iPKzrE34/p9DsjixZ5dqX7tHFUJd25oYumCa0tEGt8+jB4VL1e+o0zfwMlXEHNq2U2ygAAAABJRU5ErkJggg=="; 
+			rewindButton.addEventListener("click", function(){controlMedia("rewind");}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(rewindButton);
+			}
+		}
+		
+		function MediaCloseButtonModel()
+		{
+			var mediaCloseButton = iap_Button.template();
+			mediaCloseButton.id = "_mm_CloseButton";
+			mediaCloseButton.setAttribute("value", "Close");
+			mediaCloseButton.setAttribute("title", "Close " + mediaType + " control area");
+			mediaCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
+			mediaCloseButton.addEventListener("click", function(){cancelInput();}, false);
+			
+			this.add = function()
+			{
+				var mmInteractionArea = document.getElementById("_mm_InteractArea");
+				mmInteractionArea.appendChild(mediaCloseButton);
+			}
+		}
 	}
 	
 	// Control Panel (CP) Base Models
@@ -1130,13 +1544,25 @@ function MMControlPanelModel()
 		}
 	}
 	
+	function CP_DisplayBoxModel()
+	{
+		this.template = function()
+		{
+			var textBox = document.createElement("input");
+			textBox.setAttribute("type", "text");
+			textBox.setAttribute("readonly", "readonly")
+			textBox.style.cssText = "float:left;width:400px;";
+			return textBox; 
+		}
+	}
+	
 	function CP_TextBoxModel()
 	{
 		this.template = function()
 		{
 			var textBox = document.createElement("input");
 			textBox.setAttribute("type", "text");
-			textBox.style.cssText = "float:left;width:400px;height:16px;";
+			textBox.style.cssText = "float:left;width:400px;";
 			textBox.addEventListener("focus", function(e){inputHasFocus(e);}, false);
 			textBox.addEventListener("blur", function(e){inputLostFocus(e);}, false);
 			return textBox; 
@@ -1148,7 +1574,7 @@ function MMControlPanelModel()
 			{
 				if (e.srcElement.getAttribute("title") != "")
 				{
-					getAudio(e.srcElement.getAttribute("title") + " text area has focus", false, null);
+					getAudio(e.srcElement.getAttribute("title") + " entry area has focus", false, null);
 				}
 				
 				// reset the box
@@ -1446,6 +1872,17 @@ function MMControlPanelModel()
 		var optionSelectedFunction = function(value)
 		{
 			svb.setJumpableNodes(value);
+
+			// to ensure that the jump button is updated
+
+			if (svb.nextJumpableOSMNode() > osm.elementCount())
+			{
+				mmJumpButton.disable();
+			}
+			else
+			{
+				mmJumpButton.enable();
+			}
 		}
 		
 		var button = new CP_MenuButtonModel("Navigate by", "_mm_NavigateByButton", optionSelectedFunction);
@@ -1720,20 +2157,68 @@ function MMControlPanelModel()
 					case "Link":
 						linkInteraction(osmNode);
 						break;
+					case "Quote_Link":
+						linkInteraction(osmNode);
+						break;
+					case "Map_Area":
+						linkInteraction(osmNode);
+						break;
 					case "Skip_Link":
 						skipLinkInteraction(osmNode);
 						break;
 					case "Text_Box":
-						textBoxInteraction(osmNode);
+						textBoxInteraction(osmNode, "text");
+						break;
+					case "Search_Box":
+						textBoxInteraction(osmNode, "search");
+						break;
+					case "Password_Box":
+						textBoxInteraction(osmNode, "password");
+						break;
+					case "Telephone_Box":
+						textBoxInteraction(osmNode, "telephone");
+						break;
+					case "Url_Box":
+						textBoxInteraction(osmNode, "url");
+						break;
+					case "Email_Box":
+						textBoxInteraction(osmNode, "e-mail");
+						break;
+					case "Number_Box":
+						textBoxInteraction(osmNode, "number");
+						break;
+					case "Date_Time_Box":
+						textBoxInteraction(osmNode, "date time");
+						break;
+					case "Date_Box":
+						textBoxInteraction(osmNode, "date");
+						break;
+					case "Month_Box":
+						textBoxInteraction(osmNode, "month");
+						break;
+					case "Week_Box":
+						textBoxInteraction(osmNode, "week");
+						break;
+					case "Time_Box":
+						textBoxInteraction(osmNode, "time");
+						break;
+					case "Range_Input":
+						rangeInputInteraction(osmNode);
 						break;
 					case "Button":
 						buttonInteraction(osmNode);
 						break;
 					case "Check_Button":
-						checkButtonInteraction(osmNode)
+						checkButtonInteraction(osmNode);
 						break;
 					case "Single_Select":
-						singleSelectInteraction(osmNode)
+						singleSelectInteraction(osmNode);
+						break;
+					case "Audio":
+						audioInteraction(osmNode);
+						break;
+					case "Video":
+						videoInteraction(osmNode);
 						break;
 				}
 			}
@@ -1773,16 +2258,39 @@ function MMControlPanelModel()
 			}
 		}
 		
-		function textBoxInteraction(osmNode)
+		function textBoxInteraction(osmNode, enteredDataType)
 		{
-			controlPanel.drawTextBoxInteract(osmNode);
+			controlPanel.drawTextBoxInteract(osmNode, enteredDataType);
 			
-			getAudio("text entry area entered", false, changeFocus);
+			getAudio(enteredDataType + " entry area entered", false, changeFocus);
 			
 			function changeFocus()
 			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
+				getAudio("Menu contains a text entry area, an enter button and a close menu button", false, onFocus);
+				
+				function onFocus()
+				{
+					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+					mmInteractionArea.children[0].focus();
+				}
+			}
+		}
+		
+		function rangeInputInteraction(osmNode)
+		{
+			controlPanel.drawRangeInputInteract(osmNode);
+			
+			getAudio("Range input entry area entered", false, changeFocus);
+			
+			function changeFocus()
+			{
+				getAudio("Menu contains an increase value button a decrease value button an enter button and a close menu button", false, onFocus);
+				
+				function onFocus()
+				{
+					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+					mmInteractionArea.children[0].focus();
+				}
 			}
 		}
 		
@@ -1791,11 +2299,13 @@ function MMControlPanelModel()
 			var mmStore = inputElement.getAttribute("_mm_Store");
 			if (mmStore != "null") // null a string as it has been entered as a value into an attribute
 			{
+				console.log(document.getElementById(mmStore));
 				document.getElementById(mmStore).click();
 			}
 			else
 			{
-				var originalIdValue = "_mm_" + inputElement.getAttribute("originalId"); // should be _mm_originalId
+				var originalIdValue = inputElement.getAttribute("originalId"); // should be _mm_originalId
+				console.log(originalIdValue);
 				var allInputElements = document.getElementsByTagName("input");
 				for (var i in allInputElements)
 				{
@@ -1819,8 +2329,13 @@ function MMControlPanelModel()
 			
 			function changeFocus()
 			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
+				getAudio("Menu contains a check option button, an uncheck option button and a close menu button", false, onFocus);
+				
+				function onFocus()
+				{
+					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+					mmInteractionArea.children[0].focus();
+				}
 			}
 		}
 		
@@ -1840,6 +2355,42 @@ function MMControlPanelModel()
 			{
 				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
 				mmInteractionArea.children[0].focus();
+			}
+		}
+		
+		function audioInteraction(osmNode)
+		{
+			controlPanel.drawMediaInteract(osmNode, "audio");
+			
+			getAudio("audio control area entered", false, changeFocus);
+			
+			function changeFocus()
+			{
+				getAudio("Menu contains a play button, a pause button, a rewind button and a close menu button", false, onFocus);
+				
+				function onFocus()
+				{
+					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+					mmInteractionArea.children[0].focus();
+				}
+			}
+		}
+		
+		function videoInteraction(osmNode)
+		{
+			controlPanel.drawMediaInteract(osmNode, "video");
+			
+			getAudio("video control area entered", false, changeFocus);
+			
+			function changeFocus()
+			{
+				getAudio("Menu contains a play button, a pause button, a rewind button and a close menu button", false, onFocus);
+				
+				function onFocus()
+				{
+					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+					mmInteractionArea.children[0].focus();
+				}
 			}
 		}
 	}
@@ -2099,7 +2650,7 @@ function MMControlPanelModel()
 			var textBox = new CP_TextBoxModel();
 			var uRLTextEntry = textBox.template();
 			uRLTextEntry.id = "_mm_URLTextEntry";
-			uRLTextEntry.setAttribute("title", "u r l entry");
+			uRLTextEntry.setAttribute("title", "u r l");
 			
 			this.add = function()
 			{
@@ -2315,6 +2866,26 @@ function MMControlPanelModel()
 		}
 	}
 	
+	function CurrentItemDisplayModel()
+	{
+		// constructor
+		
+		var displayBox = new CP_DisplayBoxModel();
+		var currentItemDisplayArea = displayBox.template();
+		currentItemDisplayArea.id = "_mm_CurrentItemDisplayArea";
+		currentItemDisplayArea.setAttribute("title", "Current item display area");
+		
+		this.add = function()
+		{
+			mmInfoArea.appendChild(currentItemDisplayArea);
+		}
+		
+		this.setValue = function(currentItemName)
+		{
+			currentItemDisplayArea.value = currentItemName;
+		}
+	}
+	
 	// Utilities 
 	
 	function fireChangeEvt(onThisElement)
@@ -2474,8 +3045,6 @@ function MMControlPanelModel()
 	{
 		var highlighter = document.getElementById("_mm_Highlighter");
 		highlighter.style.cssText = "display:none;";
-		highlighter.children[0].innerText = ""; // reset legend
-		highlighter.children[1].innerText = ""; // reset text
 	}
 	
 	function drawCurrentElementHighlighterArea(osmNodeToHighlight)
@@ -2489,10 +3058,11 @@ function MMControlPanelModel()
 		
 		if ((x <= 0)||(x >= document.body.scrollWidth)||(y <=0)||(y >= document.body.scrollHeight)||(width == 0)||(height == 0))
 		{
-			drawOffscreenWarning(osmNodeToHighlight.className.replace("_mm_", ""), y + 30); // adjust down 
+			controlPanel.changeDisplayedCurrentItem(osmNodeToHighlight.className.replace("_mm_", "") + " (offscreen)");
 		}
 		else
 		{
+			controlPanel.changeDisplayedCurrentItem(osmNodeToHighlight.className.replace("_mm_", ""));
 			drawRectangleFromCoords(osmNodeToHighlight.className.replace("_mm_", ""), x, y, width, height, false);
 		}
 	}
@@ -2508,8 +3078,9 @@ function MMControlPanelModel()
 			var scrollPosY = window.scrollY;
 			window.scrollTo(0, scrollPosY - 40);
 			// paint following after scroll otherwise their paint might be disrupted
-			highlighter.children[0].innerText = legendValue;
-			highlighter.style.border = "2px solid #FF8C00"; 
+			highlighter.style.border = "2px solid #FF8C00";
+			window.scrollTo(0, window.scrollY - 1); // forces the page to refresh - otherwise sometimes partial squares are left visable
+			 
 		}
 	}
 	
@@ -2518,15 +3089,11 @@ function MMControlPanelModel()
 		var highlighter = document.getElementById("_mm_Highlighter");
 		if (highlighter != null)
 		{
-			highlighter.style.cssText = "left:10px;top:" + y + "px;width:150px;height:20px;background:#FFFFFF;"; 
+			highlighter.style.cssText = "left:10px;top:" + y + "px;"; // width:150px;height:20px;background:#FFFFFF;
 			highlighter.scrollIntoView();
 			// amend scroll position due to metal mouth control panel 
 			var scrollPosY = window.scrollY;
 			window.scrollTo(0, scrollPosY - y);
-			// paint following after scroll otherwise their paint might be disrupted
-			highlighter.children[0].innerText = legendValue;
-			highlighter.children[1].innerText = "<<< OFFSCREEN";
-			highlighter.style.border = "2px solid #FF8C00";
 		}
 	}
 	
@@ -2695,7 +3262,6 @@ function OSMModel() // setUp
 		var tempOSMHolder = document.createElement("div");
 		tempOSMHolder.innerHTML = allFreeTextInSpan(bodyDOMCode);
 		correctAddedSpanElements(tempOSMHolder);
-		addLabelAttributes(tempOSMHolder);
 		messAbout(tempOSMHolder);
 		var osmArea = document.getElementById("_mm_OSMArea");
 		osmArea.innerHTML = tempOSMHolder.innerHTML;
@@ -2714,45 +3280,30 @@ function OSMModel() // setUp
 		{
 			for(var i in bodySplit)
 			{
-				if ((bodySplit[i].substring(0, 6).toUpperCase() == "SCRIPT")||(bodySplit[i].substring(0, 8).toUpperCase() == "NOSCRIPT"))
+				var rightArrowIndex = bodySplit[i].indexOf(">");
+				
+				if (rightArrowIndex != -1)
 				{
-					switchOff = true;
-				}
-				if ((bodySplit[i].substring(0, 7).toUpperCase() == "/SCRIPT")||(bodySplit[i].substring(0, 9).toUpperCase() == "/NOSCRIPT"))
-				{
-					switchOff = false;
-				}
-				if (switchOff == false)
-				{
-					if ((bodySplit[i].substring(0, 7).toUpperCase() != "/SCRIPT")&&(bodySplit[i].substring(0, 9).toUpperCase() != "/NOSCRIPT"))
+					if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
 					{
-						var rightArrowIndex = bodySplit[i].indexOf(">");
-						
-						if (rightArrowIndex != -1)
+						newBodyText = newBodyText + "<" + bodySplit[i];
+					}
+					else
+					{
+						var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
+						var freeText = bodySplit[i].substring(rightArrowIndex + 1);
+						if (freeText.trim() != "")
 						{
-							if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
-							{
-								newBodyText = newBodyText + "<" + bodySplit[i];
-							}
-							else
-							{
-								var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
-								var freeText = bodySplit[i].substring(rightArrowIndex + 1);
-								if (freeText.trim() != "")
-								{
-									newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
-								}
-								else
-								{
-									newBodyText = newBodyText + "<" + bodySplit[i].trim();
-								}
-							}
+							newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
+						}
+						else
+						{
+							newBodyText = newBodyText + "<" + bodySplit[i].trim();
 						}
 					}
 				}
 			}
 		}
-		
 		return newBodyText;
 	}
 	
@@ -2776,40 +3327,6 @@ function OSMModel() // setUp
 		}
 	}
 	
-	function addLabelAttributes(element)
-	{
-		var forAttributes = [];
-		var labelValues = [];
-		
-		var labels = element.getElementsByTagName("label");
-		
-		if (labels.length > 0)
-		{
-			for (var i in labels)
-			{
-				if (labels[i].tagName != null)
-				{
-					forAttributes[forAttributes.length] = labels[i].getAttribute("for");
-					labelValues[labelValues.length] = labels[i].innerText;
-					labels[i].outerHTML = ""; 
-				}
-			}
-			
-			var elements = element.getElementsByTagName("*"); // all elements
-			for (var j in elements)
-			{
-				var forIndex = forAttributes.indexOf(elements[j].id);
-				if (forIndex != -1)
-				{
-					if (elements[j].tagName != null)
-					{
-						elements[j].setAttribute("label", labelValues[forIndex]);
-					}
-				}
-			}
-		}
-	}
-	
 	this.osmTypesInDOM = function()
 	{
 		return typesInDOM;
@@ -2822,7 +3339,7 @@ function OSMModel() // setUp
 		
 		switch(liveElement.tagName)
 		{
-				// interaction 
+			// interaction 
 			case "A": 
 				var hrefValue = liveElement.getAttribute("href");
 				if (hrefValue == null)
@@ -2846,9 +3363,17 @@ function OSMModel() // setUp
 				if (typeValue != null)
 				{
 					typeValue = typeValue.toLowerCase();
-					if ((typeValue == "text")||(typeValue == "search")) // 
+					if (typeValue == "text") // 
 					{
 						elementSwitch = "_mm_Text_Box";
+					}
+					if (typeValue == "search") // 
+					{
+						elementSwitch = "_mm_Search_Box";
+					}
+					if (typeValue == "password") // 
+					{
+						elementSwitch = "_mm_Password_Box";
 					}
 					if ((typeValue == "button")||(typeValue == "image")||(typeValue == "submit")||(typeValue == "reset"))
 					{
@@ -2857,6 +3382,46 @@ function OSMModel() // setUp
 					if ((typeValue == "checkbox")||(typeValue == "radio"))
 					{
 						elementSwitch = "_mm_Check_Button";
+					}
+					if (typeValue == "telephone")
+					{
+						elementSwitch = "_mm_Telephone_Box";
+					}
+					if (typeValue == "url")
+					{
+						elementSwitch = "_mm_Url_Box";
+					}
+					if (typeValue == "e-mail")
+					{
+						elementSwitch = "_mm_Email_Box";
+					}
+					if (typeValue == "number")
+					{
+						elementSwitch = "_mm_Number_Box";
+					}
+					if (typeValue == "datetime")
+					{
+						elementSwitch = "_mm_Date_Time_Box";
+					}
+					if (typeValue == "date")
+					{
+						elementSwitch = "_mm_Date_Box";
+					}
+					if (typeValue == "month")
+					{
+						elementSwitch = "_mm_Month_Box";
+					}
+					if (typeValue == "week")
+					{
+						elementSwitch = "_mm_Week_Box";
+					}
+					if (typeValue == "time")
+					{
+						elementSwitch = "_mm_Time_Box";
+					}
+					if (typeValue == "range")
+					{
+						elementSwitch = "_mm_Range_Input";
 					}
 				}
 				break;
@@ -2880,9 +3445,6 @@ function OSMModel() // setUp
 				elementSwitch = "_mm_Option";
 				break;
 				// semantic
-			case "DIV":
-				elementSwitch = "_mm_Section";
-				break; 
 			case "FORM":
 				elementSwitch = "_mm_Form";
 				break;
@@ -2890,7 +3452,14 @@ function OSMModel() // setUp
 				elementSwitch = "_mm_Paragraph";
 				break; 
 			case "SPAN":
-				elementSwitch = "_mm_Static_Text";
+				if ((liveElement.getAttribute("parentElement") == "BODY")||(liveElement.getAttribute("parentElement") == "DIV")) // parentElement introduced in DOMText at top of page
+				{
+					elementSwitch = "_mm_Sentence";
+				}
+				else
+				{
+					elementSwitch = "_mm_Static_Text";
+				}
 				break;
 			case "IMG":
 				var altValue = liveElement.getAttribute("alt");
@@ -2899,11 +3468,137 @@ function OSMModel() // setUp
 					elementSwitch = "_mm_Semantic_Image";
 				}
 				break; 
+			case "HEADER":
+				elementSwitch = "_mm_Page_Header_Area";
+				break;
+			case "NAV":
+				elementSwitch = "_mm_Site_Navigation_Area";
+				break;
+			case "MENU":
+				var menuType = liveElement.getAttribute("type"); 
+				if (menuType != null)
+				{
+					if (menuType.toLowerCase() == "list")
+					{
+						elementSwitch = "_mm_Menu";
+					}
+				}
+				break;
+			case "ARTICLE":
+				elementSwitch = "_mm_Section";
+				break;
+			case "SECTION":
+				if (liveElement.getAttribute("role") == "main")
+				{
+					elementSwitch = "_mm_Main_Content_Area";
+				}
+				else
+				{
+					elementSwitch = "_mm_Section";
+				}
+				break;
+			case "FOOTER":
+				elementSwitch = "_mm_Page_Footer_Area";
+				break;
+			case "ADDRESS":
+				elementSwitch = "_mm_Page_Contact_Details"; 
+				break;
+			case "DIV":
+				if (liveElement.getAttribute("was") == "th") // solution to table issue - contents of a table element cannot be changed to divs via the dom, as the whole contents changes i.e. tbody into div creates a new div below tbody rather than changing tbody
+				{
+					if (liveElement.getAttribute("role") == "presentation")
+					{
+						elementSwitch = "_mm_Layout_Header_Cell"; 
+					}
+					else
+					{
+						elementSwitch = "_mm_Header_Cell";
+					}
+				}
+				else if (liveElement.getAttribute("was") == "td")
+				{
+					if (liveElement.getAttribute("role") == "presentation")
+					{
+						elementSwitch = "_mm_Layout_Data_Cell"; 
+					}
+					else
+					{
+						elementSwitch = "_mm_Data_Cell";
+					}
+				}
+				else
+				{
+					elementSwitch = "_mm_Layout_Division";
+				}
+				break;
+			case "CANVAS":
+				elementSwitch = "_mm_Layout_Division"; // Any text inside the between <canvas> and </canvas> will be displayed in browsers that do not support the canvas element. As Chrome supports canvas we need to be able to change out the canvas element for its contents - the easiest way is to say it is a layout division
+				break;
+			case "FIELDSET":
+				elementSwitch = "_mm_Input_Group";
+				break;
+			case "UL":
+				elementSwitch = "_mm_Bulleted_List";
+				break;
+			case "OL":
+				elementSwitch = "_mm_Numbered_List";
+				break;
+			case "LI":
+				if (liveElement.getAttribute("role") == "menuitem")
+				{
+					elementSwitch = "_mm_Menu_Item";
+				}
+				else
+				{
+					elementSwitch = "_mm_List_Item";
+				}
+				break;
+			case "MAP":
+				elementSwitch = "_mm_Map";
+				break;
+			case "AREA":
+				elementSwitch = "_mm_Map_Area";
+				break;
+			case "TABLE":
+				if (liveElement.getAttribute("role") == "presentation")
+				{
+					elementSwitch = "_mm_Layout_Table"; 
+				}
+				else
+				{
+					elementSwitch = "_mm_Data_Table";
+				}
+				break;
+			case "BLOCKQUOTE":
+				if (liveElement.getAttribute("cite") == null)
+				{
+					elementSwitch = "_mm_Quote";
+				}
+				else
+				{
+					elementSwitch = "_mm_Quote_Link";
+				}
+				break;
+			case "INS":
+				elementSwitch = "_mm_Insertion";
+				break;
+			case "DEL":
+				elementSwitch = "_mm_Deletion";
+				break;
+			case "CODE":
+				elementSwitch = "_mm_Code";
+				break;
+			case "AUDIO":
+				elementSwitch = "_mm_Audio";
+				break;
+			case "VIDEO":
+				elementSwitch = "_mm_Video";
+				break;
 		}
 		
-		// following done as a by product
+		// following done as a by product 
 		
-		if ((typesInDOM.indexOf(elementSwitch) == -1)&&(elementSwitch != "unsupported")&&(elementSwitch != "_mm_Static_Text"))
+		if ((typesInDOM.indexOf(elementSwitch) == -1)&&(elementSwitch != "unsupported")&&(elementSwitch != "_mm_Static_Text")&&(elementSwitch != "_mm_Layout_Division")&&(elementSwitch != "_mm_Layout_Table")&&(elementSwitch != "_mm_Layout_Header_Cell")&&(elementSwitch != "_mm_Layout_Data_Cell")) // static text is included as it is read out automatically within other osm items.  Noting a main content area should always be included even in the simplest pages.
 		{
 			typesInDOM.push(elementSwitch);
 		}
@@ -2941,7 +3636,6 @@ function OSMModel() // setUp
 		while(element.getElementsByClassName("unchanged").length > 0)
 		{
 			var selectedElement = element.getElementsByClassName("unchanged")[0];
-			
 			var elementSwitch = htmlElementToOSMType(selectedElement); // becomes default
 			
 			switch(elementSwitch)
@@ -2961,6 +3655,14 @@ function OSMModel() // setUp
 					break;
 				// interaction - non-container (have textToReadOut attributes)
 				case "_mm_Text_Box":
+					osmIndex++;
+					createModelElement(selectedElement, TextBoxModel);
+					break;
+				case "_mm_Search_Box":
+					osmIndex++;
+					createModelElement(selectedElement, TextBoxModel);
+					break;
+				case "_mm_Password_Box":
 					osmIndex++;
 					createModelElement(selectedElement, TextBoxModel);
 					break;
@@ -2997,6 +3699,158 @@ function OSMModel() // setUp
 					osmIndex++;
 					createModelElement(selectedElement, SemanticImageModel);
 					break;
+				case "_mm_Page_Header_Area":
+					osmIndex++;
+					createModelElement(selectedElement, PageHeaderAreaModel);
+					break;
+				case "_mm_Site_Navigation_Area":
+					osmIndex++;
+					createModelElement(selectedElement, SiteNavigationAreaModel);
+					break;
+				case "_mm_Menu":
+					osmIndex++;
+					createModelElement(selectedElement, MenuModel);
+					break;
+				case "_mm_Main_Content_Area":
+					osmIndex++;
+					createModelElement(selectedElement, MainContentAreaModel);
+					break;
+				case "_mm_Page_Footer_Area":
+					osmIndex++;
+					createModelElement(selectedElement, PageFooterAreaModel);
+					break; 
+				case "_mm_Page_Contact_Details":
+					osmIndex++;
+					createModelElement(selectedElement, PageContactDetailsModel);
+					break;
+				case "_mm_Layout_Division":
+					osmIndex++;
+					createModelElement(selectedElement, LayoutDivisionModel);
+					break; 
+				case "_mm_Sentence":
+					osmIndex++;
+					createModelElement(selectedElement, SentenceModel);
+					break;
+				case "_mm_Input_Group":
+					osmIndex++;
+					createModelElement(selectedElement, InputGroupModel);
+					break;
+				case "_mm_Bulleted_List":
+					osmIndex++;
+					createModelElement(selectedElement, BulletedListModel);
+					break;
+				case "_mm_Numbered_List":
+					osmIndex++;
+					createModelElement(selectedElement, NumberedListModel);
+					break;
+				case "_mm_List_Item":
+					osmIndex++;
+					createModelElement(selectedElement, ListItemModel);
+					break;
+				case "_mm_Menu_Item":
+					osmIndex++;
+					createModelElement(selectedElement, MenuItemModel);
+					break;
+				case "_mm_Map":
+					osmIndex++;
+					createModelElement(selectedElement, MapModel);
+					break;
+				case "_mm_Map_Area":
+					osmIndex++;
+					createModelElement(selectedElement, MapAreaModel);
+					break;
+				case "_mm_Layout_Table":
+					osmIndex++;
+					createModelElement(selectedElement, LayoutTableModel);
+					break;
+				case "_mm_Layout_Header_Cell":
+					osmIndex++;
+					createModelElement(selectedElement, LayoutHeaderCellModel);
+					break;
+				case "_mm_Layout_Data_Cell":
+					osmIndex++;
+					createModelElement(selectedElement, LayoutDataCellModel);
+					break;
+				case "_mm_Data_Table":
+					osmIndex++;
+					createModelElement(selectedElement, DataTableModel);
+					break;
+				case "_mm_Header_Cell":
+					osmIndex++;
+					createModelElement(selectedElement, HeaderCellModel);
+					break;
+				case "_mm_Data_Cell":
+					osmIndex++;
+					createModelElement(selectedElement, DataCellModel);
+					break;	
+				case "_mm_Quote":
+					osmIndex++;
+					createModelElement(selectedElement, QuoteModel);
+					break;
+				case "_mm_Quote_Link":
+					osmIndex++;
+					createModelElement(selectedElement, QuoteLinkModel);
+					break;
+				case "_mm_Insertion":
+					osmIndex++;
+					createModelElement(selectedElement, InsertionModel);
+					break;
+				case "_mm_Deletion":
+					osmIndex++;
+					createModelElement(selectedElement, DeletionModel);
+					break;
+				case "_mm_Code":
+					osmIndex++;
+					createModelElement(selectedElement, CodeModel);
+					break;
+				case "_mm_Audio":
+					osmIndex++;
+					createModelElement(selectedElement, AudioModel);
+					break;
+				case "_mm_Video":
+					osmIndex++;
+					createModelElement(selectedElement, VideoModel);
+					break;
+				case "_mm_Telephone_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Url_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Email_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Number_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Date_Time_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Date_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Month_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Week_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Time_Box":
+					osmIndex++;
+					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
+					break;
+				case "_mm_Range_Input":
+					osmIndex++;
+					createModelElement(selectedElement, RangeInputModel);
+					break;
 				// unsupported
 				case "unsupported":
 					osmIndex++;
@@ -3030,7 +3884,7 @@ function OSMModel() // setUp
 		
 		this.contents = function()
 		{
-			var elementContents = null;
+			var elementContents = "";
 			if (baseElement.hasChildNodes() == true)
 			{
 				elementContents = baseElement.outerHTML.substring(baseElement.outerHTML.indexOf(">") + 1, baseElement.outerHTML.lastIndexOf("<")); // works for <a></a> not for <input />
@@ -3125,6 +3979,8 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("href").substring(1));
+			
+			// need to change elements within the contents
 			var elementContents = baseElement.contents();
 			if (elementContents != null)
 			{
@@ -3156,7 +4012,7 @@ function OSMModel() // setUp
 					}
 				}
 			}
-			
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
 			
 			return element;
@@ -3213,13 +4069,7 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("name"));
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
-			
-			element.innerHTML = whatAmI() + titleValue() + elementContents;
+			element.innerHTML = whatAmI() + titleValue() + baseElement.contents();
 			
 			return element;
 		}
@@ -3271,6 +4121,7 @@ function OSMModel() // setUp
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("href"));
 			
+			// need to change elements within the contents
 			var elementContents = baseElement.contents();
 			if (elementContents != null)
 			{
@@ -3303,6 +4154,7 @@ function OSMModel() // setUp
 				}
 			}
 			
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
 			
 			return element;
@@ -3347,7 +4199,109 @@ function OSMModel() // setUp
 		}
 	}
 	
-	// MAPAREA // image map areas 
+	// QUOTELINK 
+	
+	function QuoteLinkModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Quote_Link"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("cite"));
+				
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = interactable() + whatAmI() + titleValue() + baseElement.contents();
+			
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Quote link</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function titleValue()
+		{
+			// title forms part of the text to read out
+			
+			var title = baseElement.getAttribute("title");
+			
+			if ((title == null)||(title == ""))
+			{
+				title = ""; 
+			}
+			else
+			{
+				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+			}
+			
+			return title;
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
+	// MAP // map
+	
+	function MapModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Map"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + titleValue() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Map</span>";
+		}
+		
+		function titleValue()
+		{
+			// title forms part of the text to read out
+			
+			var title = baseElement.getAttribute("title");
+			
+			if ((title == null)||(title == ""))
+			{
+				title = ""; 
+			}
+			else
+			{
+				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+			}
+			
+			return title;
+		}
+	}
+	
+	// MAPAREA 
 	
 	function MapAreaModel(baseElement)
 	{
@@ -3358,17 +4312,377 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
+			storeValue(element, baseElement.getAttribute("href"));
+			
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = interactable() + whatAmI() + altValue();
+			
 			return element;
 		}
 		
 		this.allChildrenIds = function()
 		{
 			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Map area</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function altValue()
+		{
+			// title forms part of the text to read out
+			
+			var alt = baseElement.getAttribute("alt");
+			
+			if ((alt == null)||(alt == ""))
+			{
+				alt = "Untitled"; 
+			}
+			else
+			{
+				alt = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + alt + "</span>";
+			}
+			
+			return alt;
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
+	// LAYOUTTABLE // image map areas 
+	
+	function LayoutTableModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Layout_Table"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = changeTableContents(baseElement.contents());
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function changeTableContents(tableContents)
+		{
+			tableContents = tableContents.replace(/<tbody/gi, "<div role='presentation' was='tbody'"); // gi global insensitive
+			tableContents = tableContents.replace(/tbody>/gi, "div>");
+			tableContents = tableContents.replace(/<tr/gi, "<div role='presentation' was='tr'"); // gi global insensitive
+			tableContents = tableContents.replace(/tr>/gi, "div>");
+			tableContents = tableContents.replace(/<th/gi, "<div was='th'"); // gi global insensitive
+			tableContents = tableContents.replace(/th>/gi, "div>");
+			tableContents = tableContents.replace(/<td/gi, "<div was='td'"); // gi global insensitive
+			tableContents = tableContents.replace(/td>/gi, "div>");
+			return tableContents;
+		}
+	}
+	
+	// LAYOUTHEADERCELL // image map areas 
+	
+	function LayoutHeaderCellModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Layout_Header_Cell"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+	}
+	
+	// LAYOUTDATACELL // image map areas 
+	
+	function LayoutDataCellModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Layout_Data_Cell"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+	}
+	
+	// DATATABLE // image map areas 
+	
+	function DataTableModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Data_Table"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + summaryValue() + changeTableContents(baseElement.contents());
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function changeTableContents(tableContents)
+		{
+			tableContents = tableContents.replace(/<tbody/gi, "<div role='presentation' was='tbody'"); // gi global insensitive
+			tableContents = tableContents.replace(/tbody>/gi, "div>");
+			tableContents = tableContents.replace(/<tr/gi, "<div role='presentation' was='tr'"); // gi global insensitive
+			tableContents = tableContents.replace(/tr>/gi, "div>");
+			tableContents = tableContents.replace(/<th/gi, "<div was='th'"); // gi global insensitive
+			tableContents = tableContents.replace(/th>/gi, "div>");
+			tableContents = tableContents.replace(/<td/gi, "<div was='td'"); // gi global insensitive
+			tableContents = tableContents.replace(/td>/gi, "div>");
+			return tableContents;
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Data table</span>";
+		}
+		
+		function summaryValue()
+		{
+			// title forms part of the text to read out
+			
+			var summary = baseElement.getAttribute("summary");
+			
+			if ((summary == null)||(summary == ""))
+			{
+				summary = ""; 
+			}
+			else
+			{
+				summary = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + summary + "</span>";
+			}
+			
+			return summary;
+		}
+	}
+	
+	// HEADERCELL // image map areas 
+	
+	function HeaderCellModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Header_Cell"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Header cell</span>";
+		}
+	}
+	
+	// DATACELL // image map areas 
+	
+	function DataCellModel(baseElement) 
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Data_Cell"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + labelValue() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Data cell</span>";
+		}
+		
+		function labelValue()
+		{
+			// label forms part of the text to read out
+			
+			var labelText = ""; 
+			var label = baseElement.getAttribute("headerCellTitles"); 
+			
+			if (label == null)
+			{
+				labelText = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>No specific row or column</span>";
+			}
+			else
+			{
+				var headerCellTitles = JSON.parse(label);
+				for (var i in headerCellTitles)
+				{
+					labelText = labelText + "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>relates to " + headerCellTitles[i] + "</span>";
+				}
+				labelText = labelText + "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>cell value</span>";
+			}
+			
+			return labelText;
+		}
+	}
+	
+	// AUDIO
+	
+	function AudioModel(baseElement) // allows play, pause, rewind
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Audio"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("id"));
+			
+			// need to check contents to see if track elements are included - need to do a little more research on TRACK ELEMENT
+			
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = interactable() + whatAmI() + titleValue();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Audio</span>";
+		}
+		
+		function titleValue()
+		{
+			// label forms part of the text to read out
+			
+			var title = baseElement.getAttribute("title"); 
+			
+			if (title == null)
+			{
+				title = "Untitled";
+			}
+			else
+			{
+				title = "Entitled: " + title; 
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
+	// VIDEO
+	
+	function VideoModel(baseElement) // allows play, pause, rewind
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Video"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("id"));
+			
+			// need to check contents to see if track elements are included - need to do a little more research on TRACK ELEMENT
+			
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = interactable() + whatAmI() + titleValue();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Video</span>";
+		}
+		
+		function titleValue()
+		{
+			// label forms part of the text to read out
+			
+			var title = baseElement.getAttribute("title"); 
+			
+			if (title == null)
+			{
+				title = "Untitled";
+			}
+			else
+			{
+				title = "Entitled: " + title; 
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
 		}
 	}
 	
@@ -3380,13 +4694,40 @@ function OSMModel() // setUp
 	{
 		var baseElement = new ElementModel(baseElement);
 		
-		this.name = "Text_Box"; 
+		var type;
+		
+		if (baseElement.tagName() == "TEXTAREA")
+		{
+			type = "text"; 
+		}
+		else
+		{
+			type = baseElement.getAttribute("type").toLowerCase(); 
+		}
+		
+		var nameBasedOnType = "";
+		
+		switch(type)
+		{
+			case "text":
+				nameBasedOnType = "Text_Box";
+				break;
+			case "search":
+				nameBasedOnType = "Search_Box";
+				break;
+			case "password":
+				nameBasedOnType = "Password_Box";
+				break;
+		}
+		
+		this.name = nameBasedOnType; 
 		
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
 			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
 			return element;
 		}
@@ -3398,7 +4739,7 @@ function OSMModel() // setUp
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Text Box</span>";
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + type + " box</span>";
 		}
 		
 		function interactable()
@@ -3414,11 +4755,7 @@ function OSMModel() // setUp
 			
 			if (label == null)
 			{
-				label = baseElement.getAttribute("title");
-				if (label == null)
-				{
-					label = "Unlabelled";
-				}
+				label = "Unlabelled";
 			}
 			
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
@@ -3444,6 +4781,209 @@ function OSMModel() // setUp
 		}
 	}
 	
+	// FORMATSPECIFICENTRYBOX // from texture, type=password, type=text, label
+	
+	function FormatSpecificEntryBoxModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		var type = baseElement.getAttribute("type").toLowerCase(); 
+		var nameBasedOnType = ""; 
+		
+		switch(type)
+		{
+			case "telephone":
+				nameBasedOnType = "Telephone_Box"; 
+				break;
+			case "url":
+				nameBasedOnType = "Url_Box"; 
+				break;
+			case "e-mail":
+				nameBasedOnType = "Email_Box"; 
+				break;
+			case "number":
+				nameBasedOnType = "Number_Box"; 
+				break;
+			case "datetime":
+				nameBasedOnType = "Date_Time_Box"; 
+				break;
+			case "date":
+				nameBasedOnType = "Date_Box"; 
+				break;
+			case "month":
+				nameBasedOnType = "Month_Box"; 
+				break;
+			case "week":
+				nameBasedOnType = "Week_Box"; 
+				break;
+			case "time":
+				nameBasedOnType = "Time_Box"; 
+				break;
+		}
+		
+		this.name = nameBasedOnType; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("id"));
+			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = labelValue() + interactable() + whatAmI() + specifiedFormat() + stateValue();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{		
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + type + " box</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function labelValue()
+		{
+			// label forms part of the text to read out
+			
+			var label = baseElement.getAttribute("label"); 
+			
+			if (label == null)
+			{
+				label = "Unlabelled";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+		}
+		
+		function specifiedFormat()
+		{
+			var title = baseElement.getAttribute("title"); 
+			
+			if (title == null)
+			{
+				title = "No format specified";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Specified format " + title + "</span>";
+		}
+		
+		function stateValue()
+		{
+			// state forms part of the text to read out
+			
+			var state = baseElement.value(); 
+			
+			if (state == null)
+			{
+				state = "None";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>";
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
+	// RANGE // from type=range
+	
+	function RangeInputModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+
+		this.name = "Range_Input"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("id"));
+			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
+			
+			var min = baseElement.getAttribute("min"); 
+			
+			if (min != null)
+			{
+				element.setAttribute("mmMin", min);
+			}
+
+			var max = baseElement.getAttribute("max"); 
+			
+			if (max != null)
+			{
+				element.setAttribute("mmMax", max);
+			}
+			
+			var step = baseElement.getAttribute("step"); 
+			
+			if (step != null)
+			{
+				element.setAttribute("mmStep", step);
+			}
+			
+			element.setAttribute("mmInteractable", true);
+			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Range input</span>";
+		}
+		
+		function interactable()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+		}
+		
+		function labelValue()
+		{
+			// label forms part of the text to read out
+			
+			var label = baseElement.getAttribute("label"); 
+			
+			if (label == null)
+			{
+				label = "Unlabelled";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+		}
+		
+		function stateValue()
+		{
+			// state forms part of the text to read out
+			
+			var state = baseElement.value(); 
+			
+			if (state == null)
+			{
+				state = "None";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>"; // careful changing text as it is used in drawRangeInput above
+		}
+		
+		// state max / min 
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
 	// PUSHBUTTON // from button, input type=image, input type=button, input type=submit, input type=reset, label
 	
 	function ButtonModel(baseElement)
@@ -3456,6 +4996,7 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = labelValue() + interactable() + whatAmI();
 			return element;
 		}
@@ -3519,6 +5060,8 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
+			
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
 			return element;
 		}
@@ -3584,6 +5127,7 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id"));
+			
 			var elementContents = baseElement.contents();
 			if (elementContents != null)
 			{
@@ -3631,6 +5175,7 @@ function OSMModel() // setUp
 			}
 			
 			// finally
+			element.setAttribute("mmInteractable", true);
 			element.innerHTML = interactable() + whatAmI() + labelValue() + stateValue() + element.innerHTML;
 			return element;
 		}
@@ -3688,8 +5233,242 @@ function OSMModel() // setUp
 	
 	// Semantic container objects 
 	
-	// SECTION //  (DEFAULT FOR DIVISION) - version 1 - lets leave it at section
-	// ARTICLE 
+	// 	PAGE HEADER AREA //
+	
+	function PageHeaderAreaModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Page_Header_Area"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page header area</span>";
+		}
+	}
+	
+	// 	SITE NAVIGATION AREA //
+	
+	function SiteNavigationAreaModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Site_Navigation_Area"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Site navigation area</span>";
+		}
+	}
+	
+	// 	MENU //
+	
+	function MenuModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Menu"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = titleValue() + whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Menu</span>";
+		}
+		
+		function titleValue()
+		{
+			var title = baseElement.getAttribute("title"); 
+			
+			if (title == null)
+			{
+				title = "None";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+		}
+	}
+	
+	// 	MAIN CONTENT AREA //
+	
+	function MainContentAreaModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Main_Content_Area"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
+			
+			// you need to fill the element first 
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			// return And Remove First Child Header, as nodes are now set up in replacement element
+			
+			var header = null;
+			var children = element.children; // direct children
+			var headings = ["H1", "H2", "H3", "H4", "H5", "H6"];
+			
+			for (var i in children)
+			{
+				if (headings.indexOf(children[i].tagName) != -1)
+				{
+					header = children[i].innerText;
+					element.removeChild[i];
+					break;
+				}
+			}
+			
+			// finally
+			
+			element.innerHTML = whatAmI() + title(header) + element.innerHTML;
+			return element;
+			
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Main content area</span>";
+		}
+		
+		function title(selectionTitle)
+		{		
+			if (selectionTitle == null)
+			{
+				selectionTitle = "Untitled";
+			}
+			else
+			{
+				selectionTitle = "headed " + selectionTitle;
+			}
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + selectionTitle + "</span>";
+		}
+		
+		function storeValue(element, text)
+		{
+			element.setAttribute("_mm_Store", text);
+		}
+	}
+	
+	// 	PAGE FOOTER AREA //
+	
+	function PageFooterAreaModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Page_Footer_Area"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page footer area</span>";
+		}
+	}
+	
+	// 	PAGE CONTACT DETAILS //
+	
+	function PageContactDetailsModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Page_Contact_Details"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page contact details</span>";
+		}
+	}
+	
+	// 	PAGE CONTACT DETAILS //
+	
+	function LayoutDivisionModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Layout_Division"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+	}
+	
+	// SECTION + ARTICLE 
 	
 	function SectionModel(baseElement)
 	{
@@ -3701,6 +5480,8 @@ function OSMModel() // setUp
 		{
 			var element = document.createElement("div");
 			storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
+			
+			// you need to fill the element first 
 			var elementContents = baseElement.contents();
 			if (elementContents != null)
 			{
@@ -3758,6 +5539,33 @@ function OSMModel() // setUp
 		}
 	}
 	
+	// SENTENCE //
+	
+	function SentenceModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Sentence"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Sentence</span>";
+		}
+	}
+	
+	
 	// PARAGRAPH //
 	
 	function ParagraphModel(baseElement)
@@ -3769,11 +5577,7 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = whatAmI() + elementContents;
-			}
+			element.innerHTML = whatAmI() + baseElement.contents();
 			return element;
 		}
 		
@@ -3784,7 +5588,335 @@ function OSMModel() // setUp
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>New Paragraph</span>";
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Paragraph</span>";
+		}
+	}
+	
+	// QUOTE //
+	
+	function QuoteModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Quote"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Quote</span>";
+		}
+	}
+	
+	// INSERTION //
+	
+	function InsertionModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Insertion"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + insertedWhen() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Insertion</span>";
+		}
+		
+		function dateTimeValue()
+		{
+						
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + name + "</span>";
+		}
+		
+		function insertedWhen()
+		{
+			// YYYY-MM-DDThh:mm:ss 2011-05-17T13:25:01
+ 			
+			// datetime attribute 
+			
+			var datetime = baseElement.getAttribute("datetime"); 
+			
+			if (datetime == null)
+			{
+				datetime = "";
+			}
+			else
+			{
+				// on the xx-yy
+				
+				if (datetime.indexOf("T") != -1)
+				{
+					datetime = datetime.replace("T", " at ");
+				}
+				
+				datetime = "on the " + datetime; 
+			}			
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>The following was inserted into the page" + datetime + "</span>";
+		}
+	}
+	
+	// DELETION //
+	
+	function DeletionModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Deletion"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + deletedWhen() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Deletion</span>";
+		}
+		
+		function deletedWhen()
+		{
+			// YYYY-MM-DDThh:mm:ss 2011-05-17T13:25:01
+			
+			// datetime attribute
+			
+			var datetime = baseElement.getAttribute("datetime"); 
+			
+			if (datetime == null)
+			{
+				datetime = "";
+			}
+			else
+			{
+				// on the xx-yy
+				
+				if (datetime.indexOf("T") != -1)
+				{
+					datetime = datetime.replace("T", " at ");
+				}
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>The following was deleted from the page" + datetime + "</span>";
+		}
+	}
+	
+	// CODE //
+	
+	function CodeModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Code"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Code</span>";
+		}
+	}
+	
+	// 	BULLETED LIST //
+	
+	function BulletedListModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Bulleted_List"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			
+			// element needs to be filled
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			element.innerHTML = whatAmI() + numberOfChildren(element.children.length) + element.innerHTML;
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Bulleted list</span>";
+		}
+		
+		function numberOfChildren(number)
+		{
+			var text = "items";
+			
+			if (number == 1)
+			{
+				text = "item"
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + number + " " + text + " listed</span>";
+		}
+	}
+	
+	// NUMBERED LIST //
+	
+	function NumberedListModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Numbered_List"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			
+			// element needs to be filled
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			var children = element.children; // direct children
+			
+			var count = 1; 
+			
+			for (var i in children)
+			{
+				if (children[i].tagName == "LI")
+				{
+					children[i].setAttribute("positionInList", count);
+					count++;
+				}
+			}
+			
+			element.innerHTML = whatAmI() + numberOfChildren(element.children.length) + element.innerHTML;
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Numbered list</span>";
+		}
+		
+		function numberOfChildren(number)
+		{
+			var text = "items";
+			
+			if (number == 1)
+			{
+				text = "item"
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + number + " " + text + " listed</span>";
+		}
+	}
+	
+	// LIST ITEM //
+	
+	function ListItemModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "List_Item"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			var positionInList = baseElement.getAttribute("positionInList"); 
+			
+			var text = ""; 
+			
+			if (positionInList != null)
+			{
+				text = " " + positionInList;
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>List item" + text + "</span>";
+		}
+	}
+	
+	// MENU ITEM //
+	
+	function MenuItemModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Menu_Item"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = whatAmI() + baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{		
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Menu item</span>";
 		}
 	}
 	
@@ -3799,11 +5931,7 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = whatAmI() + elementContents;
-			}
+			element.innerHTML = nameValue() + whatAmI() + baseElement.contents();
 			return element;
 		}
 		
@@ -3816,7 +5944,84 @@ function OSMModel() // setUp
 		{
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Form</span>";
 		}
+		
+		function nameValue()
+		{
+			var name = baseElement.getAttribute("name"); 
+			
+			if (name == null)
+			{
+				name = "Untitled";
+			}
+			
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + name + "</span>";
+		}
 	}
+	
+	// INPUT GROUP 
+	
+	function InputGroupModel(baseElement)
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Input_Group"; 
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			// storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
+			
+			// you need to fill the element first
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			// return And Remove First Child Header, as nodes are now set up in replacement element
+			
+			var legend = null;
+			var children = element.children; // direct children
+			
+			for (var i in children)
+			{
+				if (children[i].tagName == "LEGEND")
+				{
+					legend = children[i].innerText;
+					element.removeChild[i];
+					break;
+				}
+			}
+			
+			// finally
+			
+			element.innerHTML = whatAmI() + title(legend) + element.innerHTML;
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+		
+		function whatAmI()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Input group</span>";
+		}
+		
+		function title(selectionTitle)
+		{		
+			if (selectionTitle == null)
+			{
+				selectionTitle = "Untitled";
+			}
+			else
+			{
+				selectionTitle = "headed " + selectionTitle;
+			}
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + selectionTitle + "</span>";
+		}
+	}	
 	
 	// STATICTEXT (should have a type attribute like type=quote or type=code) // from span, p, quote, abbr, code, etc… 
 	
@@ -3829,11 +6034,7 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("span");
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
+			element.innerHTML = baseElement.contents();
 			return element;
 		}
 		
@@ -3913,11 +6114,7 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");// baseElement.tagName());
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
+			element.innerHTML = baseElement.contents();
 			return element;
 		}
 		
@@ -4145,7 +6342,7 @@ function SVBModel()
 				var nodeType = node.className;
 				if(jumpableNodeTypes.indexOf(nodeType) == -1)
 				{
-					nextNode();
+					nextJumpableNode();
 				}
 			}
 		}
