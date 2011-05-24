@@ -7,9 +7,6 @@
 
 ==3) Support for input type=file == 
 
-The issue being that a native filedialog is opened which the extension does not have access to, which means silence for the user.  If a custom fileopen dialog could be introduced it might be possible for speech to be attached.  This could be something based around a signed applet using JFileChooser, or a JWS (jnlp.jar).
-See http://download.oracle.com/javase/tutorial/uiswing/components/filechooser.html.
-
 ==4) Iframes == 
 
 ==5) Overview function==
