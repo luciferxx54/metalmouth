@@ -176,6 +176,8 @@ function BodyDOM(bodyElement)
 
 	removeScriptElements();
 	removeNonScriptElements();
+	allFreeTextInSpan();
+	correctAddedSpanElements();
 	removeLabelElements();
 	removeAbbrElements();
 	markSpecialCaseSpans();
@@ -207,6 +209,63 @@ function BodyDOM(bodyElement)
 			for (var x = 0; x < noscriptElements.length; x++)
 			{
 				noscriptElements[x].innerText = ""; 
+			}
+		}
+	}
+	
+	function allFreeTextInSpan() // <p>hello <span>there</span></p> should become <p><span>hello</span><span>there</span></p> so that the spans can become static text
+	{	
+		var newBodyText = ""; 
+		
+		var bodySplit = bodyClone.innerHTML.split("<");
+		
+		if (bodySplit.length > 0)
+		{
+			for(var i in bodySplit)
+			{
+				var rightArrowIndex = bodySplit[i].indexOf(">");
+				
+				if (rightArrowIndex != -1)
+				{
+					if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
+					{
+						newBodyText = newBodyText + "<" + bodySplit[i];
+					}
+					else
+					{
+						var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
+						var freeText = bodySplit[i].substring(rightArrowIndex + 1);
+						if (freeText.trim() != "")
+						{
+							newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
+						}
+						else
+						{
+							newBodyText = newBodyText + "<" + bodySplit[i].trim();
+						}
+					}
+				}
+			}
+		}
+		bodyClone.innerHTML = newBodyText;
+	}
+	
+	function correctAddedSpanElements()
+	{
+		var spans = bodyClone.getElementsByTagName("span");
+		
+		if (spans.length > 0)
+		{
+			for (var i in spans)
+			{
+				if (spans[i].tagName != null)
+				{
+					if (spans[i].hasAttribute("_mm_Id") == false)
+					{
+						var parentsMmId = spans[i].parentElement.getAttribute("_mm_Id");
+						spans[i].setAttribute("_mm_Id", parentsMmId);
+					}
+				}
 			}
 		}
 	}
@@ -2299,13 +2358,11 @@ function MMControlPanelModel()
 			var mmStore = inputElement.getAttribute("_mm_Store");
 			if (mmStore != "null") // null a string as it has been entered as a value into an attribute
 			{
-				console.log(document.getElementById(mmStore));
 				document.getElementById(mmStore).click();
 			}
 			else
 			{
 				var originalIdValue = inputElement.getAttribute("originalId"); // should be _mm_originalId
-				console.log(originalIdValue);
 				var allInputElements = document.getElementsByTagName("input");
 				for (var i in allInputElements)
 				{
@@ -3260,71 +3317,12 @@ function OSMModel() // setUp
 	this.update = function(bodyDOMCode)
 	{
 		var tempOSMHolder = document.createElement("div");
-		tempOSMHolder.innerHTML = allFreeTextInSpan(bodyDOMCode);
-		correctAddedSpanElements(tempOSMHolder);
+		tempOSMHolder.innerHTML = bodyDOMCode;
 		messAbout(tempOSMHolder);
 		var osmArea = document.getElementById("_mm_OSMArea");
 		osmArea.innerHTML = tempOSMHolder.innerHTML;
 		tempOSMHolder = null;
 		controlPanel.updateNavigatableItems();
-	}
-	
-	function allFreeTextInSpan(bodyText) // <p>hello <span>there</span></p> should become <p><span>hello</span><span>there</span></p> so that the spans can become static text
-	{	
-		var newBodyText = ""; 
-		var switchOff = false;
-		
-		var bodySplit = bodyText.split("<");
-		
-		if (bodySplit.length > 0)
-		{
-			for(var i in bodySplit)
-			{
-				var rightArrowIndex = bodySplit[i].indexOf(">");
-				
-				if (rightArrowIndex != -1)
-				{
-					if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
-					{
-						newBodyText = newBodyText + "<" + bodySplit[i];
-					}
-					else
-					{
-						var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
-						var freeText = bodySplit[i].substring(rightArrowIndex + 1);
-						if (freeText.trim() != "")
-						{
-							newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
-						}
-						else
-						{
-							newBodyText = newBodyText + "<" + bodySplit[i].trim();
-						}
-					}
-				}
-			}
-		}
-		return newBodyText;
-	}
-	
-	function correctAddedSpanElements(element)
-	{
-		var spans = element.getElementsByTagName("span");
-		
-		if (spans.length > 0)
-		{
-			for (var i in spans)
-			{
-				if (spans[i].tagName != null)
-				{
-					if (spans[i].hasAttribute("_mm_Id") == false)
-					{
-						var parentsMmId = spans[i].parentElement.getAttribute("_mm_Id");
-						spans[i].setAttribute("_mm_Id", parentsMmId);
-					}
-				}
-			}
-		}
 	}
 	
 	this.osmTypesInDOM = function()
@@ -3452,7 +3450,7 @@ function OSMModel() // setUp
 				elementSwitch = "_mm_Paragraph";
 				break; 
 			case "SPAN":
-				if ((liveElement.getAttribute("parentElement") == "BODY")||(liveElement.getAttribute("parentElement") == "DIV")) // parentElement introduced in DOMText at top of page
+				if ((liveElement.getAttribute("parentElement") == "BODY")||(liveElement.getAttribute("parentElement") == "DIV")||(liveElement.getAttribute("parentElement") == "UNSUPPORTED")) // parentElement introduced in DOMText at top of page, with UNSUPPORTED it is introduced in the model
 				{
 					elementSwitch = "_mm_Sentence";
 				}
@@ -3462,11 +3460,23 @@ function OSMModel() // setUp
 				}
 				break;
 			case "IMG":
-				var altValue = liveElement.getAttribute("alt");
-				if ((altValue != null)&&(altValue != ""))
+				if (liveElement.getAttribute("role") == "presentation")
+				{
+					elementSwitch = "_mm_Decorative_Image";
+				}
+				else
 				{
 					elementSwitch = "_mm_Semantic_Image";
 				}
+				/*
+				var roleValue = liveElement.getAttribute("role");
+				if ((altValue != null)&&(altValue != ""))
+				{
+					// this is not correct it should be defined with role=presentation
+					
+					elementSwitch = "_mm_Semantic_Image";
+				}
+				*/
 				break; 
 			case "HEADER":
 				elementSwitch = "_mm_Page_Header_Area";
@@ -3598,7 +3608,7 @@ function OSMModel() // setUp
 		
 		// following done as a by product 
 		
-		if ((typesInDOM.indexOf(elementSwitch) == -1)&&(elementSwitch != "unsupported")&&(elementSwitch != "_mm_Static_Text")&&(elementSwitch != "_mm_Layout_Division")&&(elementSwitch != "_mm_Layout_Table")&&(elementSwitch != "_mm_Layout_Header_Cell")&&(elementSwitch != "_mm_Layout_Data_Cell")) // static text is included as it is read out automatically within other osm items.  Noting a main content area should always be included even in the simplest pages.
+		if ((typesInDOM.indexOf(elementSwitch) == -1)&&(elementSwitch != "unsupported")&&(elementSwitch != "_mm_Static_Text")&&(elementSwitch != "_mm_Layout_Division")&&(elementSwitch != "_mm_Layout_Table")&&(elementSwitch != "_mm_Layout_Header_Cell")&&(elementSwitch != "_mm_Layout_Data_Cell")&&(elementSwitch != "_mm_Decorative_Image")) // static text is included as it is read out automatically within other osm items.  Noting a main content area should always be included even in the simplest pages.
 		{
 			typesInDOM.push(elementSwitch);
 		}
@@ -3695,9 +3705,13 @@ function OSMModel() // setUp
 					createModelElement(selectedElement, FormModel);
 					break;
 				// semantic - non-containers 
-				case "_mm_Semantic_Image": // semantic image if alt is not null or ""
+				case "_mm_Semantic_Image": // semantic image if no role=presentation
 					osmIndex++;
 					createModelElement(selectedElement, SemanticImageModel);
+					break;
+				case "_mm_Decorative_Image": // semantic image if no role=presentation
+					osmIndex++;
+					createModelElement(selectedElement, DecorativeImageModel);
 					break;
 				case "_mm_Page_Header_Area":
 					osmIndex++;
@@ -4552,7 +4566,7 @@ function OSMModel() // setUp
 			
 			if (label == null)
 			{
-				labelText = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>No specific row or column</span>";
+				labelText = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>No specified row or column</span>";
 			}
 			else
 			{
@@ -5550,7 +5564,20 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
+			
+			// you need to fill the element first
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			if ((element.innerHTML != "")&&(element.children.length == 0)) // removing the situation where you make a sentence which you cannot hear the content of
+			{
+				element.innerHTML = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + element.innerHTML + "</span>"; 
+			}
+		
+			element.innerHTML = whatAmI() + element.innerHTML;
 			return element;
 		}
 		
@@ -6103,6 +6130,25 @@ function OSMModel() // setUp
 		}
 	}
 	
+	function DecorativeImageModel(baseElement) // might be best to switch on wai-aria role - to differentiate it from decorative image alt="" decorative
+	{
+		var baseElement = new ElementModel(baseElement);
+		
+		this.name = "Decorative_Image";
+		
+		this.replacementElement = function()
+		{
+			var element = document.createElement("div");
+			element.innerHTML = baseElement.contents();
+			return element;
+		}
+		
+		this.allChildrenIds = function()
+		{
+			return baseElement.allChildrenIds();
+		}
+	}
+	
 	// Unsupported objects - (We need a big list: MULTISELECT,...) - some things are currently unsupported and others will not be supported even in the future...
 	
 	function UnsupportedModel(baseElement)
@@ -6114,7 +6160,33 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");// baseElement.tagName());
-			element.innerHTML = baseElement.contents();
+			
+			// you need to fill the element first
+			var elementContents = baseElement.contents();
+			if (elementContents != null)
+			{
+				element.innerHTML = elementContents;
+			}
+			
+			// span elements which are direct children need to be given an "parentElement" attribute with a text value "UNSUPPORTED" - so that they will figure are sentences
+			
+			var children = element.children; // direct children
+			
+			if (children.length > 0)
+			{
+				for (var i in children)
+				{
+					if (children[i].tagName == "SPAN")
+					{
+						children[i].setAttribute("parentElement", "UNSUPPORTED");
+						if ((children[i].innerHTML != "")&&(children[i].children == 0)) // removing the situation where you make a sentence which you cannot hear the content of
+						{
+							children[i].innerHTML = "<span class='unchanged' _mm_Id='" + children[i].getAttribute("_mm_Id") + "'>" + children[i].innerHTML + "</span>"; 
+						}
+					}
+				}
+			}
+			
 			return element;
 		}
 		
