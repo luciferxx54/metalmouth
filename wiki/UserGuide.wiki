@@ -127,6 +127,7 @@ Currently, (if they are present) the following 'off-screen model' objects can be
   *  audio;
   *  video;
   *  semantic image;
+  *  decorative image;
   *  unsupported.  
 
 The following items exist in the off-screen model but cannot be navigated to.
