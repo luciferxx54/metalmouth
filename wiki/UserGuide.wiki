@@ -62,21 +62,21 @@ A close-up of the control panel is shown below.  All functionality provided by t
  
 ===Back to start===
 
-By pressing enter when the Back to start button is focused the user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
+By holding down the hot key 'd', or by pressing enter when the Back to start button is focused, the user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
 
 ===Jump===
 
 As user is able to navigate directly to selected items by using the Jump function.  The default item is 'Section', however, by using the 'Navigate by' function (described later) a user can select other items - such as Link, Form, etc... 
 
-By pressing enter when the Jump button is focused the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
+By holding down the hot key 'f', or by pressing enter when the Jump button is focused, the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
 
 ===Read previous===
 
-By pressing enter when the Read previous button is focused the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
+By holding down the hot key 'g', or by pressing enter when the Read previous button is focused, the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
 
 ===Read next===
 
-By pressing enter when the Read next button is focused the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
+By holding down the hot key 'h', or by pressing enter when the Read next button is focused, the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
 
 Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
 
@@ -138,12 +138,9 @@ The following items exist in the off-screen model but cannot be navigated to.
   *  layout header cell;
   *  layout data cell;
 
-
-
-
 ===Interact===
 
-By pressing enter when the Interact button is focused the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
+By holding down the hot key 'i', or by pressing enter when the Interact button is focused, the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
 
   *  *skip link*: Interaction will move the user to the identified skip target.
   *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
@@ -168,12 +165,11 @@ By pressing enter when the Interact button is focused the object which has just 
   *  *audio*: Interaction will open the interaction area containing a 'play' button, 'pause' button, 'rewind' button and a 'close menu' button.
   *  *video*: Interaction same as audio.
 
-
 If the object which has just been read out cannot be interacted with the button will be disabled.
 
 ===Read on===
 
-By pressing enter when the 'Read on' button is focused the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
+By holding down the hot key 'k', or by pressing enter when the 'Read on' button is focused, the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
 
 ===Stop reading===
 
@@ -181,13 +177,13 @@ By pressing enter when the 'Stop' button is focused the Project metalmouth exten
 
 ===Navigate by item===
 
-By pressing enter when the 'Navigate by' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
+By holding down the hot key 's', or by pressing enter when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
 
 So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
 
 ===Change location button===
 
-By pressing enter when the 'Change location' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
+By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
 
 *Sub menu item - Back*
 
@@ -203,7 +199,7 @@ When a url has been entered a user can tab once to the Go button.  By pressing e
 
 ===Options button===
 
-By pressing enter when the 'Options' button is focused a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
+By holding down the hot key 'l', or by pressing enter when the 'Options' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
 
 *Sub menu item - Speak at slow speed*
 
