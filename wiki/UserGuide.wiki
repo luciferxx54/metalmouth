@@ -140,7 +140,7 @@ The following items exist in the off-screen model but cannot be navigated to.
 
 ===Interact===
 
-By holding down the hot key 'i', or by pressing enter when the Interact button is focused, the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
+By holding down the hot key 'j', or by pressing enter when the Interact button is focused, the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
 
   *  *skip link*: Interaction will move the user to the identified skip target.
   *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
