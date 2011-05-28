@@ -175,12 +175,6 @@ By holding down the hot key 'k', or by pressing enter when the 'Read on' button 
 
 By pressing enter when the 'Stop' button is focused the Project metalmouth extension will stop automatically reading the contents of the page.  The 'Stop' button is disabled until either the 'Read from start' button or the 'Continue' button is pressed.
 
-===Navigate by item===
-
-By holding down the hot key 's', or by pressing enter when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
-
-So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
-
 ===Change location button===
 
 By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
@@ -196,6 +190,12 @@ By pressing enter when the New url button is focused a url entry area and go but
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
 When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+===Navigate by item===
+
+By holding down the hot key 's', or by pressing enter when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
+
+So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
 
 ===Options button===
 
