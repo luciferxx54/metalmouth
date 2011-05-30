@@ -563,6 +563,8 @@ function MMControlPanelModel()
 {		
 	getAudio(getPageTitle(), true, null); // not the best place for this, but otherwise init page description sequence is messed up
 	
+	correctTopValuesForAbsolutePositionedElements();
+	
 	var highestZIndex = calcHighestZIndex();
 		
 	var headElement = document.getElementsByTagName("head")[0];
@@ -609,7 +611,7 @@ function MMControlPanelModel()
 		
 		var mmJumpButton = new JumpButtonModel();
 		mmJumpButton.add();
-		
+		 
 		var mmReadPrevButton = new ReadPrevButton();
 		mmReadPrevButton.add();
 		
@@ -738,14 +740,14 @@ function MMControlPanelModel()
 		var mmTBEnterButton = new TBEnterButton();
 		mmTBEnterButton.add();
 	
-		var mmCloseMenuButton = new CloseMenuButtonModel(enteredDataType, "_mm_ReadNextButton");
+		var mmCloseMenuButton = new CloseMenuButtonModel(enteredDataType, null);
 		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 		
 		mmInteractArea.show();
 		
 		function cancelInput()
 		{
-			getAudio(enteredDataType + " entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			getAudio(enteredDataType + " entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
@@ -806,14 +808,14 @@ function MMControlPanelModel()
 		var mmUncheckButton = new UncheckButtonModel();
 		mmUncheckButton.add();
 		
-		var mmCloseMenuButton = new CloseMenuButtonModel("check button", "_mm_ReadNextButton");
+		var mmCloseMenuButton = new CloseMenuButtonModel("check button", null);
 		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 		
 		mmInteractArea.show();
 		
 		function cancelInput()
 		{
-			getAudio("check button entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			getAudio("check button entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
@@ -874,7 +876,7 @@ function MMControlPanelModel()
 	{
 		mmInteractArea.clear();
 		
-		var mmCloseMenuButton = new CloseMenuButtonModel("select", "_mm_ReadNextButton"); // new OptionCloseButtonModel();
+		var mmCloseMenuButton = new CloseMenuButtonModel("select", null); // new OptionCloseButtonModel();
 		
 		// get all options and add them as buttons
 		var options = selectInputElement.children;
@@ -899,13 +901,6 @@ function MMControlPanelModel()
 		
 		mmInteractArea.show();
 		
-		function cancelSelect()
-		{
-			getAudio("select menu closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
-			mmInteractionArea.innerHTML = ""; 
-			mmInteractionArea.style.display = "none";
-		}
-		
 		function optionSelected(e, selectElement)
 		{
 			// setting value by javascript should not fire original events which is good
@@ -917,7 +912,6 @@ function MMControlPanelModel()
 				return liveElementToUpdate[liveElementToUpdate.getAttribute("_mm_selectedindex")].innerText;
 			}
 			updateLiveAndOSM(selectElement, e.srcElement.id, setValueFunction, "SELECT");
-			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
 		}
 	}
 	
@@ -940,14 +934,14 @@ function MMControlPanelModel()
 		var mmRangeEnterButton = new RangeEnterButton();
 		mmRangeEnterButton.add();
 		
-		var mmCloseMenuButton = new CloseMenuButtonModel("range input", "_mm_ReadNextButton");
+		var mmCloseMenuButton = new CloseMenuButtonModel("range input", null);
 		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 		
 		mmInteractArea.show();
 		
 		function cancelInput()
 		{
-			getAudio("range input entry area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
+			getAudio("range input entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
@@ -962,7 +956,6 @@ function MMControlPanelModel()
 			}
 			
 			updateLiveAndOSM(inputElement, currentValue, setValueFunction, "INPUT");
-			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
 		}
 		
 		function extractCurrentValue()
@@ -1060,22 +1053,6 @@ function MMControlPanelModel()
 				mmInteractionArea.appendChild(rangeEnterButton);
 			}
 		}
-		
-		function RangeCloseButton()
-		{
-			var rangeCloseButton = iap_Button.template();
-			rangeCloseButton.id = "_mm_CancelButton";
-			rangeCloseButton.setAttribute("value", "Close");
-			rangeCloseButton.setAttribute("title", "Close range input entry area");
-			rangeCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII="; 
-			rangeCloseButton.addEventListener("click", function(){cancelInput()}, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.appendChild(rangeCloseButton);
-			}
-		}
 	}
 	
 	function updateLiveAndOSM(osmNode, enteredValue, setValueFunction, elementTypeOfInterest) // setValueFunction(liveElementToUpdate, enteredValue)
@@ -1126,7 +1103,7 @@ function MMControlPanelModel()
 		var mmRewindButton = new RewindButtonModel();
 		mmRewindButton.add();
 		
-		var mmCloseMenuButton = new CloseMenuButtonModel(mediaType, "_mm_ReadNextButton");
+		var mmCloseMenuButton = new CloseMenuButtonModel(mediaType, null);
 		mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
 		
 		mmInteractArea.show();
@@ -1153,13 +1130,6 @@ function MMControlPanelModel()
 						break;
 				}
 			}
-		}
-		
-		function cancelInput()
-		{
-			getAudio(mediaType + " control area closed", false, function(){document.getElementById("_mm_ReadNextButton").focus();});
-			mmInteractionArea.innerHTML = ""; 
-			mmInteractionArea.style.display = "none";
 		}
 		
 		function PlayButtonModel()
@@ -1204,22 +1174,6 @@ function MMControlPanelModel()
 			{
 				var mmInteractionArea = document.getElementById("_mm_InteractArea");
 				mmInteractionArea.appendChild(rewindButton);
-			}
-		}
-		
-		function MediaCloseButtonModel()
-		{
-			var mediaCloseButton = iap_Button.template();
-			mediaCloseButton.id = "_mm_CloseButton";
-			mediaCloseButton.setAttribute("value", "Close");
-			mediaCloseButton.setAttribute("title", "Close " + mediaType + " control area");
-			mediaCloseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
-			mediaCloseButton.addEventListener("click", function(){cancelInput();}, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.appendChild(mediaCloseButton);
 			}
 		}
 	}
@@ -1282,6 +1236,7 @@ function MMControlPanelModel()
 		var buttonName; 
 		var textIfButtonDisabled;
 		var alreadyBusy; 
+		var arrowSelected;
 		
 		function hotKeyDown_Handler(e)
 		{
@@ -1293,6 +1248,35 @@ function MMControlPanelModel()
 				
 				switch(e.keyIdentifier.toString())
 				{
+					// special cases for arrowing around page
+					case "Up": // ReadPrevButton + Interact
+						selected = true;
+						arrowSelected = "Up"; 
+						keyBeingTimed = e.keyIdentifier.toString(); 
+						buttonName = mmReadPrevButton; 
+						textIfButtonDisabled = "Read previous Button is currently disabled"; 
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
+					case "Down": // ReadNextButton + Interact
+						selected = true;
+						arrowSelected = "Down";
+						keyBeingTimed = e.keyIdentifier.toString();
+						buttonName = mmReadNextButton; 
+						textIfButtonDisabled = "Read next button is currently disabled";
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
+					case "Right":
+						selected = true;
+						arrowSelected = "Right";
+						keyBeingTimed = e.keyIdentifier.toString();
+						buttonName = mmJumpButton; 
+						textIfButtonDisabled = "Jump button is currently disabled";
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;						
+					// end special cases
 					case "U+0047": // g - ReadPrevButton
 						selected = true;
 						keyBeingTimed = e.keyIdentifier.toString(); 
@@ -1392,6 +1376,33 @@ function MMControlPanelModel()
 			}
 		}
 		
+		function specialCasesFunctionToRun() // this is for down and up arrowing
+		{
+			if (buttonName.enabled() == true)
+			{
+				buttonName.click();
+				if ((arrowSelected == "Up")||(arrowSelected == "Down"))
+				{
+					if (mmInteractButton.enabled() == true)
+					{
+						mmInteractButton.focusNoAudio();
+					}
+				}
+				if (arrowSelected == "Right")
+				{
+					if (mmJumpButton.enabled() == true)
+					{
+						mmJumpButton.focusNoAudio();
+					}
+				}
+				setAlreadyBusy(false);
+			}
+			else
+			{
+				getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
+			}
+		}
+		
 		function setAlreadyBusy(value)
 		{
 			alreadybusy = value;
@@ -1427,12 +1438,7 @@ function MMControlPanelModel()
 		}
 		
 		this.addCloseButtonToThisMenu = function(closeButton)
-		{
-			var divider = document.createElement("span");
-			divider.innerText = "|";
-			divider.style.cssText = "float:left;margin-left:5px;margin-right:5px;";
-			interactArea.appendChild(divider);
-			
+		{ 
 			interactArea.appendChild(closeButton.asHtml());
 			closeMenuButton = closeButton;
 		}
@@ -1469,6 +1475,11 @@ function MMControlPanelModel()
 			removeHandlers();
 		}
 		
+		this.focus = function()
+		{
+			interactArea.children[0].focus();
+		}
+		
 		function addHandlers()
 		{
 			alreadyBusy = false;
@@ -1487,6 +1498,7 @@ function MMControlPanelModel()
 		var buttonName; 
 		var textIfButtonDisabled;
 		var alreadyBusy; 
+		var arrowSelected;
 		
 		function hotKeyDown_Handler(e)
 		{
@@ -1498,6 +1510,20 @@ function MMControlPanelModel()
 				
 				switch(e.keyIdentifier.toString())
 				{
+					case "Up":
+						selected = true;
+						arrowSelected = "Up"; 
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
+					case "Down":
+						selected = true;
+						arrowSelected = "Down";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
 					case "U+001B":
 						selected = true;
 						keyBeingTimed = e.keyIdentifier.toString();
@@ -1523,6 +1549,38 @@ function MMControlPanelModel()
 			{
 				clearTimeout(hotKeyTimer);
 				setAlreadyBusy(false);
+			}
+		}
+		
+		function specialCasesFunctionToRun()
+		{
+			// running function
+			
+			var focusIndex = 0;
+			
+			for (var i in interactArea.children)
+			{
+				if (interactArea.children[i] == document.activeElement)
+				{
+					focusIndex = i;
+					break;
+				}
+			}
+			
+			if (arrowSelected == "Up")
+			{
+				if (focusIndex > 0)
+				{
+					interactArea.children[parseInt(focusIndex) - 1].focus();
+				}
+			}
+			
+			if (arrowSelected == "Down")
+			{
+				if (focusIndex < (interactArea.children.length - 1))
+				{
+					interactArea.children[parseInt(focusIndex) + 1].focus();
+				}
 			}
 		}
 		
@@ -1561,6 +1619,8 @@ function MMControlPanelModel()
 	
 	function CP_ButtonModel()
 	{
+		var audioOn = true;
+		
 		this.template = function()
 		{
 			var button = document.createElement("input");
@@ -1570,11 +1630,25 @@ function MMControlPanelModel()
 			return button; 
 		}
 		
+		// focusNoAudio
+		
+		this.noAudio = function()
+		{
+			audioOn = false;
+		}
+		
 		function buttonHasFocus(e)
 		{
-			if (e.srcElement.getAttribute("title") != "")
+			if (audioOn == true)
 			{
-				getAudio(e.srcElement.getAttribute("title") + " button has focus", false, null);
+				if (e.srcElement.getAttribute("title") != "")
+				{
+					getAudio(e.srcElement.getAttribute("title") + " button has focus", false, null);
+				}
+			}
+			else
+			{
+				audioOn = true;
 			}
 		}
 		
@@ -1920,7 +1994,7 @@ function MMControlPanelModel()
 		{
 			if (e.srcElement.getAttribute("title") != "")
 			{
-				getAudio(e.srcElement.getAttribute("title") + " entered", true, function(){document.getElementById("_mm_ReadNextButton").focus();});
+				getAudio("Read all items starting.", true, function(){mmReadOnButton.click();}); // function(){mmReadNextButton.focusNoAudio();});
 			}
 		}
 	}
@@ -2008,6 +2082,17 @@ function MMControlPanelModel()
 			jumpButton.focus();
 		}
 		
+		this.click = function()
+		{
+			jumpButton.click();
+		}
+		
+		this.focusNoAudio = function()
+		{
+			button.noAudio();
+			jumpButton.focus();
+		}
+		
 		function jump()
 		{
 			svb.jumpToAndReturnNextOSMNode();
@@ -2044,7 +2129,14 @@ function MMControlPanelModel()
 		
 		function closeMenu()
 		{
-			getAudio(menuName + " menu closed", false, function(){document.getElementById(menuButtonName).focus();});
+			if (menuButtonName == null)
+			{
+				getAudio(menuName + " menu closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
+			}
+			else
+			{
+				getAudio(menuName + " menu closed", false, function(){document.getElementById(menuButtonName).focus();});
+			}
 			var mmInteractionArea = document.getElementById("_mm_InteractArea");
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
@@ -2101,6 +2193,11 @@ function MMControlPanelModel()
 			readPrevButton.focus();
 		}
 		
+		this.click = function()
+		{
+			readPrevButton.click();
+		}
+		
 		function prevNode()
 		{
 			svb.moveToAndReturnPrevOSMNode();
@@ -2153,6 +2250,17 @@ function MMControlPanelModel()
 			readNextButton.focus();
 		}
 		
+		this.focusNoAudio = function()
+		{
+			button.noAudio();
+			readNextButton.focus();
+		}
+		
+		this.click = function()
+		{
+			readNextButton.click();
+		}
+		
 		function nextNode()
 		{
 			svb.moveToAndReturnNextOSMNode();
@@ -2203,6 +2311,12 @@ function MMControlPanelModel()
 		
 		this.focus = function()
 		{
+			interactButton.focus();
+		}
+		
+		this.focusNoAudio = function()
+		{
+			button.noAudio();
 			interactButton.focus();
 		}
 		
@@ -2321,17 +2435,12 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawTextBoxInteract(osmNode, enteredDataType);
 			
-			getAudio(enteredDataType + " entry area entered", false, changeFocus);
+			getAudio(enteredDataType + " entry area entered", false, onFocus);
 			
-			function changeFocus()
+			function onFocus()
 			{
-				getAudio("Menu contains a text entry area, an enter button and a close menu button", false, onFocus);
-				
-				function onFocus()
-				{
-					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-					mmInteractionArea.children[0].focus();
-				}
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				mmInteractionArea.children[0].focus();
 			}
 		}
 		
@@ -2339,17 +2448,12 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawRangeInputInteract(osmNode);
 			
-			getAudio("Range input entry area entered", false, changeFocus);
+			getAudio("Range input entry area entered", false, onFocus);
 			
-			function changeFocus()
+			function onFocus()
 			{
-				getAudio("Menu contains an increase value button a decrease value button an enter button and a close menu button", false, onFocus);
-				
-				function onFocus()
-				{
-					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-					mmInteractionArea.children[0].focus();
-				}
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				mmInteractionArea.children[0].focus();
 			}
 		}
 		
@@ -2382,17 +2486,12 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawCheckButtonInteract(osmNode);
 			
-			getAudio("check button entry area entered", false, changeFocus);
+			getAudio("check button entry area entered", false, onFocus);
 			
-			function changeFocus()
+			function onFocus()
 			{
-				getAudio("Menu contains a check option button, an uncheck option button and a close menu button", false, onFocus);
-				
-				function onFocus()
-				{
-					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-					mmInteractionArea.children[0].focus();
-				}
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				mmInteractionArea.children[0].focus();
 			}
 		}
 		
@@ -2405,7 +2504,7 @@ function MMControlPanelModel()
 			function numberOfItems()
 			{
 				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				getAudio((mmInteractionArea.children.length - 2)  + " selectable options, first option", false, changeFocus); // -2 takes into account the divider and the close button
+				getAudio((mmInteractionArea.children.length - 1)  + " selectable options, first option", false, changeFocus); // -1 takes into account the divider and the close button
 			}
 			
 			function changeFocus()
@@ -2419,17 +2518,12 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawMediaInteract(osmNode, "audio");
 			
-			getAudio("audio control area entered", false, changeFocus);
+			getAudio("audio control area entered", false, onFocus);
 			
-			function changeFocus()
+			function onFocus()
 			{
-				getAudio("Menu contains a play button, a pause button, a rewind button and a close menu button", false, onFocus);
-				
-				function onFocus()
-				{
-					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-					mmInteractionArea.children[0].focus();
-				}
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				mmInteractionArea.children[0].focus();
 			}
 		}
 		
@@ -2437,17 +2531,12 @@ function MMControlPanelModel()
 		{
 			controlPanel.drawMediaInteract(osmNode, "video");
 			
-			getAudio("video control area entered", false, changeFocus);
+			getAudio("video control area entered", false, onFocus);
 			
-			function changeFocus()
+			function onFocus()
 			{
-				getAudio("Menu contains a play button, a pause button, a rewind button and a close menu button", false, onFocus);
-				
-				function onFocus()
-				{
-					var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-					mmInteractionArea.children[0].focus();
-				}
+				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+				mmInteractionArea.children[0].focus();
 			}
 		}
 	}
@@ -2526,6 +2615,11 @@ function MMControlPanelModel()
 		function disableSelf()
 		{
 			button.disableButton(readOnButton, "click", readOnClick);
+		}
+		
+		this.click = function()
+		{
+			readOnButton.click();
 		}
 		
 		function readOnClick()
@@ -3020,6 +3114,92 @@ function MMControlPanelModel()
 		}
 		return highestZ;
 	}
+
+	function correctTopValuesForAbsolutePositionedElements()
+	{
+		walkDOM(document.getElementsByTagName("BODY")[0]);
+		
+		function walkDOM(element)
+		{
+			do 
+			{
+				if (element.tagName != null)
+				{
+					if (document.defaultView.getComputedStyle(element).getPropertyValue("position") == "relative")
+					{
+						// do nothing
+					}
+					else if (document.defaultView.getComputedStyle(element).getPropertyValue("position") == "absolute")
+					{
+						var top = document.defaultView.getComputedStyle(element).getPropertyValue("top");
+						if (top != "")
+						{
+							if (top.toLowerCase() != "auto")
+							{
+								var cssUnits = ["px","%","in","cm","mm","em","ex","pt","pc"];
+								
+								var units = ""; 
+								
+								for (var a in cssUnits)
+								{
+									if (top.toLowerCase().indexOf(cssUnits[a]) != -1)
+									{
+										units = cssUnits[a];
+										break;
+									}
+								}
+								
+								if (units != "") // if it has units - css should have units otherwise the browser might have to guess.
+								{
+									var topToChars = top.split("");
+									var topAsNumber = "";
+									
+									var charactersOfInterest = ["-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+									
+									for (var x = 0; x < topToChars.length; x++)
+									{
+										if (charactersOfInterest.indexOf(topToChars[x]) != -1)
+										{
+											topAsNumber = topAsNumber + topToChars[x];
+										}
+									}
+									
+									topAsNumber = parseInt(topAsNumber);
+									
+									topAsNumber = topAsNumber + 22;
+									
+									var currentStyleAttribute = element.style.cssText;
+									
+									// to show what has been changed
+									
+									element.setAttribute("ccChanged", "true");
+									
+									if (currentStyleAttribute == "")
+									{
+										element.style.cssText = "top:" + topAsNumber.toString() + units + ";"; // needs to add 22 to top
+									}
+									else
+									{
+										element.style.cssText = element.style.cssText + ";top:" + topAsNumber.toString() + units + ";";
+										element.style.cssText = element.style.cssText.replace(/;;/g, ";");
+									}
+								}
+							}
+						}
+					}
+					// code end
+					else
+					{			
+						if (element.hasChildNodes())
+						{
+							walkDOM(element.firstChild);
+						}
+					}
+				}
+			} 
+			while (element = element.nextSibling)
+		}
+	}
 	
 	// Highlighter
 	
@@ -3468,15 +3648,6 @@ function OSMModel() // setUp
 				{
 					elementSwitch = "_mm_Semantic_Image";
 				}
-				/*
-				var roleValue = liveElement.getAttribute("role");
-				if ((altValue != null)&&(altValue != ""))
-				{
-					// this is not correct it should be defined with role=presentation
-					
-					elementSwitch = "_mm_Semantic_Image";
-				}
-				*/
 				break; 
 			case "HEADER":
 				elementSwitch = "_mm_Page_Header_Area";
