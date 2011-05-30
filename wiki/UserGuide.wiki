@@ -23,6 +23,11 @@ The Project metalmouth extension will start - taking the user to the "http://www
 
 This method is not really intended for use by actual users.  It is doubtful that a user will be able to navigate to the button without voice - Chrome browser is not self-voicing - or, without the need for an external screen-reader.
 ----
+
+==Starting==
+
+Once the extension has started the page title of the page currently being listened to will be read out.  The extension will then proceed to read all items on the page.  A user can stop the "read on" function by simply hitting the space bar.  Once stopped, a user can use the up and down arrows to navigate between all the items on the page (mentioned below).
+
 ==Extension Control Panel==
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
@@ -35,13 +40,17 @@ The control panel can be brought into focus at any time by using the access key 
   *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
   *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
 
-All buttons and drop-downs are then accessible by tabbing.  Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
-
-All the buttons are also available via hot keys. Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
+All the buttons are available via hot keys or tabbing. Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
+ 
+Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
 
 Also, when in a sub menu a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
 
 The hope with the hot keys, and the changed control panel layout, is that less tabbing will be required for users.
+
+New!!!  In navigation mode the user can use the up and down arrow to move between items on a page.  They can also use the up and down arrows to move through items in submenus.  In addition, by pressing the right arrow a user will jump down the page to each item of the type selected in the 'Navigate by' menu (see 'Navigate by' function).
+
+When the current item is interactable the user just has to hit the space bar to start interacting.
 
 A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
 
@@ -62,21 +71,21 @@ A close-up of the control panel is shown below.  All functionality provided by t
  
 ===Back to start===
 
-By holding down the hot key 'd', or by pressing enter when the Back to start button is focused, the user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
+By holding down the hot key 'd', or by pressing the space bar when the Back to start button is focused, the user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
 
 ===Jump===
 
 As user is able to navigate directly to selected items by using the Jump function.  The default item is 'Section', however, by using the 'Navigate by' function (described later) a user can select other items - such as Link, Form, etc... 
 
-By holding down the hot key 'f', or by pressing enter when the Jump button is focused, the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
+By pressing the right arrow, or by holding down the hot key 'f' and pressing the space bar when the Jump button is focused, the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
 
 ===Read previous===
 
-By holding down the hot key 'g', or by pressing enter when the Read previous button is focused, the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
+By pressing the up arrow, or by holding down the hot key 'g' and pressing the space bar when the Read previous button is focused, the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
 
 ===Read next===
 
-By holding down the hot key 'h', or by pressing enter when the Read next button is focused, the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
+By pressing the up arrow, or by holding down the hot key 'h' and pressing the space bar when the Read next button is focused, the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
 
 Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
 
@@ -140,7 +149,9 @@ The following items exist in the off-screen model but cannot be navigated to.
 
 ===Interact===
 
-By holding down the hot key 'j', or by pressing enter when the Interact button is focused, the object which has just been read out can be interacted with.  Not all objects, however, can be interacted with - currently it is only:
+When a user is navigating using the up and down arrows (navigation mode) the space bar need only be pressed to interact when an item has been specified as interactable.
+
+Otherwise, a user needs to hold down the hot key 'j', and press the space bar when the Interact button is focused, in order to interact with an item has been specified as interactable.  Not all objects, however, can be interacted with - currently it is only:
 
   *  *skip link*: Interaction will move the user to the identified skip target.
   *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
@@ -169,23 +180,23 @@ If the object which has just been read out cannot be interacted with the button 
 
 ===Read on===
 
-By holding down the hot key 'k', or by pressing enter when the 'Read on' button is focused, the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
+By holding down the hot key 'k', or by pressing the space bar when the 'Read on' button is focused, the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
 
 ===Stop reading===
 
-By pressing enter when the 'Stop' button is focused the Project metalmouth extension will stop automatically reading the contents of the page.  The 'Stop' button is disabled until either the 'Read from start' button or the 'Continue' button is pressed.
+By pressing the space bar when the 'Stop' button is focused the Project metalmouth extension will stop automatically reading the contents of the page.  The 'Stop' button is disabled until either the 'Read from start' button or the 'Continue' button is pressed.
 
 ===Change location button===
 
-By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
+By holding down the hot key 'b', or by pressing the space bar when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
 
 *Sub menu item - Back*
 
-By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+By pressing the space bar when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
 *Sub menu item - New url*
 
-By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
+By pressing the space bar when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
@@ -193,25 +204,31 @@ When a url has been entered a user can tab once to the Go button.  By pressing e
 
 ===Navigate by item===
 
-By holding down the hot key 's', or by pressing enter when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
+By holding down the hot key 's', or by pressing the space bar when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
 
 So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
 
 ===Options button===
 
-By holding down the hot key 'l', or by pressing enter when the 'Options' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
+By holding down the hot key 'l', or by pressing the space bar when the 'Options' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
 
 *Sub menu item - Speak at slow speed*
 
-By pressing enter when the 'Speak at slow speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a slow rate. 
+(Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
+
+By pressing the space bar when the 'Speak at slow speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a slow rate. 
 
 *Sub menu item - Speak at normal speed*
 
-By pressing enter when the 'Speak at normal speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a normal rate. 
+Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
+
+By pressing the space bar when the 'Speak at normal speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a normal rate. 
 
 *Sub menu item - Speak at fast speed*
 
-By pressing enter when the 'Speak at fast speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a fast rate. 
+Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
+
+By pressing the space bar when the 'Speak at fast speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a fast rate. 
 
 So far Project metalmouth supports slow, normal, fast (more might follow in time). 
 
