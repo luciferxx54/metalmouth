@@ -11,7 +11,7 @@ With recent support for interaction with the extension from the Chrome browser's
 
 It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.
 
-  #  Press the m key twice.  The keyword 'mm' activates the extension. The extension will ask you to "press the space bar and then press enter".
+  #  Press the m key twice.  (Reminder: Do not press enter yet as doing so will end up in a google search for 'mm').  The keyword 'mm' activates the extension.  When the extension is active it will ask you to "press the space bar and then press enter".
   #  Press the space bar.
   #  Press enter.  
 
