@@ -1980,7 +1980,7 @@ function MMControlPanelModel()
 		var controlPanelFocus = button.template();
 		controlPanelFocus.id = "_mm_ControlPanelFocus";
 		controlPanelFocus.setAttribute("type", "image");
-		controlPanelFocus.setAttribute("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
+		controlPanelFocus.setAttribute("src", "https://sites.google.com/site/projectmetalmouth/home/1by1t_1_5_4.png"); // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
 		controlPanelFocus.setAttribute("accesskey", "c");
 		controlPanelFocus.setAttribute("title", "Control panel");
 		controlPanelFocus.addEventListener("click", function(e){cpHasFocus(e);}, false);
@@ -1994,7 +1994,7 @@ function MMControlPanelModel()
 		{
 			if (e.srcElement.getAttribute("title") != "")
 			{
-				getAudio("Read all items starting.", true, function(){mmReadOnButton.click();}); // function(){mmReadNextButton.focusNoAudio();});
+				getAudio("Reading all items", true, function(){mmReadOnButton.click();}); // function(){mmReadNextButton.focusNoAudio();});
 			}
 		}
 	}
