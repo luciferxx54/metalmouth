@@ -2105,7 +2105,7 @@ function MMControlPanelModel()
 			}
 			else
 			{
-				readCurrentNode(null, "Next item");
+				readCurrentNode(null, ""); // was next item
 			}
 		}
 		
@@ -2210,7 +2210,7 @@ function MMControlPanelModel()
 			}
 			else
 			{
-				readCurrentNode(null, "Previous item");
+				readCurrentNode(null, ""); // was previous item
 			}
 		}
 	}
@@ -2273,7 +2273,7 @@ function MMControlPanelModel()
 			}
 			else
 			{
-				readCurrentNode(null, "Next item");
+				readCurrentNode(null, ""); // was next item
 			}
 		}
 	}
@@ -3300,11 +3300,11 @@ function MMControlPanelModel()
 		else
 		{
 			controlPanel.changeDisplayedCurrentItem(osmNodeToHighlight.className.replace("_mm_", ""));
-			drawRectangleFromCoords(osmNodeToHighlight.className.replace("_mm_", ""), x, y, width, height, false);
+			drawRectangleFromCoords(x, y, width, height, false);
 		}
 	}
 	
-	function drawRectangleFromCoords(legendValue, x, y, width, height, includeCircle)
+	function drawRectangleFromCoords(x, y, width, height, includeCircle)
 	{
 		var highlighter = document.getElementById("_mm_Highlighter");
 		if (highlighter != null)
@@ -3321,7 +3321,8 @@ function MMControlPanelModel()
 		}
 	}
 	
-	function drawOffscreenWarning(legendValue, y)
+	/*
+	function drawOffscreenWarning(y)
 	{
 		var highlighter = document.getElementById("_mm_Highlighter");
 		if (highlighter != null)
@@ -3333,6 +3334,7 @@ function MMControlPanelModel()
 			window.scrollTo(0, scrollPosY - y);
 		}
 	}
+	*/
 	
 	// AUDIO
 	
@@ -5747,6 +5749,11 @@ function OSMModel() // setUp
 			{
 				element.innerHTML = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + element.innerHTML + "</span>"; 
 			}
+			
+			if (element.innerHTML == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			}
 		
 			element.innerHTML = whatAmI() + element.innerHTML;
 			return element;
@@ -5775,6 +5782,12 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
+			
+			if (baseElement.contents() == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			}
+			
 			element.innerHTML = whatAmI() + baseElement.contents();
 			return element;
 		}
@@ -5801,6 +5814,12 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
+			
+			if (baseElement.contents() == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			} 
+			
 			element.innerHTML = whatAmI() + baseElement.contents();
 			return element;
 		}
@@ -5827,6 +5846,12 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
+			
+			if (baseElement.contents() == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			}
+			
 			element.innerHTML = whatAmI() + insertedWhen() + baseElement.contents();
 			return element;
 		}
@@ -5886,6 +5911,12 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
+			
+			if (baseElement.contents() == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			}
+			
 			element.innerHTML = whatAmI() + deletedWhen() + baseElement.contents();
 			return element;
 		}
@@ -5937,6 +5968,12 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
+			
+			if (baseElement.contents() == "")
+			{
+				element.setAttribute("mmEmpty", "true");
+			}
+			
 			element.innerHTML = whatAmI() + baseElement.contents();
 			return element;
 		}
@@ -6068,7 +6105,16 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
+			
+			if (baseElement.contents() == "")
+			{
+				element.innerHTML = whatAmI() + empty();
+			}
+			else
+			{
+				element.innerHTML = whatAmI() + baseElement.contents();
+
+			}
 			return element;
 		}
 		
@@ -6090,6 +6136,11 @@ function OSMModel() // setUp
 			
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>List item" + text + "</span>";
 		}
+		
+		function empty()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Empty</span>";
+		}
 	}
 	
 	// MENU ITEM //
@@ -6103,7 +6154,15 @@ function OSMModel() // setUp
 		this.replacementElement = function()
 		{
 			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
+			if (baseElement.contents() == "")
+			{
+				element.innerHTML = whatAmI() + empty();
+			}
+			else
+			{
+				element.innerHTML = whatAmI() + baseElement.contents();
+				
+			}
 			return element;
 		}
 		
@@ -6115,6 +6174,11 @@ function OSMModel() // setUp
 		function whatAmI()
 		{		
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Menu item</span>";
+		}
+		
+		function empty()
+		{
+			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Empty</span>";
 		}
 	}
 	
@@ -6461,6 +6525,30 @@ function SVBModel()
 		nextOSMNodeIndex = currentOSMNodeIndex + 1;
 	}
 	
+	/*
+	 
+	 this.moveToAndReturnNextOSMNode = function() 
+	 {
+	 currentOSMNodeIndex = nextOSMNodeIndex;
+	 nextOSMNodeIndex = nextOSMNodeIndex + 1;
+	 
+	 if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
+	 {
+	 var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
+	 if (node != null)
+	 {
+	 var nodeType = node.className;
+	 if(availableReadableNodes.indexOf(nodeType) == -1)
+	 {
+	 this.moveToAndReturnNextOSMNode();
+	 }
+	 }
+	 }
+	 return currentOSMNodeIndex;
+	 }
+	 
+	*/
+	
 	this.moveToAndReturnNextOSMNode = function() 
 	{
 		currentOSMNodeIndex = nextOSMNodeIndex;
@@ -6473,6 +6561,11 @@ function SVBModel()
 			{
 				var nodeType = node.className;
 				if(availableReadableNodes.indexOf(nodeType) == -1)
+				{
+					this.moveToAndReturnNextOSMNode();
+				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
 				{
 					this.moveToAndReturnNextOSMNode();
 				}
@@ -6496,6 +6589,11 @@ function SVBModel()
 				{
 					this.moveToAndReturnPrevOSMNode();
 				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
+				{
+					this.moveToAndReturnPrevOSMNode();
+				}
 			}
 		}
 		return currentOSMNodeIndex;
@@ -6513,6 +6611,11 @@ function SVBModel()
 			{
 				var nodeType = node.className;
 				if(jumpableNodeTypes.indexOf(nodeType) == -1)
+				{
+					this.jumpToAndReturnNextOSMNode();
+				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
 				{
 					this.jumpToAndReturnNextOSMNode();
 				}
@@ -6547,6 +6650,11 @@ function SVBModel()
 				{
 					nextNode();
 				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
+				{
+					nextNode();
+				}
 			}
 		}
 		return currentSimulated;
@@ -6567,6 +6675,11 @@ function SVBModel()
 				{
 					prevNode();
 				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
+				{
+					prevNode();
+				}
 			}
 		}
 		return currentSimulated;
@@ -6584,6 +6697,11 @@ function SVBModel()
 			{
 				var nodeType = node.className;
 				if(jumpableNodeTypes.indexOf(nodeType) == -1)
+				{
+					nextJumpableNode();
+				}
+				// if the node only contains the osm item name
+				if (node.hasAttribute("mmEmpty") == true)
 				{
 					nextJumpableNode();
 				}
