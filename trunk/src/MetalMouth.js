@@ -1554,8 +1554,6 @@ function MMControlPanelModel()
 		
 		function specialCasesFunctionToRun()
 		{
-			// running function
-			
 			var focusIndex = 0;
 			
 			for (var i in interactArea.children)
@@ -1586,7 +1584,6 @@ function MMControlPanelModel()
 		
 		function functionToRun()
 		{
-			// running function
 			buttonName.focus();
 			if (buttonName.enabled() == true)
 			{
@@ -1980,7 +1977,7 @@ function MMControlPanelModel()
 		var controlPanelFocus = button.template();
 		controlPanelFocus.id = "_mm_ControlPanelFocus";
 		controlPanelFocus.setAttribute("type", "image");
-		controlPanelFocus.setAttribute("src", "https://sites.google.com/site/projectmetalmouth/home/1by1t_1_5_4.png"); // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
+		controlPanelFocus.setAttribute("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
 		controlPanelFocus.setAttribute("accesskey", "c");
 		controlPanelFocus.setAttribute("title", "Control panel");
 		controlPanelFocus.addEventListener("click", function(e){cpHasFocus(e);}, false);
@@ -1994,7 +1991,7 @@ function MMControlPanelModel()
 		{
 			if (e.srcElement.getAttribute("title") != "")
 			{
-				getAudio("Reading all items", true, function(){mmReadOnButton.click();}); // function(){mmReadNextButton.focusNoAudio();});
+				getAudio("Reading all items", true, function(){mmReadOnButton.click();});
 			}
 		}
 	}
@@ -3320,21 +3317,6 @@ function MMControlPanelModel()
 			 
 		}
 	}
-	
-	/*
-	function drawOffscreenWarning(y)
-	{
-		var highlighter = document.getElementById("_mm_Highlighter");
-		if (highlighter != null)
-		{
-			highlighter.style.cssText = "left:10px;top:" + y + "px;"; // width:150px;height:20px;background:#FFFFFF;
-			highlighter.scrollIntoView();
-			// amend scroll position due to metal mouth control panel 
-			var scrollPosY = window.scrollY;
-			window.scrollTo(0, scrollPosY - y);
-		}
-	}
-	*/
 	
 	// AUDIO
 	
@@ -6524,30 +6506,6 @@ function SVBModel()
 		currentOSMNodeIndex = nodeIndex;
 		nextOSMNodeIndex = currentOSMNodeIndex + 1;
 	}
-	
-	/*
-	 
-	 this.moveToAndReturnNextOSMNode = function() 
-	 {
-	 currentOSMNodeIndex = nextOSMNodeIndex;
-	 nextOSMNodeIndex = nextOSMNodeIndex + 1;
-	 
-	 if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
-	 {
-	 var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
-	 if (node != null)
-	 {
-	 var nodeType = node.className;
-	 if(availableReadableNodes.indexOf(nodeType) == -1)
-	 {
-	 this.moveToAndReturnNextOSMNode();
-	 }
-	 }
-	 }
-	 return currentOSMNodeIndex;
-	 }
-	 
-	*/
 	
 	this.moveToAndReturnNextOSMNode = function() 
 	{
