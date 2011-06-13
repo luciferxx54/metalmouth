@@ -2609,6 +2609,12 @@ function MMControlPanelModel()
 			readOnButton.focus();
 		}
 		
+		this.focusNoAudio = function()
+		{
+			button.noAudio();
+			readOnButton.focus();
+		}
+		
 		function disableSelf()
 		{
 			button.disableButton(readOnButton, "click", readOnClick);
@@ -2623,7 +2629,7 @@ function MMControlPanelModel()
 		{
 			disableSelf();
 			mmStopReadingButton.enable(); 
-			mmStopReadingButton.focus();
+			mmStopReadingButton.focusNoAudio();
 			readOn();
 		}
 	}
@@ -2661,6 +2667,12 @@ function MMControlPanelModel()
 			stopReadingButton.focus();
 		}
 		
+		this.focusNoAudio = function()
+		{
+			button.noAudio();
+			stopReadingButton.focus();
+		}
+		
 		function disableSelf()
 		{
 			button.disableButton(stopReadingButton, "click", stopClick);
@@ -2671,7 +2683,7 @@ function MMControlPanelModel()
 			readStop = true;
 			disableSelf();
 			mmReadOnButton.enable();
-			mmReadOnButton.focus();
+			mmReadOnButton.focusNoAudio();
 		}
 	}
 	
