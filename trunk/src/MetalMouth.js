@@ -1245,7 +1245,7 @@ function MMControlPanelModel()
 				setAlreadyBusy(true);
 				
 				var selected = false; 
-				
+
 				switch(e.keyIdentifier.toString())
 				{
 					// special cases for arrowing around page
@@ -1275,7 +1275,23 @@ function MMControlPanelModel()
 						textIfButtonDisabled = "Jump button is currently disabled";
 						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
 						window.event.returnValue=false;
-						break;						
+						break;		
+					case "U+0020": // space bar to start and stop read on, enter should be used with button interaction
+						selected = true;
+						arrowSelected = "Space";
+						keyBeingTimed = e.keyIdentifier.toString();
+						if (mmReadOnButton.enabled() == true)
+						{
+							buttonName = mmReadOnButton;
+						}
+						if (mmStopReadingButton.enabled() == true)
+						{
+							buttonName = mmStopReadingButton;
+						}
+						textIfButtonDisabled = "button is currently disabled";
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;
 					// end special cases
 					case "U+0047": // g - ReadPrevButton
 						selected = true;
@@ -1380,7 +1396,17 @@ function MMControlPanelModel()
 		{
 			if (buttonName.enabled() == true)
 			{
+				if (arrowSelected != "Space") // this is so read on stops properly if one of the other arrows is pushed whilst read on is running
+				{
+					if (mmStopReadingButton.enabled() == true)
+					{
+						mmStopReadingButton.click();
+						readOn(); // forces readOn to acknowledge halt
+					}
+				}
+				
 				buttonName.click();
+				
 				if ((arrowSelected == "Up")||(arrowSelected == "Down"))
 				{
 					if (mmInteractButton.enabled() == true)
@@ -1991,7 +2017,7 @@ function MMControlPanelModel()
 		{
 			if (e.srcElement.getAttribute("title") != "")
 			{
-				getAudio("Reading all items", true, function(){mmReadOnButton.click();});
+				getAudio("Reading all items", true, function(){readStop = false;mmReadOnButton.click();});
 			}
 		}
 	}
@@ -2684,6 +2710,16 @@ function MMControlPanelModel()
 			disableSelf();
 			mmReadOnButton.enable();
 			mmReadOnButton.focusNoAudio();
+		}
+		
+		this.enabled = function() // for hotkeys
+		{
+			return button.isEnabled(stopReadingButton);
+		}
+		
+		this.click = function()
+		{
+			stopReadingButton.click();
 		}
 	}
 	
@@ -3398,7 +3434,7 @@ function MMControlPanelModel()
 	// READ
 	// function read needs a mechanism to ensure that the contents are read before moving on 
 	
-	var readStop = false; 
+	var readStop;
 	
 	function readOn() // runs recursively
 	{	
@@ -5338,7 +5374,14 @@ function OSMModel() // setUp
 										element.appendChild(optionsInOptGroups[j]);
 									}
 								}
-								element.removeChild[i];
+								try
+								{
+									element.removeChild[i];
+								}
+								catch(err)
+								{
+									console.log(err)
+								}
 							}
 						}
 					}
@@ -5535,7 +5578,14 @@ function OSMModel() // setUp
 				if (headings.indexOf(children[i].tagName) != -1)
 				{
 					header = children[i].innerText;
-					element.removeChild[i];
+					try
+					{
+						element.removeChild[i];
+					}
+					catch(err)
+					{
+						console.log(err)
+					}
 					break;
 				}
 			}
@@ -5680,7 +5730,14 @@ function OSMModel() // setUp
 				if (headings.indexOf(children[i].tagName) != -1)
 				{
 					header = children[i].innerText;
-					element.removeChild[i];
+					try
+					{
+						element.removeChild[i];
+					}
+					catch(err)
+					{
+						console.log(err)
+					}
 					break;
 				}
 			}
@@ -5763,7 +5820,6 @@ function OSMModel() // setUp
 			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Sentence</span>";
 		}
 	}
-	
 	
 	// PARAGRAPH //
 	
@@ -6244,7 +6300,14 @@ function OSMModel() // setUp
 				if (children[i].tagName == "LEGEND")
 				{
 					legend = children[i].innerText;
-					element.removeChild[i];
+					try
+					{
+						element.removeChild[i];
+					}
+					catch(err)
+					{
+						console.log(err)
+					}
 					break;
 				}
 			}
