@@ -28,9 +28,15 @@ This method is not really intended for use by actual users.  It is doubtful that
 
 ===Quick overview===
 
-===Items===
+Project metalmouth's off-screen model comprises of both static and interactable items which by and large reflect the state of the current GUI objects displayed on the screen.   
 
-Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
+Static items allow web content to be repackaged into more cohesive blocks of semantic information - so that it can be better understood by vision impaired users. Interactable items, on the other hand, allow the way in which a user interacts with an HTML object to be changed to improve their user experience.
+
+The off-screen model developed for Project metalmouth has been designed to work best with web content developed in accordance with relevant aspects of accessibility standards (first and foremost the W3C's Web Content Accessibility Guidelines).
+
+===Items in the off-screen model===
+
+If the (X)HTML code from which they are formed is present the following 'off-screen model' objects can be navigated to: 
 
   *  page header area;
   *  site navigation area;
@@ -90,7 +96,7 @@ The following items exist in the off-screen model but cannot be navigated to.
   *  layout header cell;
   *  layout data cell;
 
-===Interaction Items===
+===Interactable items in the off-screen model===
 
 Not all items, however, can be interacted with - currently it is only:
 
@@ -144,7 +150,7 @@ A close-up of the control panel is shown below.  All functionality provided by t
   # *Navigate by* button;
   # *Options* button;
 
-===Navigation - Simple is best===
+===Navigation - simple is best===
 
 A user can start/resume reading on from their current position at any time by hitting space bar.
 The extension can be stopped from reading all items by hitting the spacebar again. 
@@ -223,36 +229,38 @@ If a user has selected an option other than 'all' in the Navigate by drop-down t
 
 ====Expected outcome:====
 
-
+A user can interact with any item stated to be 'interactable'.
+If the object which has just been read out cannot be interacted with the button will be disabled.
 
 ====Achieved by:====
 
-When a user is navigating using the up and down arrows (navigation mode) the space bar need only be pressed to interact when an item has been specified as interactable.
-
-Otherwise, a user needs to hold down the hot key 'j', and press the space bar when the Interact button is focused, in order to interact with an item has been specified as interactable.  
-
-If the object which has just been read out cannot be interacted with the button will be disabled.
+  * pressing enter (when the item is stated to be 'interactable'); or
+  * holding down the hot key 'j' and pressing enter when the Interact button is focused.
 
 ===Read on===
 
 ====Expected outcome:====
+
+The extension will read out each item in turn, starting from the current item.  The user can choose to continue to listen to the page being read out at anytime.
+
 ====Achieved by:====
 
-By holding down the hot key 'k', or by pressing the space bar when the 'Read on' button is focused, the Project metalmouth extension will start automatically reading the contents of the page from the object which has just been read out.  The 'Read on' button is disabled until the 'Stop' button is pressed.
+  * pressing the space bar; or 
+  * holding down the hot key 'k', or by pressing the space bar when the 'Read on' button is focused.
 
 ===Stop reading===
 
 ====Expected outcome:====
+
+The extension will stop reading out all items in turn.
+
 ====Achieved by:====
 
-By pressing the space bar when the 'Stop' button is focused the Project metalmouth extension will stop automatically reading the contents of the page.  The 'Stop' button is disabled until either the 'Read from start' button or the 'Continue' button is pressed.
+  * pressing the space bar.
 
 ===Change location button===
 
-====Expected outcome:====
-====Achieved by:====
-
-By holding down the hot key 'b', or by pressing the space bar when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
+By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
 
 *Sub menu item - Back*
 
@@ -268,17 +276,11 @@ When a url has been entered a user can tab once to the Go button.  By pressing e
 
 ===Navigate by item===
 
-====Expected outcome:====
-====Achieved by:====
-
 By holding down the hot key 's', or by pressing the space bar when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
 
 So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
 
 ===Options button===
-
-====Expected outcome:====
-====Achieved by:====
 
 By holding down the hot key 'l', or by pressing the space bar when the 'Options' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
 
