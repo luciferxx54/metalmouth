@@ -26,7 +26,9 @@ This method is not really intended for use by actual users.  It is doubtful that
 
 ==Starting==
 
-Once the extension has started the page title of the page currently being listened to will be read out.  The extension will then proceed to read all items on the page.  A user can stop the "read on" function by simply hitting the space bar.  Once stopped, a user can use the up and down arrows to navigate between all the items on the page (mentioned below).
+When a page is loaded the extension will automatically start to read out the contents of the page, which can be stopped whenever by hitting the spacebar. A user can resume reading on from the current position at any time by hitting space bar again.
+
+A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page, and within sub menus. If the current element is interactable a user simply needs to hit enter to start interacting.
 
 ==Extension Control Panel==
 
