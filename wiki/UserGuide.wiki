@@ -26,33 +26,13 @@ This method is not really intended for use by actual users.  It is doubtful that
 
 ==Starting==
 
-When a page is loaded the extension will automatically start to read out all the items in the off-screen model for the page (see later sections). The extension can be stopped from reading all items by hitting the spacebar. A user can resume reading on from the current position at any time by hitting space bar again.
-
-A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page, and within sub menus. If the current item is interactable a user simply needs to hit enter to start interacting.
+When a page is loaded the extension will automatically start to read out all the items in the off-screen model for the page (see later sections). 
 
 ==Extension Control Panel==
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
 [http://2.bp.blogspot.com/-w1dXbXcgREU/TZrobmGvqAI/AAAAAAAAAA8/PI8nYIx9OQc/s1600/screenshotMetalmouth.png] 
-
-The control panel can be brought into focus at any time by using the access key 'c'.
-
-  *  On windows this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
-  *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
-  *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
-
-All the buttons are available via hot keys or tabbing. Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
- 
-Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
-
-Also, when in a sub menu a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
-
-The hope with the hot keys, and the changed control panel layout, is that less tabbing will be required for users.
-
-New!!!  In navigation mode the user can use the up and down arrow to move between items on a page.  They can also use the up and down arrows to move through items in submenus.  In addition, by pressing the right arrow a user will jump down the page to each item of the type selected in the 'Navigate by' menu (see 'Navigate by' function).
-
-When the current item is interactable the user just has to hit the space bar to start interacting.
 
 A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
 
@@ -70,24 +50,58 @@ A close-up of the control panel is shown below.  All functionality provided by t
   # *Change location* button;
   # *Navigate by* button;
   # *Options* button;
+
+===Navigation - Simple is best===
+
+A user can start/resume reading on from their current position at any time by hitting space bar.
+The extension can be stopped from reading all items by hitting the spacebar again. 
+
+A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page, and within sub menus. If the current item is interactable a user simply needs to hit enter to start interacting.
+
+In addition, by pressing the right arrow a user will jump down the page to each item of the type selected in the 'Navigate by' menu (see 'Navigate by' function).
+
+===Hotkey support===
+
+The control panel can be brought into focus at any time by using the access key 'c'.
+
+  *  On windows this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
+  *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
+  *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
+
+All the buttons are available via hot keys or tabbing. Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
+ 
+Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
+
+Also, when in a sub menu a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
+
+The hope with the hot keys, and the changed control panel layout, is that less tabbing will be required for users.
  
 ===Back to start===
 
-By holding down the hot key 'd', or by pressing the space bar when the Back to start button is focused, the user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
+====Expected outcome:====
+
+The user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
+
+Achieved by:
+
+  * holding down the hot key 'd'; or
+  * by pressing enter when the Back to start button is focused.
 
 ===Jump===
 
+
+
 As user is able to navigate directly to selected items by using the Jump function.  The default item is 'Section', however, by using the 'Navigate by' function (described later) a user can select other items - such as Link, Form, etc... 
 
-By pressing the right arrow, or by holding down the hot key 'f' and pressing the space bar when the Jump button is focused, the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
+By pressing the right arrow, or by holding down the hot key 'f' and pressing enter, when the Jump button is focused the user will be taken to the first item of the selected type, subsequent pushes of the button will take the user to subsequent items in the page - one after another.
 
 ===Read previous===
 
-By pressing the up arrow, or by holding down the hot key 'g' and pressing the space bar when the Read previous button is focused, the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
+By pressing the up arrow, or by holding down the hot key 'g' and pressing enter, when the Read previous button is focused, the previous object in the 'off-screen model' will be read out.  If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous object of this type.  If no previous object exists this button will be disabled.
 
 ===Read next===
 
-By pressing the up arrow, or by holding down the hot key 'h' and pressing the space bar when the Read next button is focused, the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
+By pressing the up arrow, or by holding down the hot key 'h' and pressing enter when the Read next button is focused, the next object in the 'off-screen model' will be read out. If no next object exists this button will be disabled.
 
 Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
 
