@@ -26,6 +26,10 @@ This method is not really intended for use by actual users.  It is doubtful that
 
 ==Flexible off-screen model==
 
+===Quick overview===
+
+===Items===
+
 Currently, (if they are present) the following 'off-screen model' objects can be navigated to: 
 
   *  page header area;
@@ -85,6 +89,8 @@ The following items exist in the off-screen model but cannot be navigated to.
   *  layout table;
   *  layout header cell;
   *  layout data cell;
+
+===Interaction Items===
 
 Not all items, however, can be interacted with - currently it is only:
 
