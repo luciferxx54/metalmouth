@@ -152,8 +152,8 @@ A close-up of the control panel is shown below.  All functionality provided by t
 
 ===Navigation - simple is best===
 
-A user can start/resume reading on from their current position at any time by hitting space bar.
-The extension can be stopped from reading all items by hitting the spacebar again. 
+A user can start/resume reading all items from their current position at any time by hitting the space bar.
+The extension can be stopped at any time by hitting the space bar again. 
 
 A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page, and within sub menus. If the current item is interactable a user simply needs to hit enter to start interacting.
 
