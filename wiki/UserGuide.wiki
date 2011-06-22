@@ -41,6 +41,8 @@ The control panel can be brought into focus at any time by using the access key 
   *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
   *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
 
+----
+
 ===Navigation - simple is best===
 
 A simple navigation mechanism is provided to move between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. 
