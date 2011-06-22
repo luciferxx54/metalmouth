@@ -57,6 +57,8 @@ If the (X)HTML code from which they are formed is present, the following 'off-sc
   *  button;
   *  check button;
   *  single select (drop-down menu with one selectable option);
+  *  static text;
+  *  level 1 - 6 headers; 
   *  section;
   *  paragraph;
   *  sentence;
@@ -87,17 +89,8 @@ If the (X)HTML code from which they are formed is present, the following 'off-sc
   *  data cell;
   *  audio;
   *  video;
-  *  semantic image;
-  *  decorative image;
-  *  unsupported.  
-
-The following items exist in the off-screen model but cannot be navigated to.
-
-  *  static text;
-  *  layout division;
-  *  layout table;
-  *  layout header cell;
-  *  layout data cell;
+  *  canvas;
+  *  semantic image.
 
 ===Interactable items in the off-screen model===
 
