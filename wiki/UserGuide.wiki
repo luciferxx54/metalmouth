@@ -64,7 +64,7 @@ The extension can be stopped from reading at any time by hitting the space bar a
 
 ====Enter====
 
-If the current item is interactable a user simply needs to hit enter to start interacting.
+If the current item is interactable (the "interactable" keyword will be read out) a user simply needs to hit enter to start interacting.
 
 ====Left arrow====
 
