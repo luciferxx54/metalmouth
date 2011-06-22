@@ -124,24 +124,7 @@ Not all items, however, can be interacted with - currently it is only:
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
-[http://2.bp.blogspot.com/-w1dXbXcgREU/TZrobmGvqAI/AAAAAAAAAA8/PI8nYIx9OQc/s1600/screenshotMetalmouth.png] 
-
-A close-up of the control panel is shown below.  All functionality provided by the buttons and drop-down menus is explained in detail below.
-
-[http://2.bp.blogspot.com/-i_iRM2HjZps/TZrap5Q-_vI/AAAAAAAAAA0/cIR6vOXjLqc/s1600/toolbar.png]
-
-===Overview===
-
-  # *Back to start* button;
-  # *Jump* button;
-  # *Read previous item* button;
-  # *Read next item* button;
-  # *Interact* button;
-  # *Read on* button;
-  # *Stop reading* button;
-  # *Change location* button;
-  # *Navigate by* button;
-  # *Options* button;
+[http://4.bp.blogspot.com/-gYDXph9GGlI/TgHG8xWZ64I/AAAAAAAAABI/kRYgRckz6tQ/s1600/storePromotionalImage2.png] 
 
 ===Navigation - simple is best===
 
