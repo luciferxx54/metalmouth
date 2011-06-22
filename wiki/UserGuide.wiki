@@ -23,7 +23,7 @@ When the page is loaded the extension will read the page title, then automatical
 
   #  Click on the Project metalmouth button (made from the Project metalmouth logo) in the Chrome browser's toolbar.  
 
-The Project metalmouth extension will start working with the current page. The extension will read the page title, then automatically start to read out all the items in the off-screen model for the page (see later sections). 
+The Project metalmouth extension will start working with the current page. The extension will read the page title, then automatically start to read out all the items in the off-screen model for the page.
 
 ----
 
@@ -33,27 +33,31 @@ The control panel is displayed at the top of the page, just under Chrome browser
 
 [http://4.bp.blogspot.com/-gYDXph9GGlI/TgHG8xWZ64I/AAAAAAAAABI/kRYgRckz6tQ/s1600/storePromotionalImage2.png] 
 
-The control panel contains a single button (the change location button) and a display panel which serves only to show the item currently being read out.  When in "navigation mode" a single tab will bring the change location button into focus. 
+The control panel contains a single button (the change location button) and a display panel which serves only to show the item currently being read out.  
 
-The control panel can be brought into focus at any time by using the access key 'c'.
+----
+
+===Navigation mode - simple is best===
+
+A simple navigation mechanism is provided to move between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. You automatically start off in "navigation mode".
+
+You can enter "Navigation mode" at any time by using the access key 'c'.
 
   *  On windows this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
   *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
   *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
 
-----
+In addition, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-===Navigation - simple is best===
+You must be in "navigation mode" for the following keys to work.
 
-A simple navigation mechanism is provided to move between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. 
-
-====Up and down arrows====
+====Up/down arrow====
 
 A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page. 
 
-In sub menus, you can use the up and down arrows to move between items.
+In sub menus, you can use the up and down arrows to move between items.  Whilst in a sub menu, a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
 
-====Hitting the space bar====
+====Space bar====
 
 A user can start/resume reading all items from their current position at any time by hitting the space bar.
 The extension can be stopped from reading at any time by hitting the space bar again. 
@@ -70,21 +74,15 @@ A user is able to use the left arrow to be taken back to the start of the page.
 
 A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
 
-===Esc key===
+====Change location button====
 
-Pressing the "esc" when the change location button is focused will take you back into "navigation mode".
+When in "navigation mode" a single tab will bring the change location button into focus.  Otherwise, holding down the hot key 'b' will do the same job.  A sub-menu will be made available with options a user can arrow through which allow the location of web page currently loaded in the browser to be changed.  
 
-In sub menus, a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
-
-===Change location button===
-
-By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available with options a user can tab through which allow them to change the web page currently loaded in the browser.  
-
-====Sub menu item - Back====
+*Sub menu option - Back*
 
 By pressing the space bar when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-====Sub menu item - New url====
+*Sub menu option - New url*
 
 By pressing the space bar when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
