@@ -39,7 +39,7 @@ The control panel contains a single button (the change location button) and a di
 
 ===Navigation mode - simple is best===
 
-A simple navigation mechanism is provided to move between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. You automatically start off in "navigation mode".
+You automatically start off in "navigation mode".  In this mode a simple navigation mechanism is provided which allows movement between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. 
 
 You can enter "Navigation mode" at any time by using the access key 'c'.
 
@@ -49,7 +49,7 @@ You can enter "Navigation mode" at any time by using the access key 'c'.
 
 In addition, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-You must be in "navigation mode" for the following keys to work.
+Note: You must be in "navigation mode" for the following keys to work.
 
 ====Up/down arrow====
 
