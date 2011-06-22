@@ -33,16 +33,7 @@ The control panel is displayed at the top of the page, just under Chrome browser
 
 [http://4.bp.blogspot.com/-gYDXph9GGlI/TgHG8xWZ64I/AAAAAAAAABI/kRYgRckz6tQ/s1600/storePromotionalImage2.png] 
 
-===Navigation - simple is best===
-
-A user can start/resume reading all items from their current position at any time by hitting the space bar.
-The extension can be stopped at any time by hitting the space bar again. 
-
-A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page, and within sub menus. If the current item is interactable a user simply needs to hit enter to start interacting.
-
-In addition, by pressing the right arrow a user will jump down the page to each item of the type selected in the 'Navigate by' menu (see 'Navigate by' function).
-
-===Hotkey support===
+The control panel contains a single button (the change location button) and a display panel which serves only to show the current item being read.  When in "navigation mode" a single tab will bring the change location button into focus. 
 
 The control panel can be brought into focus at any time by using the access key 'c'.
 
@@ -50,109 +41,48 @@ The control panel can be brought into focus at any time by using the access key 
   *  On mac this accesskey is called by holding down the 'alt' and 'ctrl' keys and pressing the 'c' key.
   *  On linux this accesskey is called by holding down the 'alt' key and pressing the 'c' key.
 
-All the buttons are available via hot keys or tabbing. Buttons will be disabled when they are not needed, which means that they will not be able to be tabbed to.
- 
-Holding down the relevant hot key for a function for more than one second will bring the function's button into focus. The hot keys for the functions above have been arranged in order to centre the hands on the keyboard, along with the use of the space bar to activate the buttons. The most used options are nearest the centre of the keyboard.
+===Navigation - simple is best===
 
-Also, when in a sub menu a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
+A simple navigation mechanism is provided to move between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. 
 
-The hope with the hot keys, and the changed control panel layout, is that less tabbing will be required for users.
-----
-===Read on===
+====Up and down arrows====
 
-====Expected outcome:====
+A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page. 
 
-The extension will read out each item in turn, starting from the current item.  The user can choose to continue to listen to the page being read out at anytime.
+In sub menus, you can use the up and down arrows to move between items.
 
-====Achieved by:====
+====Hitting the space bar====
 
-  * pressing the space bar; or 
-  * holding down the hot key 'k', or by pressing the space bar when the 'Read on' button is focused.
-----
-===Stop reading===
+A user can start/resume reading all items from their current position at any time by hitting the space bar.
+The extension can be stopped from reading at any time by hitting the space bar again. 
 
-====Expected outcome:====
+====Enter====
 
-The extension will stop reading out all items in turn.
+If the current item is interactable a user simply needs to hit enter to start interacting.
 
-====Achieved by:====
+====Left arrow====
 
-  * pressing the space bar.
-----
-===Read next===
+A user is able to use the left arrow to be taken back to the start of the page.
 
-====Expected outcome:====
+====Right arrow====
 
-If available, the next item in the 'off-screen model' will be read out.
+A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
 
-If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the next item of this type.  If no next item exists this button will be disabled.
+===Esc key===
 
-====Achieved by:====
+Pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-  * pressing the up arrow; or
-  * holding down the hot key 'h' and pressing enter when the Read next button is focused.
-----
-===Read previous===
-
-====Expected outcome:====
-
-If available, the previous item in the 'off-screen model' will be read out.
-
-If a user has selected an option other than 'all' in the Navigate by drop-down they will be take to the previous item of this type.  If no previous item exists this button will be disabled.
-
-====Achieved by:====
-
-  * pressing the up arrow; or
-  * holding down the hot key 'g' and pressing enter when the Read previous button is focused.  
-----
-
-===Interact===
-
-====Expected outcome:====
-
-A user can interact with any item stated to be 'interactable'.
-If the object which has just been read out cannot be interacted with the button will be disabled.
-
-====Achieved by:====
-
-  * pressing enter (when the item is stated to be 'interactable'); or
-  * holding down the hot key 'j' and pressing enter when the Interact button is focused.
-----
-===Jump===
-
-====Expected outcome:====
-
-As user is able to navigate directly to selected items by using the Jump function.  The default item is 'Section', however, by using the 'Navigate by' function (described later) a user can select other items - such as Link, Form, etc...
-
-The user will be taken to the first item of the selected type, and with each further click to subsequent items in the page - one after another.
-
-====Achieved by:====
-
-  * pressing the right arrow; or
-  * holding down the hot key 'f' and pressing enter when the Jump button is focused. 
-----
-
-===Back to start===
-
-====Expected outcome:====
-
-The user will be taken back to the start of the current page - with everything as it was when the Project metalmouth extension loaded.
-
-====Achieved by:====
-
-  * holding down the hot key 'd'; or
-  * pressing enter when the Back to start button is focused.
-----
+In sub menus, a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
 
 ===Change location button===
 
-By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change the web page currently loaded in the Chrome browser.  
+By holding down the hot key 'b', or by pressing enter when the 'Change location' button is focused, a sub-menu will be made available with options a user can tab through which allow them to change the web page currently loaded in the browser.  
 
-*Sub menu item - Back*
+====Sub menu item - Back====
 
 By pressing the space bar when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-*Sub menu item - New url*
+====Sub menu item - New url====
 
 By pressing the space bar when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
@@ -161,52 +91,15 @@ When the url entry area is focused a user can enter a url (which must include th
 When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 ----
 
-===Navigate by item===
-
-By holding down the hot key 's', or by pressing the space bar when the 'Navigate by' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through a set of items which they can choose to navigate the page by via the 'Jump' button.  
-
-So far Project metalmouth supports navigation by section, form, link and skip link (more will follow in time).  It should be noted that the items in the Navigate by item sub-menu will only appear if content to which they relate can be located in the web content being browsed e.g. form will show in the drop-down if a form exists. 
-----
-
-===Options button===
-
-By holding down the hot key 'l', or by pressing the space bar when the 'Options' button is focused, a sub-menu will be made available.  When this sub-menu has focus a user can tab through functions by which they can change certain settings in the Project metalmouth extension.  
-
-*Sub menu item - Speak at slow speed*
-
-(Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
-
-By pressing the space bar when the 'Speak at slow speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a slow rate. 
-
-*Sub menu item - Speak at normal speed*
-
-Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
-
-By pressing the space bar when the 'Speak at normal speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a normal rate. 
-
-*Sub menu item - Speak at fast speed*
-
-Currently does nothing - requires chrome.experimental.tts which has been temporarily removed)
-
-By pressing the space bar when the 'Speak at fast speed' button is focused the user will change the speed of the voice pronouncing the text, in this case to a fast rate. 
-
-So far Project metalmouth supports slow, normal, fast (more might follow in time). 
-
-Project metalmouth automatically changes the pronunciation being used by the voice according to the specified page language i.e. if a page specified en-US the pronunciation should change correspondingly.  The experimental nature of Chrome's text-to-speech api means that this functionality at present does not appear to be working as intended. 
-
-----
-
 ==Appendix==
 
-===Flexible off-screen model===
+===Off-screen model===
 
 Project metalmouth's off-screen model comprises of both static and interactable items which reflect the state of the current GUI objects displayed on the screen.   
 
 Static items allow web content to be repackaged into more cohesive blocks of semantic information - so that it can be better understood by vision impaired users. Interactable items allow the way in which a user interacts with an HTML object to be changed to improve user experience.
 
 The off-screen model developed for Project metalmouth has been designed to work best with web content developed in accordance with relevant aspects of accessibility standards (first and foremost the W3C's Web Content Accessibility Guidelines).
-
-===Items in the off-screen model===
 
 If the (X)HTML code from which they are formed is present, the following 'off-screen model' objects can be navigated to: 
 
@@ -261,9 +154,7 @@ If the (X)HTML code from which they are formed is present, the following 'off-sc
   *  canvas;
   *  semantic image.
 
-===Interactable items in the off-screen model===
-
-Not all items, however, can be interacted with - currently it is only:
+Some of these items can also be interacted with:
 
   *  *skip link*: Interaction will move the user to the identified skip target.
   *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
