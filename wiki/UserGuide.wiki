@@ -74,17 +74,23 @@ A user is able to use the left arrow to be taken back to the start of the page.
 
 A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
 
-====Change location button====
+----
 
-When in "navigation mode" a single tab will bring the change location button into focus.  Otherwise, holding down the hot key 'b' will do the same job.  A sub-menu will be made available with options a user can arrow through which allow the location of web page currently loaded in the browser to be changed.  
+===Change location===
 
-*Sub menu option - Back*
+When in "navigation mode" a single tab will bring the change location button into focus.  Otherwise, holding down the hot key 'b' will do the same job.  Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
 
-By pressing the space bar when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+As mentioned above, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-*Sub menu option - New url*
+This change location sub-menu holds two options a user can arrow through which allow the location of web page currently loaded in the browser to be changed.  
 
-By pressing the space bar when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
+*Sub menu option 1 - Back*
+
+By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+*Sub menu option 2 - New url*
+
+By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
