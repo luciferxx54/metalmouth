@@ -27,99 +27,6 @@ The Project metalmouth extension will start working with the current page. The e
 
 ----
 
-==Flexible off-screen model==
-
-===Quick overview===
-
-Project metalmouth's off-screen model comprises of both static and interactable items which reflect the state of the current GUI objects displayed on the screen.   
-
-Static items allow web content to be repackaged into more cohesive blocks of semantic information - so that it can be better understood by vision impaired users. Interactable items allow the way in which a user interacts with an HTML object to be changed to improve user experience.
-
-The off-screen model developed for Project metalmouth has been designed to work best with web content developed in accordance with relevant aspects of accessibility standards (first and foremost the W3C's Web Content Accessibility Guidelines).
-
-===Items in the off-screen model===
-
-If the (X)HTML code from which they are formed is present, the following 'off-screen model' objects can be navigated to: 
-
-  *  page header area;
-  *  site navigation area;
-  *  menu;
-  *  menu item;
-  *  main content area;
-  *  page footer area;
-  *  page contact details;
-  *  skip link;
-  *  skip target;
-  *  link;
-  *  text box;
-  *  search box;
-  *  password box;
-  *  button;
-  *  check button;
-  *  single select (drop-down menu with one selectable option);
-  *  static text;
-  *  level 1 - 6 headers; 
-  *  section;
-  *  paragraph;
-  *  sentence;
-  *  quote;
-  *  quote link;
-  *  insertion;
-  *  deletion;
-  *  code;
-  *  form;
-  *  input group;
-  *  telephone box;
-  *  url box;
-  *  email box;
-  *  number box;
-  *  datetime box;
-  *  date box;
-  *  month box;
-  *  week box;
-  *  time box;
-  *  range input;
-  *  bulleted list;
-  *  numbered list;
-  *  list item;
-  *  map;
-  *  map area;
-  *  data table;
-  *  header cell; 
-  *  data cell;
-  *  audio;
-  *  video;
-  *  canvas;
-  *  semantic image.
-
-===Interactable items in the off-screen model===
-
-Not all items, however, can be interacted with - currently it is only:
-
-  *  *skip link*: Interaction will move the user to the identified skip target.
-  *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
-  *  *quote link*: Interaction same as link.
-  *  *map area*: Interaction same as link.
-  *  *text box*: Interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' item which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
-  *  *search box*: Interaction same as text box.
-  *  *password box*: Interaction same as text box.
-  *  *telephone box*: Interaction same as text box.
-  *  *url box*: Interaction same as text box.
-  *  *e-mail box*: Interaction same as text box.
-  *  *number box*: Interaction same as text box.
-  *  *datetime box*: Interaction same as text box.
-  *  *date box*: Interaction same as text box.
-  *  *month box*: Interaction same as text box.
-  *  *week box*: Interaction same as text box.
-  *  *time box*: Interaction same as text box.
-  *  *button*: Interaction will click the live button corresponding to the 'off-screen model' object which was read out.
-  *  *check button*: Interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a Cancel button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' item which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
-  *  *single select*: Interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' item which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' item which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
-  *  *range input*: Interaction will open the interation area containing a 'increase value' button, a 'decrease value' button, an 'enter' button and a 'close menu' button.
-  *  *audio*: Interaction will open the interaction area containing a 'play' button, 'pause' button, 'rewind' button and a 'close menu' button.
-  *  *video*: Interaction same as audio.
-----
-
 ==Extension Control Panel==
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
@@ -286,3 +193,98 @@ By pressing the space bar when the 'Speak at fast speed' button is focused the u
 So far Project metalmouth supports slow, normal, fast (more might follow in time). 
 
 Project metalmouth automatically changes the pronunciation being used by the voice according to the specified page language i.e. if a page specified en-US the pronunciation should change correspondingly.  The experimental nature of Chrome's text-to-speech api means that this functionality at present does not appear to be working as intended. 
+
+----
+
+==Appendix==
+
+===Flexible off-screen model===
+
+Project metalmouth's off-screen model comprises of both static and interactable items which reflect the state of the current GUI objects displayed on the screen.   
+
+Static items allow web content to be repackaged into more cohesive blocks of semantic information - so that it can be better understood by vision impaired users. Interactable items allow the way in which a user interacts with an HTML object to be changed to improve user experience.
+
+The off-screen model developed for Project metalmouth has been designed to work best with web content developed in accordance with relevant aspects of accessibility standards (first and foremost the W3C's Web Content Accessibility Guidelines).
+
+===Items in the off-screen model===
+
+If the (X)HTML code from which they are formed is present, the following 'off-screen model' objects can be navigated to: 
+
+  *  page header area;
+  *  site navigation area;
+  *  menu;
+  *  menu item;
+  *  main content area;
+  *  page footer area;
+  *  page contact details;
+  *  skip link;
+  *  skip target;
+  *  link;
+  *  text box;
+  *  search box;
+  *  password box;
+  *  button;
+  *  check button;
+  *  single select (drop-down menu with one selectable option);
+  *  static text;
+  *  level 1 - 6 headers; 
+  *  section;
+  *  paragraph;
+  *  sentence;
+  *  quote;
+  *  quote link;
+  *  insertion;
+  *  deletion;
+  *  code;
+  *  form;
+  *  input group;
+  *  telephone box;
+  *  url box;
+  *  email box;
+  *  number box;
+  *  datetime box;
+  *  date box;
+  *  month box;
+  *  week box;
+  *  time box;
+  *  range input;
+  *  bulleted list;
+  *  numbered list;
+  *  list item;
+  *  map;
+  *  map area;
+  *  data table;
+  *  header cell; 
+  *  data cell;
+  *  audio;
+  *  video;
+  *  canvas;
+  *  semantic image.
+
+===Interactable items in the off-screen model===
+
+Not all items, however, can be interacted with - currently it is only:
+
+  *  *skip link*: Interaction will move the user to the identified skip target.
+  *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
+  *  *quote link*: Interaction same as link.
+  *  *map area*: Interaction same as link.
+  *  *text box*: Interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' item which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
+  *  *search box*: Interaction same as text box.
+  *  *password box*: Interaction same as text box.
+  *  *telephone box*: Interaction same as text box.
+  *  *url box*: Interaction same as text box.
+  *  *e-mail box*: Interaction same as text box.
+  *  *number box*: Interaction same as text box.
+  *  *datetime box*: Interaction same as text box.
+  *  *date box*: Interaction same as text box.
+  *  *month box*: Interaction same as text box.
+  *  *week box*: Interaction same as text box.
+  *  *time box*: Interaction same as text box.
+  *  *button*: Interaction will click the live button corresponding to the 'off-screen model' object which was read out.
+  *  *check button*: Interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a Cancel button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' item which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
+  *  *single select*: Interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' item which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' item which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
+  *  *range input*: Interaction will open the interation area containing a 'increase value' button, a 'decrease value' button, an 'enter' button and a 'close menu' button.
+  *  *audio*: Interaction will open the interaction area containing a 'play' button, 'pause' button, 'rewind' button and a 'close menu' button.
+  *  *video*: Interaction same as audio.
+----
