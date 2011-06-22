@@ -41,28 +41,10 @@ chrome.extension.onRequest.addListener(
 var startSequencerFunctions = 
 [
  getAugmentationScriptReference,
- initMmId,
- initBodyDOM,
  removeExistingAccesskeys,
  initControlPanel,
  initOSM,
- initSVB,
- updateOSM,
- updateSVB,
- resetSVB,
- attachDOMChangeEventHandler,
  bringFocus
-];
-
-// change sequencer - Node Added / Node Removed
-
-var changeSequencerFunctions = 
-[
- initMmId,
- initBodyDOM,
- updateOSM,
- updateSVB,
- doNothing
 ];
 
 var sequencerNextItem;
@@ -76,10 +58,8 @@ function sequencer()
 	sequencerFunctions[sequencerCurrentItem]();
 }
 
-var bodyDOM;
 var controlPanel;
 var osm;
-var svb;
 
 function start()
 {
@@ -87,27 +67,6 @@ function start()
 	sequencerCurrentItem = 0;
 	sequencerFunctions = startSequencerFunctions;
 	sequencer();
-}
-
-function change()
-{
-	sequencerNextItem = 0;
-	sequencerCurrentItem = 0;
-	sequencerFunctions = changeSequencerFunctions;
-	sequencer();
-}
-
-var changeEventTimer;
-
-function uponDomChange()
-{
-	// Each new element added or removed in the dom fires UponDomChange - if this is a group of 16 new options - then it fires 16 times.  It could however be fired once after the 16th event - 
-	// so, if the events are tightly packed each event resets the timer and only the last event in the series fires
-	
-	var functionToRun = function(){change()};
-	
-	clearTimeout(changeEventTimer);
-	changeEventTimer = window.setTimeout(functionToRun, 250); 
 }
 
 function getAugmentationScriptReference()
@@ -135,325 +94,6 @@ function getAugmentationScriptReference()
 }
 
 // <a id="_mm_AugmentationScript" href="js ref" style="display:none"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==" role="presentation" /></a>
-
-function initMmId()
-{
-	var htmlElement = document.all;
-	var numberingOn = true;
-	var count = 0; 
-	var elementsToAvoid = ["_mm_StyleArea", "_mm_PushDown", "_mm_ShieldImage"]; // elements which Project metalmouth extension adds
-	
-	for (var i = 0; i < htmlElement.length; i++)
-	{
-		if (elementsToAvoid.indexOf(htmlElement[i].id) == -1)
-		{
-			if (htmlElement[i].id == "_mm_Container") // element which Project metalmouth extension adds, and all its contents
-			{
-				numberingOn = false; 
-			}
-			if (numberingOn == true)
-			{
-				if (htmlElement[i].tagName != null)
-				{
-					htmlElement[i].setAttribute("_mm_Id", count); // give all a _mm_Id attribute in advance
-					count++;
-				}
-			}
-			if (htmlElement[i].id == "_mm_ContainerEnd")
-			{
-				numberingOn = true;
-			}
-		}
-	}
-	sequencer();
-}
-
-function BodyDOM(bodyElement)
-{
-	var domFromPage; 
-	
-	var bodyClone = bodyElement.cloneNode(true);
-
-	removeScriptElements();
-	removeNonScriptElements();
-	allFreeTextInSpan();
-	correctAddedSpanElements();
-	removeLabelElements();
-	removeAbbrElements();
-	markSpecialCaseSpans();
-	addHeaderCellValuesToDataCells();
-	removeMMContainer();
-	
-	this.dom = function()
-	{
-		return domFromPage;
-	}
-	
-	function removeScriptElements()
-	{
-		var scriptElements = bodyClone.getElementsByTagName("script");
-		if (scriptElements.length > 0)
-		{
-			for (var x = 0; x < scriptElements.length; x++)
-			{
-				scriptElements[x].innerText = ""; 
-			}
-		}
-	}
-	
-	function removeNonScriptElements()
-	{
-		var noscriptElements = bodyClone.getElementsByTagName("noscript");
-		if (noscriptElements.length > 0)
-		{
-			for (var x = 0; x < noscriptElements.length; x++)
-			{
-				noscriptElements[x].innerText = ""; 
-			}
-		}
-	}
-	
-	function allFreeTextInSpan() // <p>hello <span>there</span></p> should become <p><span>hello</span><span>there</span></p> so that the spans can become static text
-	{	
-		var newBodyText = ""; 
-		
-		var bodySplit = bodyClone.innerHTML.split("<");
-		
-		if (bodySplit.length > 0)
-		{
-			for(var i in bodySplit)
-			{
-				var rightArrowIndex = bodySplit[i].indexOf(">");
-				
-				if (rightArrowIndex != -1)
-				{
-					if (rightArrowIndex == bodySplit[i].length - 1) // see if we have <hghgh>
-					{
-						newBodyText = newBodyText + "<" + bodySplit[i];
-					}
-					else
-					{
-						var openingTag = bodySplit[i].substring(0, rightArrowIndex + 1);
-						var freeText = bodySplit[i].substring(rightArrowIndex + 1);
-						if (freeText.trim() != "")
-						{
-							newBodyText = newBodyText + "<" + openingTag + "<span>" + freeText.trim() + "</span>";
-						}
-						else
-						{
-							newBodyText = newBodyText + "<" + bodySplit[i].trim();
-						}
-					}
-				}
-			}
-		}
-		bodyClone.innerHTML = newBodyText;
-	}
-	
-	function correctAddedSpanElements()
-	{
-		var spans = bodyClone.getElementsByTagName("span");
-		
-		if (spans.length > 0)
-		{
-			for (var i in spans)
-			{
-				if (spans[i].tagName != null)
-				{
-					if (spans[i].hasAttribute("_mm_Id") == false)
-					{
-						var parentsMmId = spans[i].parentElement.getAttribute("_mm_Id");
-						spans[i].setAttribute("_mm_Id", parentsMmId);
-					}
-				}
-			}
-		}
-	}
-	
-	function removeLabelElements()
-	{
-		// remove labels and add their contents to the relevant elements as label attributes - label attributes are not specified in html
-		
-		var labels = bodyClone.getElementsByTagName("label");  // this step is needed as you are removing elements, otherwise labels is reduced when the labels are removed
-		if (labels.length > 0)
-		{
-			var labelsHolder = [];
-			for(var a in labels)
-			{
-				if (labels[a].tagName != null)
-				{
-					labelsHolder[labelsHolder.length] = labels[a];
-				}
-			}
-			
-			if (labelsHolder.length > 0)
-			{
-				var forAttributes = [];
-				var labelValues = [];
-				
-				for (var i in labelsHolder)
-				{
-					if (labelsHolder[i].tagName != null)
-					{
-						forAttributes[forAttributes.length] = labelsHolder[i].getAttribute("for");
-						labelValues[labelValues.length] = labelsHolder[i].innerText;
-						labelsHolder[i].outerHTML = ""; // remove label elements
-					}
-				}
-				
-				var elements = bodyClone.getElementsByTagName("*"); // all elements
-				for (var j in elements)
-				{
-					var forIndex = forAttributes.indexOf(elements[j].id);
-					if (forIndex != -1)
-					{
-						if (elements[j].tagName != null)
-						{
-							elements[j].setAttribute("label", labelValues[forIndex]);
-						}
-					}
-				}
-			}	
-		}
-	}
-	
-	function removeAbbrElements()
-	{
-		// remove abbr elements - replacing their content with the title value for the abbr element
-		
-		var abbrs = bodyClone.getElementsByTagName("abbr");
-		if (abbrs.length > 0)
-		{
-			var abbrsHolder = [];
-			for(var a in abbrs)
-			{
-				if (abbrs[a].tagName != null)
-				{
-					abbrsHolder[abbrsHolder.length] = abbrs[a];
-				}
-			}
-			
-			for (var i = 0; i < abbrsHolder.length; i++)
-			{
-				var replacementSpan = document.createElement("span");
-				replacementSpan.setAttribute("_mm_Id", abbrsHolder[i].getAttribute("_mm_Id"));
-				
-				if (abbrsHolder[i].getAttribute("title") != null)
-				{
-					replacementSpan.innerText = abbrsHolder[i].getAttribute("title");
-				}
-				else
-				{
-					replacementSpan.innerText = abbrsHolder[i].innerText;
-				}
-				
-				if (replacementSpan.innerText != "")
-				{
-					abbrsHolder[i].outerHTML = replacementSpan.outerHTML;
-				}
-				else
-				{
-					abbrsHolder[i].outerHTML = "";
-				}
-			}			
-		}
-	}
-	
-	function markSpecialCaseSpans()
-	{
-		// mark span elements which have a parent of body or div - special cases 
-		
-		var spanElements = bodyClone.getElementsByTagName("span");
-		if (spanElements.length > 0)
-		{
-			for (var x = 0; x < spanElements.length; x++)
-			{
-				if ((spanElements[x].parentElement.tagName == "BODY")||(spanElements[x].parentElement.tagName == "DIV"))
-				{
-					spanElements[x].setAttribute("parentElement", spanElements[x].parentElement.tagName); 
-				}
-			}
-		}
-	}
-	
-	function addHeaderCellValuesToDataCells()
-	{
-		// collect all th element ids and texts
-		
-		var headerCells = bodyClone.getElementsByTagName("th");
-		
-		if (headerCells.length > 0)
-		{
-			var idAttributes = [];
-			var headerCellValues = [];
-			
-			for (var i in headerCells)
-			{
-				if (headerCells[i].tagName != null)
-				{
-					if (headerCells[i].getAttribute("id") != null)
-					{
-						idAttributes[idAttributes.length] = headerCells[i].getAttribute("id");
-						headerCellValues[headerCellValues.length] = headerCells[i].innerText; 
-					}
-				}
-			}
-			
-			var elements = bodyClone.getElementsByTagName("td"); // all elements
-			for (var j in elements)
-			{
-				if (elements[j].tagName != null)
-				{
-					var headersAttributeValue = elements[j].getAttribute("headers");
-					if (headersAttributeValue != null)
-					{
-						var headerTexts = [];
-						var headersAttributeValueArray = headersAttributeValue.split(',');
-						for (var k in headersAttributeValueArray)
-						{
-							var trimmedValue = headersAttributeValueArray[k].trim();
-							if (trimmedValue != "")
-							{
-								var indexOfId = idAttributes.indexOf(trimmedValue);
-								if (indexOfId != -1)
-								{
-									headerTexts[headerTexts.length] = headerCellValues[indexOfId];
-								}
-							}
-						}
-						elements[j].setAttribute("headerCellTitles", JSON.stringify(headerTexts));
-					}
-				}
-			}
-		}
-	}
-	
-	function removeMMContainer()
-	{
-		// remove mm container
-		
-		if (bodyClone.getElementsByClassName("_mm_Container").length > 0)
-		{
-			var elementsToRemoveFromBody = ["_mm_PushDown", "_mm_ShieldImage", "_mm_Container"]; // _mm_StyleArea is in the head, and untouched
-			for (var i in elementsToRemoveFromBody)
-			{
-				var mmElementInClone = bodyClone.getElementsByClassName(elementsToRemoveFromBody[i])[0];
-				bodyClone.removeChild(mmElementInClone);
-			}
-			domFromPage = bodyClone.innerHTML; // this is to remove control panel from OSM
-		}
-		else
-		{
-			domFromPage = bodyClone.innerHTML;
-		}
-	}
-}
-
-function initBodyDOM()
-{
-	bodyDOM = new BodyDOM(document.body);
-	sequencer();
-}
 
 function removeExistingAccesskeys()
 {
@@ -483,78 +123,9 @@ function initOSM()
 	sequencer();
 }
 
-function initSVB()
-{
-	svb = new SVBModel();
-	sequencer();
-}
-
-function updateOSM()
-{
-	osm.update(bodyDOM.dom());
-	sequencer();
-}
-
-function updateSVB()
-{
-	svb.update();
-	sequencer();
-}
-
-function resetSVB()
-{
-	svb.reset();
-	sequencer();
-}
-
-function attachDOMChangeEventHandler()
-{
-	document.body.addEventListener("DOMNodeInserted", addNode = function(e){nodeAddedUpdateOSM(e);}, false);
-	document.body.addEventListener("DOMNodeRemoved", removeNode = function(e){nodeAddedUpdateOSM(e);}, false);
-	
-	// we want events being raised from our own code area to be captured and stopped
-	var mmContainer = document.getElementById("_mm_Container");
-	mmContainer.addEventListener("DOMNodeInserted", function(e){doNothingCapture(e);}, false);
-    mmContainer.addEventListener("DOMNodeRemoved", function(e){doNothingCapture(e);}, false);
-	sequencer();
-}
-
-var x = 0; 
-
-function nodeAddedUpdateOSM(e)
-{
-	uponDomChange();
-}
-
-function nodeRemovedUpdateOSM(e)
-{
-	uponDomChange();
-}
-
-function doNothing()
-{
-	return;
-}
-
-function doNothingCapture(e) // stops any events from our code being interpreted as a change to the dom of the page being viewed
-{
-	e.stopPropagation();
-}
-
 function bringFocus()
 {
-	var mmControlPanelFocus = document.getElementById("_mm_ControlPanelFocus");
-	if (mmControlPanelFocus != null)
-	{
-		mmControlPanelFocus.click();
-	}
-}
-
-function removeMM()
-{
-	var mmContainer = document.getElementById("_mm_Container");
-	document.body.removeChild(mmContainer);
-	sequencer();
+	controlPanel.bringFocus();
 }
 
 //--------------
@@ -570,12 +141,14 @@ function MMControlPanelModel()
 	var headElement = document.getElementsByTagName("head")[0];
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.id = "_mm_StyleArea"; // needs to be removed in initMmId upon dom change _mm_StyleArea, _mm_PushDown and _mm_ShieldImage
-	mmStyleArea.innerText = "body{background-position:0px 22px;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}"; // #_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:80px;} 
+	mmStyleArea.setAttribute("data-mm-uicomponent", "");
+	mmStyleArea.innerText = "body{background-position:0px 22px;}ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";}#_mm_NavArea{position:fixed;top:0px;left:0px;width:2%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}"; // #_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:80px;} 
 	headElement.appendChild(mmStyleArea);
 		
 	var mmPushDown = document.createElement("div");
 	mmPushDown.id = "_mm_PushDown"; // needs to be removed in initMmId upon dom change
 	mmPushDown.className = "_mm_PushDown"; // for removal from DOM clone
+	mmPushDown.setAttribute("data-mm-uicomponent", "");
 	mmPushDown.style.width = "100%"; 
 	mmPushDown.style.height = "22px";
 	document.body.insertBefore(mmPushDown, document.body.firstChild);
@@ -583,143 +156,55 @@ function MMControlPanelModel()
 	var mmShieldImage = new Image();
 	mmShieldImage.id = "_mm_ShieldImage"; // needs to be removed in initMmId upon dom change
 	mmShieldImage.className = "_mm_ShieldImage"; // for removal from DOM clone
+	mmShieldImage.setAttribute("data-mm-uicomponent", "");
 	mmShieldImage.style.cssText = "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;";
 	document.body.insertBefore(mmShieldImage, document.body.children[1]);
 		
 	var mmContainer = document.createElement("div")
 	mmContainer.id = "_mm_Container";
 	mmContainer.className = "_mm_Container"; 
+	mmContainer.setAttribute("data-mm-uicomponent", "");
 	document.body.appendChild(mmContainer);
 		
 	mmContainer = document.getElementById("_mm_Container");
 		
 	if (mmContainer != null)
 	{
+		var mmNavArea = new CP_NavArea();
+		mmNavArea.add();
+		
 		var mmInfoArea = new CP_InfoArea();
 		mmInfoArea.add();
 		
 		// Control panel buttons
 		
-		var mmControlPanelFocus = new ControlPanelFocus();
-		mmControlPanelFocus.add();
-		
-		var mmBackToStartButton = new BackToStartButton(); 
-		mmBackToStartButton.add();
-		
-		var mmDivider1 = new CP_Divider();
-		mmDivider1.add();
-		
-		var mmJumpButton = new JumpButtonModel();
-		mmJumpButton.add();
-		 
-		var mmReadPrevButton = new ReadPrevButton();
-		mmReadPrevButton.add();
-		
-		var mmReadNextButton = new ReadNextButton();
-		mmReadNextButton.add();
-		
-		var mmInteractButton = new InteractButton();
-		mmInteractButton.add();
-		
-		var mmDivider2 = new CP_Divider();
-		mmDivider2.add(); 
-		
-		var mmReadOnButton = new ReadOnButton();
-		mmReadOnButton.add();
-		
-		var mmStopReadingButton = new StopReadingButton();
-		mmStopReadingButton.add();
-		
-		var mmDivider3 = new CP_Divider();
-		mmDivider3.add();
+		var mmNavigationModeFocus = new NavigationModeFocus();
+		mmNavigationModeFocus.add();
 		
 		var mmChangeLocationButton = new ChangeLocationButtonModel(); // shortkey B
 		mmChangeLocationButton.add();
 		
-		var mmNavigateByButton = new NavigateByButtonModel(); // shortkey S
-		mmNavigateByButton.add(); 
-		
-		var mmOptionsButton = new OptionsButtonModel(); // shortkey L
-		mmOptionsButton.add();
-		
-		var mmDivider4 = new CP_Divider();
-		mmDivider4.add();
+		var mmDivider = new CP_Divider();
+		mmDivider.add();
 		
 		var mmCurrentItemDisplay = new CurrentItemDisplayModel();
 		mmCurrentItemDisplay.add();
 		
 		// Areas
 		
-		var mmOSMArea = document.createElement("div");
-		mmOSMArea.id = "_mm_OSMArea"; 
-		mmOSMArea.style.display = "none";
-		mmContainer.appendChild(mmOSMArea);
-			
 		var mmHighlighter = document.createElement("div"); // div
 		mmHighlighter.id = "_mm_Highlighter";
+		mmHighlighter.setAttribute("data-mm-uicomponent", "");
 		mmHighlighter.style.cssText = "display:none;"; 
 		mmContainer.appendChild(mmHighlighter);
-		 
+		
 		var mmInteractArea = new CP_InteractArea();
 		mmInteractArea.add();
-		 
-		var mmContainerEnd = document.createElement("div"); // added so we know where the container ends, for use in initMmId
-		mmContainerEnd.id = "_mm_ContainerEnd";
-		mmContainerEnd.style.cssText = "display:none;"; 
-		mmContainer.appendChild(mmContainerEnd);
-	}
-	 
-	this.update = function()
-	{
-		if (svb.nextOSMNode() > osm.elementCount())
-		{
-			mmReadNextButton.disable();
-		}
-		else
-		{
-			mmReadNextButton.enable();
-		}
-		
-		if (svb.prevOSMNode() <= 0)
-		{
-			mmCurrentItemDisplay.setValue("");
-			mmReadPrevButton.disable();
-		}
-		else
-		{
-			mmReadPrevButton.enable();
-		}
-		
-		if (svb.nextJumpableOSMNode() > osm.elementCount())
-		{
-			mmJumpButton.disable();
-		}
-		else
-		{
-			mmJumpButton.enable();
-		}
-		
-		var osmNodeToRead = document.getElementById("_mm_Replacement" + svb.getCurrentOSMNode());
-		if (osmNodeToRead != null)
-		{
-			mmInteractButton.disable();
-
-			if (osmNodeToRead.hasAttribute("mmInteractable"))
-			{
-				mmInteractButton.enable();
-			}
-		}
-		else
-		{
-			mmInteractButton.disable();
-		}
 	}
 	
-	this.updateNavigatableItems = function()
+	this.bringFocus = function()
 	{
-		// Only add new possibilities if they exist in the page
-		svb.setAvailableReadableNodes(osm.osmTypesInDOM());
-		mmNavigateByButton.setAttribute("_mm_items", svb.getJumpableNodes().toString());
+		getAudio("Reading all items", true, function(){mmNavigationModeFocus.focusNoAudio();initWalker();initJump();startReadingNodes();});
 	}
 	
 	this.changeDisplayedCurrentItem = function(currentItemName)
@@ -729,7 +214,7 @@ function MMControlPanelModel()
 	
 	// interact actions
 	
-	this.drawTextBoxInteract = function(textInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
+	this.drawTextBoxInteract = function(liveTextInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
 	{
 		var iap_Button = new IAP_ButtonModel();
 		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
@@ -747,22 +232,14 @@ function MMControlPanelModel()
 		
 		function cancelInput()
 		{
-			getAudio(enteredDataType + " entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
+			getAudio(enteredDataType + " entry area closed. Navigation mode entered.", false, function(){mmNavigationModeFocus.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
 		
-		function enter(inputElement)
+		function enter()
 		{
-			// setting value by javascript should not fire original events which is good
-			var setValueFunction = function(liveElementToUpdate, enteredValue)
-			{
-				liveElementToUpdate.value = enteredValue;
-				return null;
-			}
-			
-			updateLiveAndOSM(inputElement, document.getElementById("_mm_TBTextEntry").value, setValueFunction, "INPUT");
-			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
+			liveTextInputElement.value = document.getElementById("_mm_TBTextEntry").value;
 		}
 		
 		function TBTextEntry()
@@ -771,6 +248,7 @@ function MMControlPanelModel()
 			var textBox = new CP_TextBoxModel();
 			var tBTextEntry = textBox.template();
 			tBTextEntry.id = "_mm_TBTextEntry";
+			tBTextEntry.setAttribute("data-mm-uicomponent", "");
 			tBTextEntry.setAttribute("title", enteredDataType);
 			
 			this.add = function()
@@ -784,10 +262,11 @@ function MMControlPanelModel()
 		{
 			var tBEnterButton = iap_Button.template();
 			tBEnterButton.id = "_mm_TBEnterButton";
+			tBEnterButton.setAttribute("data-mm-uicomponent", "");
 			tBEnterButton.setAttribute("value", "Enter");
 			tBEnterButton.setAttribute("title", "Enter");
 			tBEnterButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACmElEQVQ4Ee2VXUgUURTH/3fmzu66O21qayKVUREYhlFCpghRJFFUhoREpr1F+VxB0AfRm5APRS9aZFBQEok+lG8GQlFZgfSmFlGiJJqtu7Ozzsft3BXWXMe1hx49A8Pce+b+zse951wmhICUgoaefXu3hW7k6loJhHAY2Jwipc3+YgzqjOl8H/gSaxlqO9op/2YSXH2ht66uIr+9coue79cYcbODMrWMJmwX+PTNMLoGpi713qy5y0LHnpVdP7n+VUNVJC9J2hw/h6qqmWuzjl3XhWFayPEp6P7wy2l9OX6CV2wPny8rDuY55KZpCzx/+wPR6AwURfqxvLi0LhgM4VB5ERTmYkdxUCXeZb7KzwoCmpIKX3AdHY/v4POLNiJSbP8kDBuq6nHgfgslNg7OGfQcNcLJoHQ2JYx2gVtR+PMK0XSxFTq3QFF6igwoiQAe3b4CnpxKRyhZwoXDPVf5wmg8UonStUDC8ib7uILRGQ1P7uVC0JMp3mAymUgkEDMAcwmwRWAjYZN30vDi/VAyLf2v8Qo4ncmVVKRT4X2O6VwGAxrCQQZtiXPsp3P8W9YXVauXeIBlJ7bQNziOwYAN21lcVRKkUk3H3QCEM0vsxXAum/Tf8xY4zIkhXGvcT8u9y3neQ7n3BvQ1temilj2EXOF8MuaMxEyXPKAJM46Dh2uxc1c5eb0cdA4vmIrV+YVQrBgUH4ORdDEdt0YYKh+uu3p2a/+Z6sgm6vFQuA8q11Jm5z3L8kUeurYF25pN5fvpm8nora6xGi5eN42WnOuppyuqY/dmvTTkT6bDyoJboJIZls2Krqav3R+nmsc6j79L3XnyL1b0oGDPqaLmSJhvpJ7qvWMLcPMDBUyZNuyf/e8n2kXf6WGp+QP1tPFu71qjGQAAAABJRU5ErkJggg==";
-			tBEnterButton.addEventListener("click", function(){enter(textInputElement);cancelInput();}, false);
+			tBEnterButton.addEventListener("click", function(){enter();cancelInput();}, false);
 			
 			this.add = function()
 			{
@@ -797,7 +276,7 @@ function MMControlPanelModel()
 		}
 	}
 		
-	this.drawCheckButtonInteract = function(checkInputElement) // - services radio button and checkboxes
+	this.drawCheckButtonInteract = function(liveCheckInputElement) // - services radio button and checkboxes
 	{
 		var iap_Button = new IAP_ButtonModel();
 		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
@@ -815,38 +294,32 @@ function MMControlPanelModel()
 		
 		function cancelInput()
 		{
-			getAudio("check button entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
+			getAudio("check button entry area closed. Navigation mode entered.", false, function(){mmNavigationModeFocus.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
 		
-		function checkNoCheckClick(e, inputElement)
+		function enter(e)
 		{
-			// setting value by javascript should not fire original events which is good
-			var setValueFunction = function(liveElementToUpdate, enteredValue)
+			if (e.srcElement.value == "checked")
 			{
-				if (enteredValue == "checked")
-				{
-					liveElementToUpdate.setAttribute("checked", "checked")
-				}
-				else
-				{
-					liveElementToUpdate.removeAttribute("checked");
-				}
-				return null;
+				liveCheckInputElement.setAttribute("checked", "checked")
 			}
-			updateLiveAndOSM(inputElement, e.srcElement.value, setValueFunction, "INPUT");
-			readCurrentNode(function(){document.getElementById("_mm_ReadNextButton").focus();});
+			else
+			{
+				liveCheckInputElement.removeAttribute("checked");
+			}
 		}
 		
 		function CheckButtonModel()
 		{
 			var checkButton = iap_Button.template();
 			checkButton.id = "_mm_CheckButton";
+			checkButton.setAttribute("data-mm-uicomponent", "");
 			checkButton.setAttribute("value", "checked");
 			checkButton.setAttribute("title", "Check");
 			checkButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADc0lEQVQ4Ea2VeUgUcRTHvzPzmz1akxLbnCAiEqPoAikDiYrchCgiKf8oyg6MIklKKzIyovsOjCLosJNKrLRTkoggWiq68+qQRE1B0Uq3nd2dmd5v1yNzJwp6C7u/mffe573f+733W8EwDHCJmndh5tSxykq7hcVAhBZ8+Zdfhg6p+bv6rqS4bIfxKrOSuwkcPCO3NGOJa9iuhOHOCLtVQijUX1K5GTk0fVNR+qKuOu96xfz3p1PciFtasKjIXUP8/yP7Ct98gDNnoDQ7LfN2enJcX7tF+ocUzU2ZJES5W/VGFhVpVWQmdFn6NAM5R0tQ8/Ed9IAPAn3CC+2f2eFKmoblM0d3mfSxMihRNoVR4QNUZrlTo0sC7ly/iDJ3CaKHjgvCO3XdvxROktBc9gBO5xngFzDvBd0QNNZtHFrx/ASKNj4pFTcv5ZEVYCErNRDS87VGPfOpGUhMiAdDh+I3UC9wJ17U/XDaQ08tKjDQEVq3Eae/FfD5DQpAEYTwpRJ/C9T9SA687Y4XPUPi3A2o+KLiqx9wpW3D5mO34KG1RGUzE5OMAYeN4X7VD6zKWA2t9jEWrQogWhkC98VcuK8p8NhLycZixqUZM5EfVNSJQ21Yu24jLH1j8PTaQdw5mgnR4sDCzFykThkGr0ppm4gpOKDpcMgCtq+ehZFJi7vcnaNc2Jm7AiMUKx2o+eSbgmVG7eTRkb7pJF7dOtIBltHwvBjpGVvx5EMbbLL5UJmCreT0tt6HgkvnYPja4Fq2Ewu3nKUAOu4W5qP0ZR2svPdMxFTT7vVjcqwN5/NP4NCpIpzevwbOfiJaWr9heuIYzEkejgPZPhMsDWVYDY2PKIWGMWVSLFImZXWZ3Ti8PLhu9PDc+YZ5U/aWsGBJ1FFXXY7sQ1eh+72giwV+OkzOYJIYRLWp1MPtjUQM38tMEMGEX6bHoEvIoYxAVWU5Du7e2juVjjci8eTIGLCIAT1sOEoUDIk1taq1voA+uFNrIcW5A9kI6OshcO8/iEZJRNp6lqLdG0B9i6cWsWmXUwsffdb/xzWvabqx68rrcgzKimbv81OvTN9YEkmTtndCXHT/CLtM117PLP6QdLDCfPuNrV7ce15fmVdctsCo298U/M/jjvKs/CnJ8YOXRVglRYdgPlK9o9ARGUJDi1rx8IR7j9G8pZab/ATuk8tp2lm2nwAAAABJRU5ErkJggg=="; 
-			checkButton.addEventListener("click", function(e){checkNoCheckClick(e, checkInputElement);cancelInput();}, false);
+			checkButton.addEventListener("click", function(e){enter(e);cancelInput();}, false);
 			
 			this.add = function()
 			{
@@ -859,10 +332,11 @@ function MMControlPanelModel()
 		{
 			var uncheckButton = iap_Button.template();
 			uncheckButton.id = "_mm_UncheckButton";
+			uncheckButton.setAttribute("data-mm-uicomponent", "");
 			uncheckButton.setAttribute("value", "unchecked");
 			uncheckButton.setAttribute("title", "Uncheck");
 			uncheckButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACT0lEQVQ4EWP8//8/Awgwusw29bBWyObjYpNj+P//L1iQWOI/I/P7L7/u7t5+o///udxrYPNABlsWbg1K8VCdaq0tLsHPzQY0F2IZseYyMjAyvPv8k+HA5RePZm25kXRxRsBeBl6/BdYLdt3+AjSMKmDa5usvGWymqDF7RufOyfbR0AS5lBqAh5OF+9qLb2wsAjxs0twcLChmti0+xnD7xlWG/39+AAOfEUUOwQEGFzMHg4GhIUNBiAlcmJeTjUGYj0MOaOL/v//QwnT7lg0MR9bOYOBVNGT4++cXXBMyg5mZleHz3TMM7zLqUQwGhicwjhj+oDoVqpOJ4ReDkrkHw67tqxjY0SyFGf7+FyODi5MHAwvDb5gQCo3VYKD/GRiBKU6ejwGoEXtQ8ALN+/8PlCqxyzOhWIPG+fkPTQCJ+xO7Q+Eq8BoMV0UGY9RgeKANl6AAZgomZhYGbjz+4eECpmAmZqDXsZeEWDMIE7B8+PDyEUPltO0MTH++Y2gFFR+//rMzfH//FGdRwsL0n4EFZBAy4BBWZHj/cRdDR20JTheBTGQBOpiVXwZZK1CYkYGJ6T8zy/tvf559+/lHS4iXHa5gQnUSw7eyJKACUBGOG/z595+Bjx1VxZcfvxnefv71lEEgcJH94n13v1GllAcaMmPbjTcMtpO0WN6viz1oV7oj6e/ff1NstMWFeTlZcTsRj8yHr7+AVdPz5zO33Ur+fyj3GiOo/AQBVu+Fdp7mMnnAQl8emBj+4DEDQwpYVrF8/vbnztZD93v+70s5C1IAAH/cVPmhj9oJAAAAAElFTkSuQmCC"; 
-			uncheckButton.addEventListener("click", function(e){checkNoCheckClick(e, checkInputElement);cancelInput();}, false);
+			uncheckButton.addEventListener("click", function(e){enter(e);cancelInput();}, false);
 			
 			this.add = function()
 			{
@@ -872,26 +346,28 @@ function MMControlPanelModel()
 		}
 	}
 	
-	this.drawSelectMenuInteract = function(selectInputElement)
+	this.drawSelectMenuInteract = function(liveSelectInputElement)
 	{
 		mmInteractArea.clear();
 		
 		var mmCloseMenuButton = new CloseMenuButtonModel("select", null); // new OptionCloseButtonModel();
 		
 		// get all options and add them as buttons
-		var options = selectInputElement.children;
+		
+		var options = liveSelectInputElement.getElementsByTagName("option");
 		
 		var count = 0;
 		for (var i in options)
 		{
-			if (options[i].className == "_mm_Option")
+			if (options[i].tagName == "OPTION")
 			{
 				var iap_OptionButtonModel = new IAP_OptionButtonModel()
 				var mmOptionButton = iap_OptionButtonModel.template();
 				mmOptionButton.id = count;
+				mmOptionButton.setAttribute("data-mm-uicomponent", "");
 				mmOptionButton.setAttribute("value", options[i].innerText);
 				mmOptionButton.setAttribute("title", options[i].innerText);
-				mmOptionButton.addEventListener("click", function(e){mmCloseMenuButton.click();optionSelected(e, selectInputElement)}, false); // mirror this above in text input for enter
+				mmOptionButton.addEventListener("click", function(e){mmCloseMenuButton.click();optionSelected(e)}, false); // mirror this above in text input for enter
 				mmInteractArea.addOptionToThisMenu(mmOptionButton);
 				count++;
 			}
@@ -901,28 +377,28 @@ function MMControlPanelModel()
 		
 		mmInteractArea.show();
 		
-		function optionSelected(e, selectElement)
+		function optionSelected(e)
 		{
-			// setting value by javascript should not fire original events which is good
-			var setValueFunction = function(liveElementToUpdate, enteredValue)
-			{
-				liveElementToUpdate.setAttribute("_mm_selectedindex", enteredValue); // problem is that we take dom innerHTML which does not keep live variable values like selectedIndex
-				liveElementToUpdate.selectedIndex = enteredValue;
-				fireChangeEvt(liveElementToUpdate);
-				return liveElementToUpdate[liveElementToUpdate.getAttribute("_mm_selectedindex")].innerText;
-			}
-			updateLiveAndOSM(selectElement, e.srcElement.id, setValueFunction, "SELECT");
+			liveSelectInputElement.selectedIndex = e.srcElement.id;
+			fireChangeEvt(liveSelectInputElement);
+		}
+		
+		function fireChangeEvt(onThisElement)
+		{
+			var changeEvt = document.createEvent("HTMLEvents");
+			changeEvt.initEvent("change", false, true); // bubbles - false, default action preventable
+			onThisElement.dispatchEvent(changeEvt);
 		}
 	}
 	
-	this.drawRangeInputInteract = function(inputElement) // - services input elements with a type attribute set to range
+	this.drawRangeInputInteract = function(liveTextInputElement) // - services input elements with a type attribute set to range
 	{
 		var iap_Button = new IAP_ButtonModel();
 		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		var min = inputElement.getAttribute("mmMin");
-		var max = inputElement.getAttribute("mmMax");
-		var step = inputElement.getAttribute("mmStep");
-		var currentValue = extractCurrentValue();
+		var min = liveTextInputElement.getAttribute("min");
+		var max = liveTextInputElement.getAttribute("max");
+		var step = liveTextInputElement.getAttribute("step");
+		var currentValue = liveTextInputElement.value;
 		var changedStep = calculateSteps();
 		
 		var mmIncreaseValueButton = new IncreaseValueButtonModel(); // increase value
@@ -941,31 +417,16 @@ function MMControlPanelModel()
 		
 		function cancelInput()
 		{
-			getAudio("range input entry area closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
+			getAudio("range input entry area closed. Navigation mode entered.", false, function(){mmNavigationModeFocus.focusNoAudio();});
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
 		}
 		
-		function enter(inputElement)
+		function enter()
 		{
-			// setting value by javascript should not fire original events which is good
-			var setValueFunction = function(liveElementToUpdate, enteredValue)
-			{
-				liveElementToUpdate.value = enteredValue;
-				return null;
-			}
-			
-			updateLiveAndOSM(inputElement, currentValue, setValueFunction, "INPUT");
+			liveTextInputElement.value = currentValue;
 		}
-		
-		function extractCurrentValue()
-		{
-			var text = inputElement.children[3].innerText; 
-			var colonPosition = text.indexOf(": ") + 2;
-			text = text.substring(colonPosition);
-			return text;
-		}
-		
+
 		function calculateSteps()
 		{
 			// to calculate steps (max - min / step * x) increasing x by 1 until answer > 20 remembering value usually starts in the middle
@@ -1012,6 +473,7 @@ function MMControlPanelModel()
 		{
 			var increaseValueButton = iap_Button.template();
 			increaseValueButton.id = "_mm_IncreaseButton";
+			increaseValueButton.setAttribute("data-mm-uicomponent", "");
 			increaseValueButton.setAttribute("title", "Increase value");
 			increaseValueButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADkklEQVQ4EZ2Va2gcVRTH/3fu7Ozsbma3brXEhihCSqFNLCLYqokopTUWrH4JgdI2/ZC2WBobTAilFRMMSmoVDfhCC35oPii1SEvQBUGCNKVv2jSt9mUU62OladLsksxOZuZ6zppduybZ2lx25nL3nvu75z1CKQUepesTK59eEnhrflSroqUnFP7ZyO7e6aVk2lHJM0P+noH3V33A0oLBj7d8u7Z+uf5ZzSI9HgwAU3fdiZbfFwLwfWDgNy/z1WnvjYOvruwUePZQxZ4NVn9DtbHAcRU8EpjLYHhJEEgMenjnm8w2fUVluKGqXC7wfIVJby7IqTPkuHQGqCzTUPWg3K3NCyNuSDKliEd5S9foIbkiYlkXSpKzDBHXSNIrKkxQQyqk3CBGMyGEOAZFDOP40M8jfvHB1iBgof3TE3jpzV4k7Sj5UhSFM1EvhtU1Bd200NlzGQe7d5EeY9iasdH92jpUxFJI2bNHelaNNUpkMxRB9+Hr+Oj15iyUlTj5ZRca2z7GwF8liIbZnJnHjGCGlkRC2PfdCN7eTdDxPwpOX0x8iM3Ne3H0FxOxyMxGTwNTOsIKB/H5MRudba/AG7lWAM0thvp7sGV7BxI/SIIb4Dy+fUwDR0mD3vMKu1p3wv5zIC8bK1+Gx+rbaf2vhsmzh7F9WxsOnHJhRYLQboMXgNlnfVcDaG1tR2qoPw+FVY6Wji707F2PF5vfpUYQzu+NXulDU2MjPkkkEaR+kIPLiqc2PvdEhVxeFpf4/qrA1h1dGB7szR9EqAwvd76HHS+Uw/Ru4pkVizEceRiDF65QxsRgxEqp4UzixKVR6Pc/gqVlAqd+9pysXZJMSNsKRy6MYfWqGsyrWwPTNKHrAdwbj6Guej4mJ9JwPIFgYAwdm5ahtnofVSNlDmlpcEn6DjS6YNLlmptyGJeeTtXVssZCwKiZ0lYhWwbKx7idgaNENkAZl+pFy2D1EgaQhO/STA+VnIDEjTTBmJezmf3O3c1x7dxfBXMuLjxzB0zPUBw5//JBja/5b6oUEO9ywSxWWPt9xLucIiUDsxfR/0ZzZ5twgOG0uiSTN9b++MDSUG3lQllqmZRJdCML3O3DzYrPJM6741/0Oxt1da3u1n0NX9f7ntr/5CL5qGUKOZdPk0NBPXfd/enQGa/p1/21fdlvHtsqxAGjqumeLQuj6iElhJi9b033jFS+GJ0QN48fsXvU8eeHWOJv971DmIZVuAUAAAAASUVORK5CYII="; 
 			increaseValueButton.addEventListener("click", function(){changeValue("increase");}, false);
@@ -1027,6 +489,7 @@ function MMControlPanelModel()
 		{
 			var decreaseValueButton = iap_Button.template();
 			decreaseValueButton.id = "_mm_DecreaseButton";
+			decreaseValueButton.setAttribute("data-mm-uicomponent", "");
 			decreaseValueButton.setAttribute("title", "Decrease value");
 			decreaseValueButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADbUlEQVQ4EaWVWUhUURjH/3eZOzOalJpaUmFlVmL5oEF7Ly22QFRWJvVQRlqjUASB5FhRmdhLRZIZLW8VEfZQYETLU7YYREmQJRJE24M5zujs9/R9d+aOaWlZ5+Hec77zfb/zLWeRhBDgNn333W1zJivOMXFKBgRChvAvP0KC6urV37V0hKo7GlfcZDOJwQXOe47CfO1kfoZsVxUgutZfYgkiAcEw8LQj7LnxPFhx/8SyK9KUkubVB9ZYbxXmqarHP3KoubpM8DgrcPVJyFvb5Fuuzpqk7s+doKh9ASCsm2oj/+uUUV8QmD1RtudmWhxyvA2JmgXgif9tOjlms0iItyJZFkIKjzSnwznALF2IsMpK7KyVvFZkmXpStHiREPxBHQEqDKUw1jQqsKKQhCj9gbJd/8gAa6TU2qmj83MPEig3iqJApmrokJE9wYb0BB+4Bgy3a8BHtx1fXICFrLlohIS3rxeTkmRyLrK+AeZJu92GxqbHaLt1CpJNgyQrBnhuQRHqDxUh3d5DiwHtXQlwOC+h/cUDqOwA7TUfRTV/4z6c3DmDxuQBNQPsCwnkpgfRULkUZe4PaGtuiIX45HoNyiUZF44Wwe3TsbvyPM3XR9yKfvPW7kVtSTYyEgN49zUiNMAcoscvMC3Zj8a6PShTrXh1+3TMuOXaMVRQRB5X1y/QeUVVFNFmisiFXmIwi5sB5g4L3D6BqaN7cO54CcqoEK/vnOEpoz28XGV2Y//5W5yor96E8QRlxyzR/LLCT91+eOYYgtfsRM6q8hhkcGdB8aEBUNNTU28AmIVGWsjzLAO+CzkrHaZu7L9w62GCFmJc1NPBUFb8BWxac1qmJ7rJ81JkF+wxxVi07QjqneuRZu0ekNOYQrQTy/HgCR7zLshKZvgulPgCSE4Zi7MH1yFVo0JF9/Xv7Fg2LJgV3F6CJ3nQUFeKeItAivXPUANMh1Dl+3SoxlO8jWaM9RtH1jyBQ+qzgSQpcndvuN3tFVCHzHakoP6gQIDelWF8MI64i1hdHv2t+uCNv3rxNGXJ1FQtle+Bf72T2TE/LdzyPvTh0eO+OuNpynE0L9yQrzXSmzeT79OfLqmhIh4g51R6AxBPO0NtV5+Fd3Q0LGs1wKwlZTal5q0ZtT0lQUob0UtKtpzFbz349PLMt4tCFH9n3g9Gn08YtFwTeQAAAABJRU5ErkJggg=="; 
 			decreaseValueButton.addEventListener("click", function(){changeValue("decrease");}, false);
@@ -1042,10 +505,11 @@ function MMControlPanelModel()
 		{
 			var rangeEnterButton = iap_Button.template();
 			rangeEnterButton.id = "_mm_rangeEnterButton";
+			rangeEnterButton.setAttribute("data-mm-uicomponent", "");
 			rangeEnterButton.setAttribute("value", "Enter");
 			rangeEnterButton.setAttribute("title", "Enter");
 			rangeEnterButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACmElEQVQ4Ee2VXUgUURTH/3fmzu66O21qayKVUREYhlFCpghRJFFUhoREpr1F+VxB0AfRm5APRS9aZFBQEok+lG8GQlFZgfSmFlGiJJqtu7Ozzsft3BXWXMe1hx49A8Pce+b+zse951wmhICUgoaefXu3hW7k6loJhHAY2Jwipc3+YgzqjOl8H/gSaxlqO9op/2YSXH2ht66uIr+9coue79cYcbODMrWMJmwX+PTNMLoGpi713qy5y0LHnpVdP7n+VUNVJC9J2hw/h6qqmWuzjl3XhWFayPEp6P7wy2l9OX6CV2wPny8rDuY55KZpCzx/+wPR6AwURfqxvLi0LhgM4VB5ERTmYkdxUCXeZb7KzwoCmpIKX3AdHY/v4POLNiJSbP8kDBuq6nHgfgslNg7OGfQcNcLJoHQ2JYx2gVtR+PMK0XSxFTq3QFF6igwoiQAe3b4CnpxKRyhZwoXDPVf5wmg8UonStUDC8ib7uILRGQ1P7uVC0JMp3mAymUgkEDMAcwmwRWAjYZN30vDi/VAyLf2v8Qo4ncmVVKRT4X2O6VwGAxrCQQZtiXPsp3P8W9YXVauXeIBlJ7bQNziOwYAN21lcVRKkUk3H3QCEM0vsxXAum/Tf8xY4zIkhXGvcT8u9y3neQ7n3BvQ1temilj2EXOF8MuaMxEyXPKAJM46Dh2uxc1c5eb0cdA4vmIrV+YVQrBgUH4ORdDEdt0YYKh+uu3p2a/+Z6sgm6vFQuA8q11Jm5z3L8kUeurYF25pN5fvpm8nora6xGi5eN42WnOuppyuqY/dmvTTkT6bDyoJboJIZls2Krqav3R+nmsc6j79L3XnyL1b0oGDPqaLmSJhvpJ7qvWMLcPMDBUyZNuyf/e8n2kXf6WGp+QP1tPFu71qjGQAAAABJRU5ErkJggg==";
-			rangeEnterButton.addEventListener("click", function(){enter(inputElement);cancelInput();}, false);
+			rangeEnterButton.addEventListener("click", function(){enter();cancelInput();}, false);
 			
 			this.add = function()
 			{
@@ -1055,42 +519,10 @@ function MMControlPanelModel()
 		}
 	}
 	
-	function updateLiveAndOSM(osmNode, enteredValue, setValueFunction, elementTypeOfInterest) // setValueFunction(liveElementToUpdate, enteredValue)
+	this.drawMediaInteract = function(liveMediaElement, mediaType) // - services video and audio
 	{
-		var valueToSay;
-		var mmStore = osmNode.getAttribute("_mm_Store");
-		if (mmStore != "null") // null a string as it has been entered as a value into an attribute
-		{
-			valueToSay = setValueFunction(document.getElementById(mmStore), enteredValue);
-		}
-		else
-		{
-			var originalIdValue = osmNode.getAttribute("originalId"); // should be _mm_originalId
-			var allElementsOfInterest = document.getElementsByTagName(elementTypeOfInterest);
-			for (var i in allElementsOfInterest)
-			{
-				if(allElementsOfInterest[i].tagName == elementTypeOfInterest.toUpperCase())
-				{
-					if (allElementsOfInterest[i].getAttribute("_mm_Id") == originalIdValue)
-					{
-						valueToSay = setValueFunction(allElementsOfInterest[i], enteredValue);
-						break;
-					}
-				}
-			}				
-		}
+		// Should also handle track selection
 		
-		if (valueToSay == null)
-		{
-			valueToSay = enteredValue;
-		}
-		
-		// change value in model
-		osmNode.children[3].innerText = "Current value: " + valueToSay; // the node which holds the current value is in 4th position
-	}
-	
-	this.drawMediaInteract = function(mediaElement, mediaType) // - services video and audio
-	{
 		var iap_Button = new IAP_ButtonModel();
 		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
 		
@@ -1110,25 +542,21 @@ function MMControlPanelModel()
 		
 		function controlMedia(actionName)
 		{
-			var mmStore = mediaElement.getAttribute("_mm_Store");
-			if (mmStore != "null") // null a string as it has been entered as a value into an attribute
+			switch(actionName)
 			{
-				switch(actionName)
-				{
-					case "play":
-						document.getElementById(mmStore).play();
-						getAudio(mediaType + " playing", false, function(){document.getElementById("_mm_PauseButton").focus();});
-						break;
-					case "pause":
-						document.getElementById(mmStore).pause();
-						getAudio(mediaType + " paused", false, function(){document.getElementById("_mm_PlayButton").focus();});
-						break;
-					case "rewind":
-						document.getElementById(mmStore).currentTime = 0;
-						document.getElementById(mmStore).pause();
-						getAudio(mediaType + " rewound", false, function(){document.getElementById("_mm_PlayButton").focus();});
-						break;
-				}
+				case "play":
+					liveMediaElement.play();
+					getAudio(mediaType + " playing", false, function(){document.getElementById("_mm_PauseButton").focus();});
+					break;
+				case "pause":
+					liveMediaElement.pause();
+					getAudio(mediaType + " paused", false, function(){document.getElementById("_mm_PlayButton").focus();});
+					break;
+				case "rewind":
+					liveMediaElement.currentTime = 0;
+					liveMediaElement.pause();
+					getAudio(mediaType + " rewound", false, function(){document.getElementById("_mm_PlayButton").focus();});
+					break;
 			}
 		}
 		
@@ -1136,6 +564,7 @@ function MMControlPanelModel()
 		{
 			var playButton = iap_Button.template();
 			playButton.id = "_mm_PlayButton";
+			playButton.setAttribute("data-mm-uicomponent", "");
 			playButton.setAttribute("title", "Play");
 			playButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADAElEQVQ4EZ2VW0gUURjH/2cuO7vuqmt0oQvipageAi2phCQQywK7gSRRJN7wgvWQSWaCYg+BLwWJ1oNgb1k9BYVKL0V0MSFJKURS8BJRpunqujs7s9N3ditH0XX1g7Nzzpnz/b7vfHPOf5lhGODG0p4lpKVKxU67sJmG/sBk+D/CL7cx/KZDbTZ6ssa4G+PgvVc6MrKT5fv74qQEmwwEQ4VPZbR0VgW6BrX+h91q3pfGY2+lmLPPk6pO2x5dTJVjOEoz5SqQhz/MKJII7Nlq2Sky9pgdbz8kpmfn3Tt3QE5yRjB4tCCIw3hTdQFWmcGrGYHxv/mlnpoOWGi3isyiRl2GIkTbWbzdyhZkyjO3SAxNnZNo79MRZbdAFPhsaPNRYg5irYtAosAMaH+/3wIvWbFhZKAPZSWVaOqYgKQ4KPuV689Z1LSQeSiKAs/Ye9ReKkBFYxfGfU5EWkO6/E8uvFXub2hrKEVuZQu6Rm2IptLwrYay8MABgh89T+8gt6gKra9mYLU5oEjLl2YV4GB+E587UVlSiOstvXAZ0XAobMlzv2owxxvTQ2itK8L5iha8GaQjRidosa0JHISo6O/twdBPDQK/SYuMqrQWE5F88jLqr13A/m1ezHjodiyy1YPtW5BTXocb+QexyeoiqEkDTPBVgaMS03C1pgb5GRvBfFNweUjFTDBzNzSYzbvtPlKMm9WFOLzDwOycC7qfLQvlAUKAST+8c4AYgxNltagtTUesw4XpWb71+YDmLM19yTAYKZ15KtjXNS8kZyzKbzWjMmcXZH0K0xRniaULnAMsAaLkVv3jqg90RQHzt/V6fSjNikPcBgl+1YU5SnQlKFdAj0ql8hg/hE+DRsPHYU21WRgkesEDCPRkFDphPemwpga0mM8t28hHJqG3UGF7Rvyu7gH9buCvKbO6s+BMiuV2SrwYyReElpcFOw8M+E5U0uJ3X/XJJx/U0pcNR9sCYP42Nr/jVOp2sYpkMY6SpWXhG+mv9NvtH3g9oNd/f5D5gnv+Ac3vF2uTPY7FAAAAAElFTkSuQmCC"; 
 			playButton.addEventListener("click", function(){controlMedia("play");}, false);
@@ -1151,6 +580,7 @@ function MMControlPanelModel()
 		{
 			var pauseButton = iap_Button.template();
 			pauseButton.id = "_mm_PauseButton";
+			pauseButton.setAttribute("data-mm-uicomponent", "");
 			pauseButton.setAttribute("title", "Pause");
 			pauseButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAChElEQVQ4Ee1VS0hUURj+zn2Nd8bxwYhFk1BQbTIKhDIMC8yE9j1Aowymhe2aRYsWtYgoKKOFCAlFEQQ9qE0gRBlSKbZskUS2SKiF9iC1mbmvv/+/V8dJy127+Ye559zvP+c73/24fFcREaRWdw227Wk0r9RVolERfIaiRthd8aJIQZ+eobfPxv1TU7c6hmS1EuLm7NP9h3cYt1s3GamYAQRMqRT/+RfxKz4lOmcpJro0Xpb3gOFx7+vdMadrrLdjUKH1ccOFTNVI9y4z7bJOP4jUyQY9loDSNFAQwHfmwoZulWCFuVCANHQNMHXgxitv8kzf7E6jaZt9qHGtnhY9QiwVtxSG3/u4evMRdG8GrpbA6Uw75LBLAw9h0Rx8I4ns8Xa0bNSQcwgB7zWYeMsarWFrk3XQqK1EjcUAiyqWYh8KvobRB32A943xJPLde3kN4c39a3w/y/JScI7uYxsW7Io4RHWqCtUaQYmly0p80+KJCOcxvBcOO8KkF3Iu2Slc5KuAnfk/VSYu+lq2omxF0YHiZMW3gmgh6kqCZB4r9opUf04MDgpdIqC05N5jLnLnO64WxmkYqTyXIh5lzd/2clDoxudpmpgtRJFX4LCWcn3CqsoAJ89dhAEHLpmoT3Iuc272nL8MU7nwYKGe17j+IrXEJnPRl6lggtF7dra/7vmJ3WZzdVyFpEJusDC7IsaSRGGAXM4RGLZt8ZUxtiSXL4SqBTf5ub//Igy8cF739nxqM4gO5Go6n3RC2XdaNujbkxVKl0CPKrcwKRmXY6L5Zz7wX36g0f4h7wjRsXz4zZNdSl03N/esy6RrtfX8yIvPV0L5ryl/GGjyR/DxXd/IANHZ0NDffR//tvknLgsAAAAASUVORK5CYII="; 
 			pauseButton.addEventListener("click", function(){controlMedia("pause");}, false);
@@ -1166,6 +596,7 @@ function MMControlPanelModel()
 		{
 			var rewindButton = iap_Button.template();
 			rewindButton.id = "_mm_RewindButton";
+			rewindButton.setAttribute("data-mm-uicomponent", "");
 			rewindButton.setAttribute("title", "Rewind");
 			rewindButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADcElEQVQ4EZWVaUhUURTH//fd92beDM5ouBQFaaEZZeuXClsMKjAo+tCCUBFUFGVEfSjIFipCbIUkaYNCaCMoKIgK2vRDQdSHSkMjKsmw0FJHne29uZ0zk2E6T+x8mDnvLL977n3nnieUUmARSx9MLJ4m9w3zYgIEbDInHHGv848QFK0gf3apuvuvrMPqXnF9nMfgyZvvz1pZ6Lo2L1/PTnFTXB9kH9WRTnB0hxRqGuzPV17YJfVVC17oYvrNzAPbM6rXFRrZiUwBt+khVSEcCsGyFTjRSaQG2DFguE9gTKaWQ/HVIu9moV4wO7Vk2miZq1MAIfC4PoJ7NW/i+rL5+ZiT70IwMrBuXst0S7QGFLyGTXABrwuYmq3nTVo0bJWe5UOWKROruimwuTWIqxVbOA0zp9yGIT0IwvqnYF1T8Hg8uFr7C3VN3di7PAs2lc2Vuw0gI01laUoJ2mxC+Gx1Ga8FkGZc7/VxBOseSlSGH8dufcWOrdvQ+qUOuouPLiHMUDFh672Gofz7PRqaunw4WPUId88dBqI/4TLNpKlDAkuhkOJ1o+ajRNmRM3j/8FxSWF/joGDeupsiLG8KLjxpQ8WhI2j/8LRvvqPuDCYqv+WA8mPP+ZeoPrWfHpocQf0djmBJ0HctBi7tvIzaGycpz+6fO+gzda+DUHNw+4TDYQr4PygTHcE28aaOtHCjchNW7T5LfTbCoYLkZkcwXUJ0041L1ztxonQGDlReQkr2jOSUJFZnMAXzVQlFqStCAZQWp+P8xUrkFq1LghloGhTcG85zINAVxsJ8C9Wnd2DhhnI6RN8fNy8/UIYE5jTu6c6gjRxfJ86WLca2iouAfwyi4Z6BVLLoQijZOxb534oxIhRvCZv0/vX0RACX7EBZSS5GZVahobkbVoTi/wjH00SX+o8ONAcpWNKEi0ZtDE8zsWTLcfJqSE910zz+t9U4MWrTJ6anB2uL0tDS4ac8i2a2oKEFBOmdfG+3mwVybqft2Ztau3GuUcDX11YChumlvSvaZhAx3kH/srk6NpOdB71FaxsEDdF0vfAs8ra8vG2Orj4tax+7/sFqCrg+O0+O95tM6eLU+LnyGGTAYMLuAH+aGq33159H16iPKzrE34/p9DsjixZ5dqX7tHFUJd25oYumCa0tEGt8+jB4VL1e+o0zfwMlXEHNq2U2ygAAAABJRU5ErkJggg=="; 
 			rewindButton.addEventListener("click", function(){controlMedia("rewind");}, false);
@@ -1180,10 +611,210 @@ function MMControlPanelModel()
 	
 	// Control Panel (CP) Base Models
 	
+	function CP_NavArea() // should have a this.addButton function - see CP_InteractArea
+	{
+		var navArea = document.createElement("div");
+		navArea.id = "_mm_NavArea";
+		navArea.setAttribute("data-mm-uicomponent", "");
+		addHandlers();
+		
+		this.add = function()
+		{
+			mmContainer.appendChild(navArea);
+		}
+		
+		this.appendChild = function(elementToAppend)
+		{
+			navArea.appendChild(elementToAppend);
+		}
+		
+		function changeHotKeyStatus()
+		{
+			if (hotKeysHolder.value == "hotkeys on")
+			{
+				addHandlers();
+			}
+			else
+			{
+				removeHandlers();
+			}
+		}
+		
+		this.enableHotkeys = function()
+		{
+			addHandlers();
+		}
+		
+		this.disableHotkeys = function()
+		{
+			removeHandlers();
+		}
+		
+		function addHandlers()
+		{
+			alreadyBusy = false;
+			navArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
+			navArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
+		}
+		
+		function removeHandlers()
+		{
+			navArea.removeEventListener("keydown", hotKeyDown, false);
+			navArea.removeEventListener("keyup", hotKeyUp, false);
+		}
+		
+		var hotKeyTimer;
+		var keyBeingTimed;
+		var buttonName; 
+		var textIfButtonDisabled;
+		var alreadyBusy; 
+		var arrowSelected;
+		
+		function hotKeyDown_Handler(e)
+		{
+			if (alreadyBusy == false)
+			{
+				setAlreadyBusy(true);
+				
+				var selected = false; 
+				
+				switch(e.keyIdentifier.toString())
+				{
+					// special cases for arrowing around page
+					case "Up": // ReadPrevButton
+						selected = true;
+						arrowSelected = "Up"; 
+						keyBeingTimed = e.keyIdentifier.toString();  
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
+					case "Down": // ReadNextButton
+						selected = true;
+						arrowSelected = "Down";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue = false;
+						break;
+					case "Left": // back to start
+						selected = true;
+						arrowSelected = "Left";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;	
+					case "Right": // jump
+						selected = true;
+						arrowSelected = "Right";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;	
+					case "U+0020": // space bar to start and stop read on, enter should be used with button interaction
+						selected = true;
+						arrowSelected = "Space";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;
+					case "Enter":
+						selected = true;
+						arrowSelected = "Enter";
+						keyBeingTimed = e.keyIdentifier.toString();
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						window.event.returnValue=false;
+						break;
+						
+					// end special cases
+
+					case "U+0042": // b - change location 
+						selected = true;
+						keyBeingTimed = e.keyIdentifier.toString();
+						buttonName = mmChangeLocationButton; 
+						textIfButtonDisabled = "Change location button is currently disabled";
+						hotKeyTimer = window.setTimeout(functionToRun, 500);
+						break;
+					default: 
+						// if this is not one of the above we need to set alreadybusy to false... 
+						if (selected == false)
+						{
+							setAlreadyBusy(false);
+						}
+						break;
+				}
+			}
+		}
+		
+		function hotKeyUp_Handler(e)
+		{
+			// cancels timer
+			if (e.keyIdentifier.toString() == keyBeingTimed)
+			{
+				clearTimeout(hotKeyTimer);
+				setAlreadyBusy(false);
+			}
+		}
+		
+		function functionToRun()
+		{
+			// running function
+			buttonName.focus();
+			if (buttonName.enabled() == true)
+			{
+				buttonName.focus();
+				setAlreadyBusy(false);
+			}
+			else
+			{
+				getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
+			}
+		}
+		
+		function specialCasesFunctionToRun() // this is for down and up arrowing
+		{
+			if (arrowSelected == "Enter")
+			{
+				interact();
+			}
+			else if(arrowSelected == "Up")
+			{
+				readPrevNode();
+			}
+			else if(arrowSelected == "Down")
+			{
+				readNextNode();
+			}
+			else if(arrowSelected == "Space")
+			{
+				if (readNodesStop == true)
+				{
+					startReadingNodes();
+				}
+				else
+				{
+					stopReadingNodes();
+				}
+			}
+			else if(arrowSelected == "Right")
+			{
+				jump();
+			}
+			else // if(arrowSelected == "Right")
+			{
+				backToStart();
+			}
+		}
+		
+		function setAlreadyBusy(value)
+		{
+			alreadybusy = value;
+		}
+	}
+	
 	function CP_InfoArea() // should have a this.addButton function - see CP_InteractArea
 	{
 		var infoArea = document.createElement("div");
 		infoArea.id = "_mm_InfoArea";
+		infoArea.setAttribute("data-mm-uicomponent", "");
 		addHandlers();
 		
 		this.add = function()
@@ -1236,7 +867,6 @@ function MMControlPanelModel()
 		var buttonName; 
 		var textIfButtonDisabled;
 		var alreadyBusy; 
-		var arrowSelected;
 		
 		function hotKeyDown_Handler(e)
 		{
@@ -1245,116 +875,14 @@ function MMControlPanelModel()
 				setAlreadyBusy(true);
 				
 				var selected = false; 
-
+				
 				switch(e.keyIdentifier.toString())
 				{
-					// special cases for arrowing around page
-					case "Up": // ReadPrevButton + Interact
-						selected = true;
-						arrowSelected = "Up"; 
-						keyBeingTimed = e.keyIdentifier.toString(); 
-						buttonName = mmReadPrevButton; 
-						textIfButtonDisabled = "Read previous Button is currently disabled"; 
-						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-						window.event.returnValue = false;
-						break;
-					case "Down": // ReadNextButton + Interact
-						selected = true;
-						arrowSelected = "Down";
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmReadNextButton; 
-						textIfButtonDisabled = "Read next button is currently disabled";
-						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-						window.event.returnValue = false;
-						break;
-					case "Right":
-						selected = true;
-						arrowSelected = "Right";
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmJumpButton; 
-						textIfButtonDisabled = "Jump button is currently disabled";
-						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-						window.event.returnValue=false;
-						break;		
-					case "U+0020": // space bar to start and stop read on, enter should be used with button interaction
-						selected = true;
-						arrowSelected = "Space";
-						keyBeingTimed = e.keyIdentifier.toString();
-						if (mmReadOnButton.enabled() == true)
-						{
-							buttonName = mmReadOnButton;
-						}
-						if (mmStopReadingButton.enabled() == true)
-						{
-							buttonName = mmStopReadingButton;
-						}
-						textIfButtonDisabled = "button is currently disabled";
-						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-						window.event.returnValue=false;
-						break;
-					// end special cases
-					case "U+0047": // g - ReadPrevButton
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString(); 
-						buttonName = mmReadPrevButton; 
-						textIfButtonDisabled = "Read previous Button is currently disabled"; 
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+0048": // h - ReadNextButton
+					case "U+001B": // escape
 						selected = true;
 						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmReadNextButton; 
-						textIfButtonDisabled = "Read next button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+0046": // f - jump 
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmJumpButton; 
-						textIfButtonDisabled = "Jump button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+004A": // j - interact
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmInteractButton; 
-						textIfButtonDisabled = "Interact button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+0042": // b - change location 
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmChangeLocationButton; 
-						textIfButtonDisabled = "Change location button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+004B": // k - read on
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmReadOnButton; 
-						textIfButtonDisabled = "Read on button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+0044": // d - start of page
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmBackToStartButton; 
-						textIfButtonDisabled = "Back to start button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+004C": // l - options
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmOptionsButton; 
-						textIfButtonDisabled = "Options button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
-						break;
-					case "U+0053": // s - jump item selector
-						selected = true;
-						keyBeingTimed = e.keyIdentifier.toString();
-						buttonName = mmNavigateByButton; 
-						textIfButtonDisabled = "Navigate by button is currently disabled";
-						hotKeyTimer = window.setTimeout(functionToRun, 500);
+						buttonName = mmNavigationModeFocus; 
+						hotKeyTimer = window.setTimeout(functionToRun, 10);
 						break;
 					default: 
 						// if this is not one of the above we need to set alreadybusy to false... 
@@ -1381,52 +909,7 @@ function MMControlPanelModel()
 		{
 			// running function
 			buttonName.focus();
-			if (buttonName.enabled() == true)
-			{
-				buttonName.focus();
-				setAlreadyBusy(false);
-			}
-			else
-			{
-				getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
-			}
-		}
-		
-		function specialCasesFunctionToRun() // this is for down and up arrowing
-		{
-			if (buttonName.enabled() == true)
-			{
-				if (arrowSelected != "Space") // this is so read on stops properly if one of the other arrows is pushed whilst read on is running
-				{
-					if (mmStopReadingButton.enabled() == true)
-					{
-						mmStopReadingButton.click();
-						readOn(); // forces readOn to acknowledge halt
-					}
-				}
-				
-				buttonName.click();
-				
-				if ((arrowSelected == "Up")||(arrowSelected == "Down"))
-				{
-					if (mmInteractButton.enabled() == true)
-					{
-						mmInteractButton.focusNoAudio();
-					}
-				}
-				if (arrowSelected == "Right")
-				{
-					if (mmJumpButton.enabled() == true)
-					{
-						mmJumpButton.focusNoAudio();
-					}
-				}
-				setAlreadyBusy(false);
-			}
-			else
-			{
-				getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
-			}
+			setAlreadyBusy(false);
 		}
 		
 		function setAlreadyBusy(value)
@@ -1440,6 +923,7 @@ function MMControlPanelModel()
 		var closeMenuButton;
 		var interactArea = document.createElement("div");
 		interactArea.id = "_mm_InteractArea";
+		interactArea.setAttribute("data-mm-uicomponent", "");
 		interactArea.style.cssText = "display:none;";
 		addHandlers();
 		
@@ -1550,7 +1034,7 @@ function MMControlPanelModel()
 						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
 						window.event.returnValue = false;
 						break;
-					case "U+001B":
+					case "U+001B": // escape
 						selected = true;
 						keyBeingTimed = e.keyIdentifier.toString();
 						buttonName = closeMenuButton; 
@@ -1630,13 +1114,74 @@ function MMControlPanelModel()
 	
 	function CP_Divider()
 	{
-		var mmDivider = document.createElement("span");
-		mmDivider.innerText = "|";
-		mmDivider.style.cssText = "float:left;margin-left:5px;margin-right:5px;";
+		var cpDivider = document.createElement("span");
+		cpDivider.innerText = "|";
+		cpDivider.setAttribute("data-mm-uicomponent");
+		cpDivider.style.cssText = "float:left;margin-left:5px;margin-right:5px;";
 		
 		this.add = function()
 		{
-			mmInfoArea.appendChild(mmDivider);
+			mmInfoArea.appendChild(cpDivider);
+		}
+	}
+	
+	function CP_ModeFocusModel()
+	{
+		var audioOn = true;
+		
+		this.template = function()
+		{
+			var button = document.createElement("input");
+			button.setAttribute("type", "image");
+			button.style.cssText = "float:left;"; 
+			button.addEventListener("focus", function(e){buttonHasFocus(e);}, false);
+			return button; 
+		}
+		
+		// focusNoAudio
+		
+		this.noAudio = function()
+		{
+			audioOn = false;
+		}
+		
+		function buttonHasFocus(e)
+		{
+			if (audioOn == true)
+			{
+				if (e.srcElement.getAttribute("title") != "")
+				{
+					getAudio(e.srcElement.getAttribute("title"), false, null);
+				}
+			}
+			else
+			{
+				audioOn = true;
+			}
+		}
+		
+		this.isEnabled = function(buttonName) // for hotkeys
+		{
+			var result = false;
+			if (buttonName.style.opacity == "1")
+			{
+				result = true;
+			}
+			return result;
+		}
+		
+		this.enableButton = function(buttonName, eventName, eventFunction)
+		{
+			buttonName.style.opacity = "1";
+			buttonName.setAttribute("tabindex", "0");
+			buttonName.addEventListener(eventName, eventFunction, false);
+		}
+		
+		this.disableButton = function(buttonName, eventName, eventFunction)
+		{
+			buttonName.style.opacity = "0.25";
+			buttonName.setAttribute("tabindex", "-1");
+			buttonName.removeEventListener(eventName, eventFunction, false);
 		}
 	}
 	
@@ -1872,6 +1417,7 @@ function MMControlPanelModel()
 			{
 				var optionButton = iap_Button.template();
 				optionButton.id = i;
+				optionButton.setAttribute("data-mm-uicomponent", "");
 				optionButton.setAttribute("value", readOnlyElementItems[i].replace("_mm_", ""));
 				optionButton.setAttribute("title", readOnlyElementItems[i].replace("_mm_", ""));
 				optionButton.addEventListener("click", function(e){mmCloseMenuButton.click();optionSelected(e, readOnlyElement, optionSelectedFunction)}, false); // mirror this above in text input for enter
@@ -1898,6 +1444,7 @@ function MMControlPanelModel()
 	{
 		var divider = document.createElement("span");
 		divider.innerText = "|";
+		divider.setAttribute("data-mm-uicomponent");
 		divider.style.cssText = "float:left;margin-left:5px;margin-right:5px;";
 		
 		this.add = function()
@@ -1997,141 +1544,32 @@ function MMControlPanelModel()
 	
 	// Control Panel Button Models - Extend Button Model
 	
-	function ControlPanelFocus()
+	function NavigationModeFocus()
 	{
-		var button = new CP_ButtonModel();
-		var controlPanelFocus = button.template();
-		controlPanelFocus.id = "_mm_ControlPanelFocus";
-		controlPanelFocus.setAttribute("type", "image");
-		controlPanelFocus.setAttribute("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
-		controlPanelFocus.setAttribute("accesskey", "c");
-		controlPanelFocus.setAttribute("title", "Control panel");
-		controlPanelFocus.addEventListener("click", function(e){cpHasFocus(e);}, false);
+		var button = new CP_ModeFocusModel();
+		var navigationModeFocus = button.template();
+		navigationModeFocus.id = "_mm_NavigationModeFocus";
+		navigationModeFocus.setAttribute("data-mm-uicomponent", "");
+		navigationModeFocus.setAttribute("type", "image");
+		navigationModeFocus.setAttribute("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
+		navigationModeFocus.setAttribute("accesskey", "c");
+		navigationModeFocus.setAttribute("title", "Navigation mode");
 		
 		this.add = function()
 		{
-			mmInfoArea.appendChild(controlPanelFocus);
-		}
-		
-		function cpHasFocus(e)
-		{
-			if (e.srcElement.getAttribute("title") != "")
-			{
-				getAudio("Reading all items", true, function(){readStop = false;mmReadOnButton.click();});
-			}
-		}
-	}
-	
-	function NavigateByButtonModel() // replace NavigateByHolder
-	{
-		// constructor
-		var optionSelectedFunction = function(value)
-		{
-			svb.setJumpableNodes(value);
-
-			// to ensure that the jump button is updated
-
-			if (svb.nextJumpableOSMNode() > osm.elementCount())
-			{
-				mmJumpButton.disable();
-			}
-			else
-			{
-				mmJumpButton.enable();
-			}
-		}
-		
-		var button = new CP_MenuButtonModel("Navigate by", "_mm_NavigateByButton", optionSelectedFunction);
-		var navigateByButton = button.template();
-		navigateByButton.id = "_mm_NavigateByButton";
-		navigateByButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAC/0lEQVQ4EZ1VXUgUURQ+M3Nndme1bC1iSdCHlHqqTJFgyYIsgjWECgrLoECI6qWHQrC36CHIHoKg6DkKMorqIYUICjSUzOqhYkVarDdbK3fcn5m5t3NGZ91xx5y6cHdm7jn3u9/97nfPSkIIoBY7/nhPS0PlmYim1HAJbGcwyI+QJAAh/zKsz4Pj6avi2ZFPNE0i4L29g6cObI/2NdZG1miqDO5iQXAdEMTO5GwYTs6mHoymu97fSLxmDd1PO84nYrcPNlWzbIEDn99AUMxiXqyKQf36cB0X0l1p1/240na4u/9QczSmMRksWyBb3Nh/dJsDaEwCJF+VypgGi+pKDQ3wBapMwWCRR7AXG+fSdCKmqxJEK9kGhgtZC+fnaPtjDmGVMK0cqHHOIQRZiGiyk+8oKbjN3NkyIakhuHzrOXwYGgBFnk904/5PAaZcCZcunINEYzUULKS50IrA9C2rGsx8T0Jq5JEbD/DUUcazuEPvFr20UBPG1ABgJSmhCl/ZPIwpPWfRym4vAfB9RUVtBUw8tCWEoQhMott5Azra90F8RxMoinczvriAGnMZateFPfpS7iIwWQM9c7JtI2j6Vn8cv1HB4ffPGcjh5SLbuq0ITK4QigJX7r2Dqa8TEMgUiGJyFY62x2HnptWOj8uAaUAJRWB0+BW8edjnxgM8ddi/+yUwZGLZi7XLKyTKEQ5pAcBKUvRV6HncbckQvXqBUY5CwVySssJn1sCjWQpbcng03S5kYfOWZnTERfSzsgIihhHQlHSIhFkZOJ0jIw/SqsI2oaezBW9gKzq5nEX5SpiFrrDQpnN5G1S3gEmywmbmrKm8BdEq1MkpcNwEkcdejrLsCOlJ+VQZswUB6Yz9TR6fMHrHJg1T1yTHh2Q7uvf/0mUkFcZySeVzLGWkht9O35n/a+oZONHeFL2+ra5iLZnc5yyWZUsBkjKT4zCUnJ3sH0l3fbyZGHKAKRg99qQ1Xh85jXW1BovfoiEp+Jfm2EoCOW1YX16MTl8Tg51JSv8Dyv8z1ZWiNJgAAAAASUVORK5CYII="; 
-		navigateByButton.setAttribute("alt", "Navigate by menu");
-		navigateByButton.setAttribute("title", "Navigate by menu"); 
-		navigateByButton.style.opacity = "1";
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(navigateByButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(navigateByButton);
-		}
-		
-		this.focus = function()
-		{
-			navigateByButton.focus();
-		}
-		
-		this.setAttribute = function(attributeName, attributeValue)
-		{
-			navigateByButton.setAttribute(attributeName, attributeValue);
-		}
-	}
-	
-	function JumpButtonModel()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var jumpButton = button.template(); 
-		jumpButton.id = "_mm_JumpButton";
-		jumpButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADEElEQVQ4Ee1VW0gUURj+5szMXtxV8y4mpa12EbXMEETtgqBiD0EPQRei20NUkJgvQZAkkRT10kMKvSjbQhcsK+glSu1GBQVdyMIoDSM37brX2dmZzj97cUMfhV76h9kz5z/f/80//9nz/YKu6yAzNfdWNFbltWekmMsEJqjgbp1fFlmGSRJoapjAf8M8xhdUOYC8Ar8geoOq+/nIt7Pvzm90EVAg4vJ9V9dsXutwri7NzU8ySwYhLTIeMfkrhKBuBqMJN8ILmoKsZBEiYwaWqMOahhcfvvv7H4219x+tPymg4mzesbbahzsbFi+kDNUwDzQoAJvVgs6eO3CeOwFJZIZX4wTLqpvRdfwgrCzECSkqkoTNIuHW03Gc7nu1V1pZW7B1+aKMhSLPyBcMRykjgwYRit8D95uBv/zzC5dyJpmTKgYxLWr89vhVlBemoaIoo4Olp0jZZhMzPuWvaGOi8xJEMk1cE2VTtL6J3ohLFAUkJ8lZvEgC7cWcGXFpuh6emc4cveI/cbyQ/0vxD0thMUmw2xlkkzmeReyBiRJsNoYkKxcnLiyznS8pBo6NssTwccKLvqG3gP8rXg+/jy3Fxx+TX3Cy+yYUXUTdqhLUlWRCUUktpm0GsRrWUJCbjML5GWjb3wZ1/Mk0Ovo0POjC8GA/dhx3orI4a1adYVyRRSGmkzyQzrqqqtiybjG6ei4h1VEzgxjmdOw/cwUd+zbAKmlxhSMgcXFSkU1MBUZ9ATWut7RI5L+9fmyoyseZbhdSi2rJHTEi7XTh8K4maIoXIa7fMSMhVEI6pjzKqOieXPauoDR/fVlBWg51DzLSZuoYaljFCkcmHJWNGBx6AL/Pg5ZTl3BkTwN0xcdbVARLeNobiyzi9rPP4cv33u82WtOC7RdLt9UXX6gpyS5PSZIjrSyaBnU7u82Ka/dHMDL2BQc21UFXA0aniUKMz1dC1Jq+ua8//nTobmeT0yAmgCC0ple31rfkzLMu0bmgJu4xnfvUVDuYKOP3r58I8n9AwrbwWIH5AyH3wMuJXuXGdmO3/wB/8ytagoaVjgAAAABJRU5ErkJggg=="; 
-		jumpButton.setAttribute("alt", "Jump");
-		jumpButton.setAttribute("title", "Jump");
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(jumpButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(jumpButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(jumpButton, "click", jump);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(jumpButton, "click", jump);
-		}
-		
-		this.focus = function()
-		{
-			jumpButton.focus();
-		}
-		
-		this.click = function()
-		{
-			jumpButton.click();
+			mmNavArea.appendChild(navigationModeFocus);
 		}
 		
 		this.focusNoAudio = function()
 		{
 			button.noAudio();
-			jumpButton.focus();
+			navigationModeFocus.focus();
 		}
 		
-		function jump()
+		this.focus = function()
 		{
-			svb.jumpToAndReturnNextOSMNode();
-			controlPanel.update();
-			highlightCurrentNode();
-			
-			if (svb.nextJumpableOSMNode() > osm.elementCount())
-			{
-				readCurrentNode(null, "Last item in page");
-			}
-			else
-			{
-				readCurrentNode(null, ""); // was next item
-			}
+			navigationModeFocus.focus();
 		}
-		
 	}
 	
 	function CloseMenuButtonModel(menuName, menuButtonName) // generic sits in change location sub menu
@@ -2140,6 +1578,7 @@ function MMControlPanelModel()
 		var iap_Button = new IAP_ButtonModel();
 		var closeMenuButton = iap_Button.template();
 		closeMenuButton.id = "_mm_CloseMenuButton";
+		closeMenuButton.setAttribute("data-mm-uicomponent", "");
 		closeMenuButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADlUlEQVQ4EaVVbUhTURh+7jZ12fxKZ2ViUWlglkWYBBWZYpSWfZF92LTCpA/RH/3Qon5k2L9MSRMloxLM0MpMilbTzCKUKPErJ2Wppa10xebcZPN0zubm3E2weuHee87znvd53/ueh3M4QgiYcVyEJOhIqsxP6upLMc4MTvPFcRz5OqhTKYsv3SKkQWPmY8QBCeVhx+OCi9eFzA5xEzsJx3NNk5YVBWj0RlND67fW/Kq25J7S+CYgrGDh5butvaaxMZrj/4xx5Nxv68OqvEXCyKTUS2lxweulHuJpVzjVQtoSeEmc3TuH9B4Cqbs4yFPiMtXav8a93Fzg4+4SJKD9NNIG8AjuvP6Chs/DPNwKfNAQFD/rhmMk4xoDjALrQvuvomcEgkQZVNv3oqxxACZ7Jx0/6dHjRUI65u+JQVldt4PXMuURK9Wj+HQyA7uVCux89xD+WyNx9dpzfKfrR+lzXd6F4S1xSHqQh+ihDkhOpKBeOcQjF9kj7LfuVjcjrrrIBq9TtWN+cgwqlDkw+Psj4kwKQjW9Nn9UuxzZJY+xMns/3OzLjL9Y97x/SGfTWb/WSAoK5eSlzxLWedtjoOOfMEvchnU6e5PczBLyXqUnVrEOqHWEctbb5zBXMWemEMkpUfhao0BlZCJ0IotinKnXY7zbJnBQLIvCq/KnkGUfwhKpC0UmG4+YuVl/1q72w5voeKidJZMj6MwgcELDmliExqyAJ89rAf5IXD9gRGXiBZzK2IF5ukFeqOvYKDKL0tGy6Qgqm/l+FsAjLq/7gO+btuH4zbOYRWhnx602cC0qwndZp3CiI1ltCaSbN6Lw5kuMOAiaR2ykAQGf2m09YxK7sSEJmqqHkFZXoEB2Hipzsyw5Avs7YNKPQujYZEdVsN3NL31NejGDfIGY5KZdIU0/baIh3SZCcnOqyVuJPxmhSsnJvE7UE25iVcUkHbMaWOL9B8JR2FYIr7k+2Je6BVJLceb3AvqPKemxuLc4APernkF2OumPGyiiB5JIwA5UO2M7ffSCDO6UhJeZ+pgA98Yuh2rzcvgK7QLpkJ1wLEyg+qXvVGsnNsm6bNYUpFY/+zqSMkytMeCHRt8pUNR0ZT1q6uujZzTD/8sYB+OSyz9miUjzye4A2e0dI0ZSvH6p7zKJWCT82xSskVoDu5oGWvKrOo6SxmMfObqh5io5LnRm4OFzB/28XX3/pWx2mXaVXCklpFbL4n8DdMXmrcY/z1YAAAAASUVORK5CYII=";
 		closeMenuButton.setAttribute("title", "Close menu");
 		closeMenuButton.style.opacity = "1"; 
@@ -2154,7 +1593,7 @@ function MMControlPanelModel()
 		{
 			if (menuButtonName == null)
 			{
-				getAudio(menuName + " menu closed. Navigation mode entered.", false, function(){mmInteractButton.focusNoAudio();});
+				getAudio(menuName + " menu closed. Navigation mode entered.", false, function(){mmNavigationModeFocus.focusNoAudio();});
 			}
 			else
 			{
@@ -2181,554 +1620,13 @@ function MMControlPanelModel()
 		}
 	}
 	
-	function ReadPrevButton()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var readPrevButton = button.template(); 
-		readPrevButton.id = "_mm_ReadPrevButton";
-		readPrevButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADKElEQVQ4EZ1VWUhUYRT+7uJcJ2ckHRMiW6Ro8SHrwcoWBEOCoB6mxZYXRwySoCYtogWiIKjeeukp6SGsyJRoecheSisjCXpooZmYSixTW9TZ79y5t3OuM2NGy51+uHNn/v+c73z/Od85IxiGAV5z69o3rVhUdDzfocwVDGjmpsUPQ4A8GlEDvW+GTvovbG5jN4GBaw531rtXzzq3fME0hyyJGA9lEZVB6NGSOnr9X8LtD997O0+tuyCUbL9cdWjH0ru1a+YokbgGXU9ZWscFMxFFYIqSg2vd79Szrc/Xy0vmF3vL5xQoMTVJUVNcs6VMJPQkEFU1lJcW2soXFjeJuTbJpdgkJPUJNIHuZpOJQpZLJwzCo0d0iZT4ZKp+JgznK0eW4R8IIV3YbPDZxxCE5CRaDOp02NHW9RbX779CLuXsf5ecduTrOx1TcKOnD0f3euDZcxAFhXaEQhMpStv+6S1Bx9exGAwSgAnMTPMJtP1RHw407kTs4zO8ePkazafbkFDjf8KZtK+TnGz2fGxcuwxOuwTZvH5eLm486Ufz7h0YC/SYDt2tJ9A9yfXfP/JmV2Bd9R2qkQjRzOkDH7z17gzovyF+b8E6Fokpi0GEIGFgeARjgx9+b53NLhcqtcRIKIRG93IcO38TQn5Jev+/3tEwSdRscCqeRh2TiEexb2sldd5VnGnaBiPYj7K1dSieXgJdS1gKwsWzF0yHqKvUGKwKUrJG8ohFwwS+khJ0Baf3bUFVzQYc97oRtiw3gSaahqGv3xGKJsblxpR4TmgMXrsKwfBFxFWKFlUhaKolxmwkU+UkyjMrP9MgfMDzgpnv316FZ75himxNw+zLi7KaGbkiDXUOklkMLpJJ5UJXxihzaOGLQGDEWRJHwnF/MJIwRZ324ymlUuJ/ipc++uubGyMYUTESSvikgFL9Yt5M55bFpYVOJYc6hiJKnKssHxv5MqFbT/s/X7rt88jGPU+gbFfHJipeS8X8ojK7Tc56XPL1o/RH0esbft3R1dcQ66zzm/95fD/BeWRaRf3KBtdUZQaP1L/e+ZdDTuu3UfXT0yuPW4zBU4N8/ANeHTvrCJ1lmwAAAABJRU5ErkJggg=="; 
-		readPrevButton.setAttribute("alt", "Read previous");
-		readPrevButton.setAttribute("title", "Read previous");
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(readPrevButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(readPrevButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(readPrevButton, "click", prevNode);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(readPrevButton, "click", prevNode);
-		}
-		
-		this.focus = function()
-		{
-			readPrevButton.focus();
-		}
-		
-		this.click = function()
-		{
-			readPrevButton.click();
-		}
-		
-		function prevNode()
-		{
-			svb.moveToAndReturnPrevOSMNode();
-			controlPanel.update();
-			highlightCurrentNode();
-			
-			if (svb.prevOSMNode() <= 0)
-			{
-				readCurrentNode(null, "First item in page");
-			}
-			else
-			{
-				readCurrentNode(null, ""); // was previous item
-			}
-		}
-	}
-	
-	function ReadNextButton()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var readNextButton = button.template();
-		readNextButton.id = "_mm_ReadNextButton";
-		readNextButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADKElEQVQ4EZ2VS0hUURjH//fcc0fH97MHYWqhSISbEs1UmIKCktBFKGpEBkWFkmQm0aKVSkUu3AgRZRG6EaGCFi2SMrKNQi4yw0cWpY7vGcd53EffGZ+jRFe/y7ncO/ec3/m+//m+byTDMCBMsj0+eDw74UpkCE/QdUn3/2jyxpjBZhzekXedA01Gd+V3P0+As268PlWQldSckRKbYLXIWN7LJJackoAFj4rPA/bh9q7h8t6mgk4eX9hyqLbscGuJbV+EphsQYzvGZQkH9kYlM7C24BNPc2Vb0bXmorzk9IhQBV6fDp3c3c5QNQOcMQRZWNjorMvKwkOUxJBgDo0+bMVE+GKsN1XXERasIDo0KJFJkqRuWVOi+VQdEl0yC6QLllCUrd/R7DPnDOMzi3jx/ge4YtkEFxyukfsWmhhKIQidzJiiMMTGROHZk/uY/mNDzYXTcC8uBCzl1iCO4XEnhuwe0iwwrICZ615E+C6Ewmf/hsbaFljDX6Li7BGoHtfqLB4XHYm33f14VFcJOlTTJst04I4xwD2FhqpiWteGquJskmXRXwcckMGgwmvvNw3dOFGf/4l6gjPjOfLz0sFlEBN0un4JtuDuRjK9GwS/d/cmugdmERcRLMCMXBeHtqX2sBkdvgdVdxqQmRKFqXk3SAqNLhk8NgWyZC4rBJVxDt05AY9zGiBozYM2VJfmYOjXJHwapdvUzBzOZKbB9qrTdFbw5ay4fbUYI33dBG2lg8uBh1JO9BqhLHdRV9q/Kxy7Y0KgmmxACuX9xLwOHpeKirpLuO6HOqnG1xTiMuWYl8pzwe0z3dkEeHLagbLzF1F+MnXVU9HhVowOz5BN1sXKGqpQHTuirDhnS4Lm8wY4JFiklMycLm3C7dWoONZ2WyX840EkkYXKWtj6/i2iX/RocLh8Y6y3/3d9z+C0W/xzKDLzNxRRsv8b1BaFZ6vzhDwKSdEzODn3uW+0URI5bLv1prTwaGJTRmp8dBBNMJ90SyGJ8D0U9aevk/aOrqHLHx7md/jB4nNcSeux3LSd1WFWnkSloi4tMXcnUficyzfY+WWsYb699KNY9RdxgVu70uAVBgAAAABJRU5ErkJggg==";
-		readNextButton.setAttribute("alt", "Read next"); 
-		readNextButton.setAttribute("title", "Read next");
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(readNextButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(readNextButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(readNextButton, "click", nextNode);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(readNextButton, "click", nextNode);
-		}
-		
-		this.focus = function()
-		{
-			readNextButton.focus();
-		}
-		
-		this.focusNoAudio = function()
-		{
-			button.noAudio();
-			readNextButton.focus();
-		}
-		
-		this.click = function()
-		{
-			readNextButton.click();
-		}
-		
-		function nextNode()
-		{
-			svb.moveToAndReturnNextOSMNode();
-			controlPanel.update();
-			highlightCurrentNode();
-			
-			if (svb.nextOSMNode() > osm.elementCount())
-			{
-				readCurrentNode(null, "Last item in page");
-			}
-			else
-			{
-				readCurrentNode(null, ""); // was next item
-			}
-		}
-	}
-	
-	function InteractButton()
-	{
-		// constructor 
-		var button = new CP_ButtonModel();
-		var interactButton = button.template();
-		interactButton.id = "_mm_InteractButton";
-		interactButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAFHElEQVQ4EYVVCWxUVRQ9f52ZP/PbTHdKS7Gy1LYpjmwxUAwaWkWsayJtUBoECTEQm5IIjSzGJoJRMC5BQ1QgVkUgCkkNCSYFLB0JUSgoiGVJgEKHpcuUmfnrfO/7lIEak97kvz/v/ffOPfe+c+9wjuOAGac2Zc9YOuPNrHTfBFq6s+h+GXngwPEx3YwcOnV1m7Gv/piLx4CLF+6pmP/E2JbK0rxy1SdiyNfIiEM7OA4wrCQ6L/ZG9oW7G9s2VrWIXMF7maubq79bXDW+1CuLsGjD/xodTtl/4mFTgedQXhTM9UjCtvH1uwbFSc+WvjptYlapQqAx3UqdZT94oiJLAiRJRBI8RcLRGsE4FgyDnvtIWDZgJx1Mn5gtTivN+VDMy1CK/F4Rpj2cqeKhNcj48/IAOk+fw5XubgIzoKoqxj1YjFBJEcZkemhNdx2wgJIELIs8gqrnAUpo0r4/pyxffp8Xv1+MYuv2r9Gx/3v0XTkDW4sSUxuc4IGkZqGg5FHU1L6G+uceQ6bPRlyjaOmsi+XAEofFThOFQPe0X0Tz2w3oOfEzvBIHSRAhchYcSgMHDVzsGi6Fd+KjY604Gl6JDWsbUZwlQjMoH0M2DNjvk9B28jrWNi5B9Oxh+P0+GFoCvJKJ9PwJkL0B3O7rwWDPWXJmU9gWOlrWYxW527JxFYKee7eaAhYFHv2aiE8+/Qx9Q6C6zaHimQbULqhHxcQxYKrpHYijLXwcO7e+T/sOwq94Ed79AVoqK9FYNwu4rbucU8Ds0IETl9F5aDe8dHG6YWLmgnewqbkJBWkWdN1EkhI4LjsNM8uqMWVyCG8tq0MvgQumhv17d+KVmkqIJDtmvDvSwAkSzpztgt5/jS7AgS/vISxdvAgFqoH+wQQSJC/dtBHTTAxEB1EdysG8umUwHQGiyKH73El034hCEgUX0gVmPlh2EokEaYZu10nCp2YiN8NPzIdrm51ylZm0kZ+XQ5XhJVYcLCNBURnss2suMAPlqQRycnLAST5iL2Lg6t84cqILiqK4VTW0330pHgExS0BH+Ddw5iDxSCIQzEUwPeBqmW1KpcIwTUyuKEFGUQWRNoH4DWzZsBotbecBTwBqwA+VVBIIBHBT96L58734dddmyB4qEgqqbOpsFGb7U4WWujydNFg+Jg1za9/A9vUd8MsCbp7+BU1L5uHHqjo8HJpM8lNwrSeC8OED6DqyG2IyAds04C+chNr586EIBgao+pilgN32aWlYsbAG5/5Zg/aWdVAI3Oo9j8M71uLgtyxFMhwzDtExIXm8MCmnTnohXl+9GXMeGY1YQnNB2ZBKBZtoRhK5fhub3l2J5xu+gJM21pUZU5AMHZIdhUwVyEjFdRvBsiqs2rwLK16uJCfasHYrUo8WWH9gxt5xSkl+gMempkV4qmo2WltbcfqPdvRdv0K5NyD7VIwaW4KpM+fghacfx6QiFZqmuZ2NdUOGQY8g3ho0rmtmEgJVHqgNMh9szvMJ1EwvRPW05Yj0L8XN/tswTAsBqrTcjACy/JzrKBYniQ4ZA7VsB9GEFRGu8lMulEwY9VKoOCOdp5hd6THPtNligk2aSPcB+UEPCrO8yFZFyDz1YlIR6793WBJFnkeA2m/7XxFqYpcaRKejoTu0/KeFEo9vZpXnjWZ9+O7/4F0mI705IsKYdl7oje89emnNqS01X3F3QeS5O0JPTs9fR026jPrjvf43Eip95zhHiGt25Pj5Wx93ffniD+zIv+Y1Gb9W2rKPAAAAAElFTkSuQmCC";
-		interactButton.setAttribute("alt", "Interact");
-		interactButton.setAttribute("title", "Interact");
-		interactButton.style.cssText = "float:left;";
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(interactButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(interactButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(interactButton, "click", interact);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(interactButton, "click", interact);
-		}
-		
-		this.focus = function()
-		{
-			interactButton.focus();
-		}
-		
-		this.focusNoAudio = function()
-		{
-			button.noAudio();
-			interactButton.focus();
-		}
-		
-		function interact()
-		{
-			var osmNode = document.getElementById("_mm_Replacement" + svb.getCurrentOSMNode());
-			if (osmNode != null)
-			{
-				switch(osmNode.className.replace("_mm_", ""))
-				{
-					case "Link":
-						linkInteraction(osmNode);
-						break;
-					case "Quote_Link":
-						linkInteraction(osmNode);
-						break;
-					case "Map_Area":
-						linkInteraction(osmNode);
-						break;
-					case "Skip_Link":
-						skipLinkInteraction(osmNode);
-						break;
-					case "Text_Box":
-						textBoxInteraction(osmNode, "text");
-						break;
-					case "Search_Box":
-						textBoxInteraction(osmNode, "search");
-						break;
-					case "Password_Box":
-						textBoxInteraction(osmNode, "password");
-						break;
-					case "Telephone_Box":
-						textBoxInteraction(osmNode, "telephone");
-						break;
-					case "Url_Box":
-						textBoxInteraction(osmNode, "url");
-						break;
-					case "Email_Box":
-						textBoxInteraction(osmNode, "e-mail");
-						break;
-					case "Number_Box":
-						textBoxInteraction(osmNode, "number");
-						break;
-					case "Date_Time_Box":
-						textBoxInteraction(osmNode, "date time");
-						break;
-					case "Date_Box":
-						textBoxInteraction(osmNode, "date");
-						break;
-					case "Month_Box":
-						textBoxInteraction(osmNode, "month");
-						break;
-					case "Week_Box":
-						textBoxInteraction(osmNode, "week");
-						break;
-					case "Time_Box":
-						textBoxInteraction(osmNode, "time");
-						break;
-					case "Range_Input":
-						rangeInputInteraction(osmNode);
-						break;
-					case "Button":
-						buttonInteraction(osmNode);
-						break;
-					case "Check_Button":
-						checkButtonInteraction(osmNode);
-						break;
-					case "Single_Select":
-						singleSelectInteraction(osmNode);
-						break;
-					case "Audio":
-						audioInteraction(osmNode);
-						break;
-					case "Video":
-						videoInteraction(osmNode);
-						break;
-				}
-			}
-		}
-		
-		function linkInteraction(osmNode)
-		{
-			document.location.href = osmNode.getAttribute("_mm_Store");
-		}
-		
-		function skipLinkInteraction(osmNode)
-		{
-			// locate target id from skip link
-			
-			var targetHref = osmNode.getAttribute("_mm_Store");
-			
-			var mmTargets = ["_mm_Skip_Target", "_mm_Section"]; 
-			
-			for (var i in mmTargets)
-			{
-				var skipTargets = document.getElementsByClassName(mmTargets[i]);
-				for (var j in skipTargets)
-				{
-					if (typeof(skipTargets[j]) == "object")
-					{
-						if (skipTargets[j].getAttribute("_mm_Store") == targetHref)
-						{
-							var nodeIndex = parseInt(skipTargets[j].id.replace("_mm_Replacement", ""));
-							svb.moveToDefinedOSMNode(nodeIndex);
-							controlPanel.update();
-							highlightCurrentNode();
-							readCurrentNode(null);
-							break;
-						}
-					}
-				}
-			}
-		}
-		
-		function textBoxInteraction(osmNode, enteredDataType)
-		{
-			controlPanel.drawTextBoxInteract(osmNode, enteredDataType);
-			
-			getAudio(enteredDataType + " entry area entered", false, onFocus);
-			
-			function onFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-		
-		function rangeInputInteraction(osmNode)
-		{
-			controlPanel.drawRangeInputInteract(osmNode);
-			
-			getAudio("Range input entry area entered", false, onFocus);
-			
-			function onFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-		
-		function buttonInteraction(inputElement)
-		{
-			var mmStore = inputElement.getAttribute("_mm_Store");
-			if (mmStore != "null") // null a string as it has been entered as a value into an attribute
-			{
-				document.getElementById(mmStore).click();
-			}
-			else
-			{
-				var originalIdValue = inputElement.getAttribute("originalId"); // should be _mm_originalId
-				var allInputElements = document.getElementsByTagName("input");
-				for (var i in allInputElements)
-				{
-					if(allInputElements[i].tagName == "INPUT")
-					{
-						if (allInputElements[i].getAttribute("_mm_Id") == originalIdValue)
-						{
-							allInputElements[i].click();
-							break;
-						}
-					}
-				}				
-			}
-		}
-		
-		function checkButtonInteraction(osmNode)
-		{
-			controlPanel.drawCheckButtonInteract(osmNode);
-			
-			getAudio("check button entry area entered", false, onFocus);
-			
-			function onFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-		
-		function singleSelectInteraction(osmNode)
-		{
-			controlPanel.drawSelectMenuInteract(osmNode);
-			
-			getAudio("single select drop-down menu entered", false, numberOfItems);
-			
-			function numberOfItems()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				getAudio((mmInteractionArea.children.length - 1)  + " selectable options, first option", false, changeFocus); // -1 takes into account the divider and the close button
-			}
-			
-			function changeFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-		
-		function audioInteraction(osmNode)
-		{
-			controlPanel.drawMediaInteract(osmNode, "audio");
-			
-			getAudio("audio control area entered", false, onFocus);
-			
-			function onFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-		
-		function videoInteraction(osmNode)
-		{
-			controlPanel.drawMediaInteract(osmNode, "video");
-			
-			getAudio("video control area entered", false, onFocus);
-			
-			function onFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-		}
-	}
-	
-	function BackToStartButton()
-	{
-		// constructor 
-		var button = new CP_ButtonModel();
-		var backToStartButton = button.template();
-		backToStartButton.id = "_mm_ReadAllButton";
-		backToStartButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADL0lEQVQ4EaVVW0iUQRT+5r+s7uZmaWiZBV2MMDGFoogkU8vSIrAikwgkqNCwC2FET6H1YBY9SEFlSkUPBZkQgVAS0lbmS2RgkBn0UD54z3/vO9OZfy10V9utDsy/w5xzvvnOZc4yIQSkMHZ+dvaxdRUpCdpSwQRjvxSmNsJHYcroOB946RhqFq/2fzTxpH/CwZaMU3lJdwsy7KvnWlUTkzFg4s4IqJIUw7iPo+uz8bXZMVr15kphK0PqrYSa2pUd1UVJqyyxCuCnCDRC5YQXoD1toxKFDMn9zotBV/X9bzuVzF0LDhWk201Q7iI00g+MMNxzjAYZ00UiisW95Et2W9Lt1tys+HotNVFfFj/BVLEwGNyG8kstSFuyCAe2bwCcnqhIM4+bIuSwWRQkx6nLNS6YDBjQCdRrxeG6p3hy/Qw27anE0ZpBcK8nQiYEDB9DyeZs7M5JgnB6KecIaNJLUxnG3DrKLzzGo4bTiLME0NlyFR0PAhFASS04pcyKrBUPiVwKHXhNHxMYRFmhT4xFA1N1Kpyfcq3SyZ+LZ4vRoBA9g4B1jSpnhh7kYgL7uEBcrB9NZ3fAarXh9sVK5JdWISszHX5vkEHQPPiVjaJYrGh/1oae580A7UPFBDY7ykeMmRPXTuRhzLiMxQuTUX98PeAKBzarqcehuKcH7/3UDZZQWErv5CMuwXUnbp7MR1v3CMTQCBiFNylC01w+HugKAn7fZPcp+ynAUiPB58QGsG+tnRyFrHCYyKNIrzIMWKJwakDpPB2o1EcjVMrpJTT86a1mPp0ReGaX6DT/BSzk46B7hOz7EPlnYDluDb9OwDaCtMMd0iCawoT6t0WSLLnXQEXZNpQWb6TZw7AmbR7gMeeE5K5qAzT5XV4ylfM0rGOlTbjIVpPmZbnz5aAJGniIMg17H3XUiIsPKG/f9Te97nP2yyGt0IBX5G+UCx7KrUHTTy7qeVhVdH5xoavXqFFFX8vwkcYPPTTQtibatVk0NugVc7jooUS73GT7w8PR3j3mbnQMn+uoK2z4/Z+p723NKcmy1ybN1jLoGQeEzEyUQqbqqDvw3fHJVd97o6hZuv0E9D10Lhej4kwAAAAASUVORK5CYII="; 
-		backToStartButton.setAttribute("alt", "Back to start");
-		backToStartButton.setAttribute("title", "Back to start");
-		backToStartButton.style.opacity = "1";
-		backToStartButton.addEventListener("click", function(){backToStart();}, false);
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(backToStartButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(backToStartButton);
-		}
-		
-		this.focus = function()
-		{
-			backToStartButton.focus();
-		}
-		
-		function backToStart() // click and it enables and focuses on stop 
-		{
-			svb.reset();
-			restoreHighlighter();
-			getAudio("Page start", true, function(){mmReadNextButton.focus();});
-		}
-	}
-	
-	function ReadOnButton()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var readOnButton = button.template();
-		readOnButton.id = "_mm_ReadOnButton";
-		readOnButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADYElEQVQ4EZ2Va0gUURTH/3NndnbXWdPUqMzeL/tQEBRRZkEQSVEfogjLoqQXFmjWl6LoBVlJH3oKEhQE1rfAL5UG9rA+FFhYiOFGSqWE2svddWd2Zm7n7s5qqQu5B87eu/fc87vnnjlzRuKcQ4hr4/2Va+an7tHcLBucW9HF//6RWHdf5EPDo66L/M3OduEmCfDqo3XFO/LSK5fM9GX4XBLs2Fn/j5WAnpCF+veBtqr67m0fb61/rUzbVbuxckt29eb8DBmGDYwSGj990jgV83M8s23Oa6QZN5fLGwr31u5bkZmlKRSpxcGJLTEKweui/CikjFR25jTSyXbEpmzR7G8lX6YykEfG67Ddo2SlypNVun50l8gNzdu6dNQ1fyEmnQKyOWKYHItzJ2LJHA/sfjO+PDgS3OdmmJCu5igUgEknu+NWiSJs/WbiYFk58KsDskuNm2Dp/ZiyaC1qrp1F3lwX7GBkwBafRDPJYdE9hwhZVEqLhgA81k94rV8D6lN0fH15FztKT+OVn66eQulKIMPBzkaJyWCyAukfdSHF50NH4x1sLzuLpnYQnLI6giQEj7A3tiRJSNE0+BtuoehQBZo/sxHhowcLvMSg+TR8qK/GtvJKtHQqBBcVMyjJgYW/A295eB2FpRVo8huxsnTYyYMFgJ6DSoE2v3yApy3fAYUNFGfyYMq1Ge6DlToVJy9UoXRtDqBHBl7c5MAEtcIBGN5sHDlzA6eKFoBZOiDeJ0eSAAtoELp7PMpO3sC5nQsp0iC1gzgyNo4STFAjiLArEweOX8XF3YsBIzAMKtAjVrdoLnooQJEZkA162o6IBmV5M7H/2BVc2r8MzBweaXyvACuUskEhqkvmyM3fBMX4QVU1WJ9h3cCKVQW4XJIPxSIoNaWhEmVJkJXekN0ZMfl0RFeoJVJPzpvhxZPqw5BlmZqe40x2MU1XDUh2gkhlCSHdxrffZhd70Ro89rwtxOGhV5MMjAAean0ZKTrS1BDS3f0xpflYT4jqlDoap33Us/9R0Xrp0/PMH/r09lnXbcV/c929NScejw2b1vmls7QxXups8SCHXjPRf3FZujnq3/W1Vz3vLeJNxZ3Rb55wSNtaW7BqnlbidbOJVI9DiicR0llnkHv7rJa6xu4K3lDYKlb/AE4TSHrXDJNkAAAAAElFTkSuQmCC"; 
-		readOnButton.setAttribute("alt", "Read On");
-		readOnButton.setAttribute("title", "Read On");
-		button.enableButton(readOnButton, "click", readOnClick);
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(readOnButton);
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(readOnButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(readOnButton, "click", readOnClick);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(readOnButton, "click", readOnClick);
-		}
-		
-		this.focus = function()
-		{
-			readOnButton.focus();
-		}
-		
-		this.focusNoAudio = function()
-		{
-			button.noAudio();
-			readOnButton.focus();
-		}
-		
-		function disableSelf()
-		{
-			button.disableButton(readOnButton, "click", readOnClick);
-		}
-		
-		this.click = function()
-		{
-			readOnButton.click();
-		}
-		
-		function readOnClick()
-		{
-			disableSelf();
-			mmStopReadingButton.enable(); 
-			mmStopReadingButton.focusNoAudio();
-			readOn();
-		}
-	}
-	
-	function StopReadingButton()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var stopReadingButton = button.template();
-		stopReadingButton.id = "_mm_StopReadingButton";
-		stopReadingButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACZklEQVQ4Ee1VTWgTQRh9s7O7SUxStTYe1FgVW2lKEGKLgreKlepNPIgiPRQ8WD34d1P04kUEDz2UitiTqGDw4klRULAq4s1gKuqpVGxTk2pJzWYzn98kJbYlblPP/WB2YL5v3rx5O/NGEBF0CNFhbT15tbe50d5EJER5sN6PAWRyTjY1+PUu0ZnJMp4GDh991HahOzLc1R5KNPikNbdWvbBMCsgXid5+yadvv8qe/jDQ81ygdajp2qX4i3MHmmL+AC9d0jtYHmGA5xg8h7tbz6amL94f7zZ39URP7Y8FY36/ATWrYFhc4PctA5zRZn9DOZW5B+Ph1U9S4RvmhrV2y5qALDM1fAZGPs7g4cv38MkS8/ZmTkzRIRPHu9qQ2BZgDCDoE4g0yFYTUKWqprbE6PgMbl45CziTENLy1JlcBwhFsXdnEokdIQYuQWklAZeB5wUP2qaA5ZewhAFDsuYeoXRe18qKvvNLFwLPZQT/ZsHAunmFzv/rZHrP9EJdIrcCXBVoRYqqFDXPMZECqRKfUb7qHlGu4dpasRCYL1DBJRQdA0W+lIKWANYXl2sd7YiLbIUzhqzaeqGEeDSEy9cH2IRUfSakJFoiNqioTavintyZ5vgP91Muz7bEHqFts3N7EJ3xBOcWUai13/KYts0C2yZBsOXOFAgTv9So/Da2JxWNNx7avWXVeksbvXYnl3VzebF6G3MQlj65Ag/e5KaHnk6cMGmsf6rhWPKI6+LOvvZgx/8+TbMuqdef8+nhkUz/dPLwO/H3MRWyue9x7+Z19kaDVL06VARist9/utn0YPoe0fmMHvwD0ijwOFrUKeQAAAAASUVORK5CYII="; 
-		stopReadingButton.setAttribute("alt", "Stop Reading");
-		stopReadingButton.setAttribute("title", "Stop Reading");
-		stopReadingButton.style.cssText = "float:left;";
-		stopReadingButton.style.opacity = "0.25";
-		stopReadingButton.setAttribute("tabindex", "-1");
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(stopReadingButton);
-		}
-		
-		this.enable = function()
-		{
-			button.enableButton(stopReadingButton, "click", stopClick);
-		}
-		
-		this.disable = function()
-		{
-			button.disableButton(stopReadingButton, "click", stopClick);
-		}
-		
-		this.focus = function()
-		{
-			stopReadingButton.focus();
-		}
-		
-		this.focusNoAudio = function()
-		{
-			button.noAudio();
-			stopReadingButton.focus();
-		}
-		
-		function disableSelf()
-		{
-			button.disableButton(stopReadingButton, "click", stopClick);
-		}
-		
-		function stopClick() // click and it enables and focuses on read on
-		{
-			readStop = true;
-			disableSelf();
-			mmReadOnButton.enable();
-			mmReadOnButton.focusNoAudio();
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(stopReadingButton);
-		}
-		
-		this.click = function()
-		{
-			stopReadingButton.click();
-		}
-	}
-	
 	function ChangeLocationButtonModel()
 	{
 		// constructor
 		var button = new CP_ButtonModel();
 		var changeLocationButton = button.template();
 		changeLocationButton.id = "_mm_ChangeLocationButton";
+		changeLocationButton.setAttribute("data-mm-uicomponent", "");
 		changeLocationButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAEgklEQVQ4EZ2VW0wcVRjH/3PZ2V2We1kugoBQRChQtCTYVYgt2sSk1wcCiCZtkOhDk6ZaWxuVaG2jxhcUtS0xodA+kDSRB3kQi42lNgKiaaGlcrWlLG2hUC677O5c/WZwt0ChUU8yM2fOfOf33c8wmqZBH0xcjT2nOLVsTRAXbiz8h5uqQRubkUYHTm6rJ55q8HTwM/t+KNq5IbwmO8GaLpgY9h9d/wrNkBRDN5dPkToG3b81/DqxZ6J+Vz8f80rTxre3xTWVPhsVoguopH6lwegfafg9XC7Dc4wpJ8Hm4DicZXKOv8BtKa08W5IflRpsZuGTNSjkiP/SLRd4DiZBgMYKYDgTTBxDylWIJCsvkpUUDcEWFhzDxAzK/DRvt5nSgwSGYA8s1WdWEwuFs6Dzhhudl69h7PYYOJZDUnIiHLlpyIw1Qxa98BFwwRcYynR4bCifxhNEXh7TYAuPofs8vjzdjPNNdZi+1Q1N8hres5ZQxKTlY2f5G3hzVz4iBC/mRTUAN8zTVIVfHCt9MYSgfzg1HProE1xvOWFsMIVEIyxpPRRFxuztftztOYcTVZfwZ98H+PRAOWKtXngkAxnALQHr7g9P8zh85DMDyplMyHqpEqVlpchOfQwSBb+9ewiNDbUY7WjCz6feQxXFv/qdEgicOwDVJwEwy1JSOCuqG5pxreUkON6EzbuP4ehbryEp1AefKFFZMdiYmoWCvGq8WxWNXpL76cwx1OVkYt/2TIg+XwDO+mdBZg4XeqfQ0vgVGE1BxosVOLL/VcRb3bjv8sFDcZz3qZiem8eGeAUfvn8Q9qwiqO4pNNYdR9+4BjN57B/GTLdEhAXfNZ+Dy3kVFnsKKl+vQDJZSoUfSIx/04xbgiNFQPHuvWDNNoxeaUVz22WjLP0VYoAFnsHQuIiuiy0GZJ1jKzbnxsPtkfysh56Sz4sdm55GbEYBVGkebedbMeXlqSQX0AaYpya4MuDEvRvdYHgBjucLEWGRqQGWZnoxXaTuyI43I++5TcbycG8nRsbdCLUupI3XO1VjeAwM/gVxbhy26BTkPPUEtd/q1rK0ySUq6OieQJg9EWaLFd7Jm2jtGkZCbCRUsNCLAaLCwjnmJA0qQiLjEG8Pg6z39apDg4USNTTuw8W2CxQKD5SZu6irrUH3yDzCbWZQdKn1yOU796ZpxkO1RMFGbalp8qpYPUJ0ZKCiIBIZcXvxsaBhZOg6Dh86iLz0aHz+/U3wejtrpLF4x8soKnSQWzbYOJGUPSidlTTocJdXhmOtFV8cPYDRKRFb1tnQMzILiZzlSYBnGQ3lhY+DYZMpGipcHnHJobQS2L82R/DkCBZro8xURSJ5CrAMy/GT83K/R9TyPT6ZWnb1hPlBy596KPUKESlyQXT0urwq7szKA2z71Zn9l/rn5shsWAUWZor6/7n80PZBd8/vPzprmYVfUzP9mtZ8vT4x6Ek6yGltuV2Pftc71y0av6au+l8m90yc3t5ngPVtTMy3MbklcWURwULEozEPf9VNcU5Lt/q+2XqKDFV0ib8BqeLqeWsyquIAAAAASUVORK5CYII="; 
 		changeLocationButton.setAttribute("alt", "Change location menu");
 		changeLocationButton.setAttribute("title", "Change location menu"); 
@@ -2786,6 +1684,7 @@ function MMControlPanelModel()
 		var iap_Button = new IAP_ButtonModel();
 		var backButton = iap_Button.template();
 		backButton.id = "_mm_BackButton";
+		backButton.setAttribute("data-mm-uicomponent", "");
 		backButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADQUlEQVQ4EZWVW0iUURDH/+e77LfrulaLq5llZgVdoItdIIkiTIOgKLq8SSQEQVAEQVEI9RJGFCEY9dKLFdSjEUEWgXiBHnoQESxLrDSzB8XU9bueZlZddL9d08Oe71vmzPxmzpwz8wkpJXjknm8q31cgrmTrKJICbkK40IeEOmrJnqZBpXbiUXk7mwkGl19vqjpZIuvK8uTSgAJMuVoolSCkGncFmgcx9KJPnGu/XdEoCi+8La/ZJl9XrZPGhAN4i6VO+1eJHlCBJ91i+EaLsl/blYvru2PSiBPU9hYeZaqmSwEpBN8Zw7KyYnFJi+jID5InXkgdvMWwLiAE/8s0JOK2BP3g0MzSJCKGV6CRVTpmwjvv4t2AJKdeIo/p0C6d9K4YkB+aWk3cBTLR0imzjHM2oYRR0/AUPz+9QiAY9qm6tgl9+SY8r7mKorAJc1YqfWDOiEE3Q6cppIqANQwxMgARMnxgYZnQcqLQKLmpmZwD5sVsknSNBeE6FkqilAJFhUIyRQv4wNJzoai6T84CimtqMJQOEn1WGFcaO9D8W8FXeykZzvE9o/7fd9KKC6N7zMDlZ2/wsbEOve1bUa9nwfzTA93I+i8oVSEJ1jUNDZ2jaHn1GCF7DENdrYm6DhkqNCMbkm7GYkYyFZbj4OKOJThRXQM3Uoi1e09hc0U1clZshGtPLoaZ0E1GzFUXVeO4f2w77OAdHNxQiMr1uTh+6y6Gf3QikObw5vOWBHNtcSOJELz2wApM2haCzig8x57PPuNaEswaU3AgFrCoIIB+csRgyhJUK+6DOKZDaTJ9chbMAbOA4TPNSLoO1OhqRNaU0s2YrllWmh4e7UqNrYPr+Q+WeoVU0/UYh3QjGEf9mcOQ6lFq0qm1RXQy9AhaHDIxSZ8G7m4cGD1UbcQUPyZsbM6jip3djRijk2ZplHOcOc8MMgnKnY1bwZgjMDwp+pS2797N1iHxlwuE26dGb+4TPPk/Rz7f5LTxjrPIloNp+4NfH/qVe4lP055rb4+cXoOHu3OxMkRZT7drssk4hJAYtwUowG/PP8uzHQ8qmxNgthBn3m85uFKejwSxitD+08iIpQVPKCMWej98cevky0M9rPoPklM6C19DN6sAAAAASUVORK5CYII=";
 		backButton.setAttribute("alt", "Previous u r l");
 		backButton.setAttribute("title", "Previous u r l"); 
@@ -2807,6 +1706,7 @@ function MMControlPanelModel()
 		var iap_Button = new IAP_ButtonModel();
 		var newUrlButton = iap_Button.template();
 		newUrlButton.id = "_mm_EnterUrlButton";
+		newUrlButton.setAttribute("data-mm-uicomponent", "");
 		newUrlButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADUUlEQVQ4EZVVXUgUURT+7sydnd3adLVWLRExK8ukpOiHKKgghR6C/ogiKHoMxHrJeijoDyKSfkgCXyyil6CgSAjyRSPEogetQEHWIvqzHkpdp52/27ljWzO7a7EXZvbOPd/57rnn3PMtE0JADsY6i9YcDTWVFGKBABOYWvZs/3sxJpQxA6PdL62b4snWVx6fJJ5/4PGy3Zu12+sWY1k0wvB7r//x/bEzBpiWwEACHzpf2M09FxvvMZTfn33ibEHPgQZWG9YB2yY8AfMadDpFAbgK3H/mpq7eFdv4ih0zD62sQW2ESCdTedEFwQ7guMDqGkVfVee08niRUjWTjm+TQaaV084hjSZimrBpWaYvZcnfILdLxDr5FkeVak5sTrpQkvR7Enj3VYOq0keOQYWl0lpYONeGxrPrITejmGzu9w1pDIkvKpoOX4H9PQGVh/xmb26lJlG+vAEd13ehOGR4J80C0UKAWAIUhcH8NgTj8xtwLcuMVMqGU70UTOEU8RSlRWnMTFy2J2FVTQenRKtaeMrT9+bOOBRVwwxdYOQzQzjMUVZowTB9IJrmTmQQE/ySV4tSlHRj6B1UcK79LcbNCCJasKdyRhxkCn5xPYxvw304uP8sLGMM71/3gVvHcap5FWKRv/c1b2KV6xj7MIjRkTegfvDy/KDtPCqqO3BsXwGtyA7LUTxv9R8v1zYRLalCPL4IwprAl+F+bNrbhD1bYrDIlh55R2yZBioXb8C1Gy3oef4R3U+HcKGlHmXRyUAB8yaWEbmOhfKCH1i3BNhYX4dSIk1SelXfnctJLB0dyyIp9SF/n9GhFArXBskkaioENYjpaUwmMkAsjY5D1yYyD2psAoqW3XlcT8LRioncpZxSqXI0h4yBU8uo6cCkplbGbVxqa4FKHTjdUOh/IKJMemqWiZFcJPwqH0uKrylTeERSsebQjWlcIeEZ0uVjkBaDcpqpbpJUnmA8yUaV3pdOx8CI+Cj9pFx6TrSR8Y/nJ9kkiRT39CPFMEoK8Oqt/CdxTzOprWuOdDVuX89ura9lpWFKa2YkvmBzTr1ISYsHEsJ4+Nw9+ejUllaPWKILd3at3VzPzhTPcusI6LjB1s9JmF4kvDph4FN/QlwebG+4I9d/AbcNTtvfNJoMAAAAAElFTkSuQmCC";
 		newUrlButton.setAttribute("alt", "Enter new url");
 		newUrlButton.setAttribute("title", "Enter new url"); 
@@ -2846,6 +1746,7 @@ function MMControlPanelModel()
 			var textBox = new CP_TextBoxModel();
 			var uRLTextEntry = textBox.template();
 			uRLTextEntry.id = "_mm_URLTextEntry";
+			uRLTextEntry.setAttribute("data-mm-uicomponent", "");
 			uRLTextEntry.setAttribute("title", "u r l");
 			
 			this.add = function()
@@ -2866,6 +1767,7 @@ function MMControlPanelModel()
 			var iap_Button = new IAP_ButtonModel();
 			var urlEnterButton = iap_Button.template();
 			urlEnterButton.id = "_mm_UrlEnterButton";
+			urlEnterButton.setAttribute("data-mm-uicomponent", "");
 			urlEnterButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAACmElEQVQ4Ee2VXUgUURTH/3fmzu66O21qayKVUREYhlFCpghRJFFUhoREpr1F+VxB0AfRm5APRS9aZFBQEok+lG8GQlFZgfSmFlGiJJqtu7Ozzsft3BXWXMe1hx49A8Pce+b+zse951wmhICUgoaefXu3hW7k6loJhHAY2Jwipc3+YgzqjOl8H/gSaxlqO9op/2YSXH2ht66uIr+9coue79cYcbODMrWMJmwX+PTNMLoGpi713qy5y0LHnpVdP7n+VUNVJC9J2hw/h6qqmWuzjl3XhWFayPEp6P7wy2l9OX6CV2wPny8rDuY55KZpCzx/+wPR6AwURfqxvLi0LhgM4VB5ERTmYkdxUCXeZb7KzwoCmpIKX3AdHY/v4POLNiJSbP8kDBuq6nHgfgslNg7OGfQcNcLJoHQ2JYx2gVtR+PMK0XSxFTq3QFF6igwoiQAe3b4CnpxKRyhZwoXDPVf5wmg8UonStUDC8ib7uILRGQ1P7uVC0JMp3mAymUgkEDMAcwmwRWAjYZN30vDi/VAyLf2v8Qo4ncmVVKRT4X2O6VwGAxrCQQZtiXPsp3P8W9YXVauXeIBlJ7bQNziOwYAN21lcVRKkUk3H3QCEM0vsxXAum/Tf8xY4zIkhXGvcT8u9y3neQ7n3BvQ1temilj2EXOF8MuaMxEyXPKAJM46Dh2uxc1c5eb0cdA4vmIrV+YVQrBgUH4ORdDEdt0YYKh+uu3p2a/+Z6sgm6vFQuA8q11Jm5z3L8kUeurYF25pN5fvpm8nora6xGi5eN42WnOuppyuqY/dmvTTkT6bDyoJboJIZls2Krqav3R+nmsc6j79L3XnyL1b0oGDPqaLmSJhvpJ7qvWMLcPMDBUyZNuyf/e8n2kXf6WGp+QP1tPFu71qjGQAAAABJRU5ErkJggg=="; 
 			urlEnterButton.setAttribute("title", "Go");
 			urlEnterButton.addEventListener("click", functionToRun, false);
@@ -2878,190 +1780,6 @@ function MMControlPanelModel()
 		}
 	}
 	
-	function OptionsButtonModel()
-	{
-		// constructor
-		var button = new CP_ButtonModel();
-		var optionsButton = button.template();
-		optionsButton.id = "_mm_OptionsButton";
-		optionsButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADe0lEQVQ4Ee1VWWgUWRQ9r6q6ek1nMyZ2xmWSMSIuEdSgos64IogwbgwMIoqCfinEDxUFQYyCgqJ++eH6o8yHYDA4LiDGiAsaUYM4YxonJgaMbdLd6XRVd1W98r7qTuISjI5+euHVvfXue+fet9zzmG3bEPLT+trFM8pydub65HLYMJ3OL/0wKPGkFb7VnKhpO7HkopjGBPDcbZdXL51acLSqLBB0ySDcrxNGww0LuBdOxC80dm26tnfhaTb8zwuzt/xe8vcf0wq9yTQH518AyxgEmDMyu2JJYvCpEv66+1Y/cP7VImViha960ki/Vzc4TOvzoC6ZwU1LkmQFnIAdcG4hbZhImzY0wqgc4fdUVuRUK36XNMTtYhCJUlBHD7QRqiIhoqt49DSC1vbXSGoa3KqKkuIiTCgvwYhcC5ZlwkNYlPkQhVZiiTWlKJqsuBBwC9vpcvBFsKBPxe3/TGzeugvhxitAopN8KWoK4MlDcUUVduzYjhXTQ7C7TQFnSWK2yKa1M43dZx+j4XkPOnQPui0f4qYP7T1uXGpKYt/hEwjXnyLQdpqhUxPbZpD5Bq8f1+Fh079gMmWVFQpJQll5vAHUnjmEcwdbMKxsPALBfNicI9YVwZuXz2DFXmanDKxUha5T5jidARlgYdJJuyQOK9qCtsYWx/ktH2cregEY++C3t/t/6e+H9FH4H8B9G9J/K/q6BjF8xfDnD4Xq8cNM60jEIrDjbcQxghDp3malD1iUdDql9fZ/ouXAUCzfuBtzZ05GqCiPSlciRuPo6EzgakMjXOTnpqjGjDjAgtGCVDQjx01HU+s/VJDxXn9Gu4swf9V27K9eCQ+PEelYxCncyc9VGsRv4xagLdIDPU1Zi4IkUUgrJgGHPAaO1WzGjZVL0Rx+gWgsCkmSUFhQgLFjyvHrhGHgyQhixLvvi2BFxkyU5skOgVGdiYCyEtOscELnM+xchlCOhTXzRsGa9wsNyuyXzGxItgEtRdRIoP272A8vKNkgyhUs2a1zROk1keqfdu6509zd4YQhKtNTBh2KBm4knWaQLZYoMlGJjwUnD9S8RPJCBFb9k2iN8zRVbqqbtWxy4fEpP/tGiwHZR6E/pUEsEVSj1+f+i+Tz8w/ernt0ZPFNB1jMY1Unh8+cE9qQ71VKOfHaIFgfuCUwqUszXzVcbz9m31vbKpzvAAWRarIdJVEmAAAAAElFTkSuQmCC"; 
-		optionsButton.setAttribute("alt", "Options menu");
-		optionsButton.setAttribute("title", "Options menu"); 
-		optionsButton.addEventListener("click", openOptionsMenu, false);
-		optionsButton.style.opacity = "1";
-		
-		this.add = function()
-		{
-			mmInfoArea.appendChild(optionsButton);
-		}
-		
-		this.focus = function()
-		{
-			optionsButton.focus();
-		}
-		
-		this.enabled = function() // for hotkeys
-		{
-			return button.isEnabled(optionsButton);
-		}
-		
-		function openOptionsMenu()
-		{		
-			getAudio("Options menu drop-down entered 3 options available", false, changeFocus);
-			
-			function changeFocus()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.children[0].focus();
-			}
-			
-			drawOptionsSubMenu();
-		}
-		
-		function drawOptionsSubMenu() // node ref needed so enter can set the values in the model and in the live site
-		{
-			mmInteractArea.clear();
-			
-			var mmSpeakSlowButton = new SpeakSlowButtonModel();
-			mmInteractArea.addButtonToThisMenu(mmSpeakSlowButton);
-			
-			var mmSpeakNormalButton = new SpeakNormalButtonModel();
-			mmInteractArea.addButtonToThisMenu(mmSpeakNormalButton);
-			
-			var mmSpeakFastButton = new SpeakFastButtonModel();
-			mmInteractArea.addButtonToThisMenu(mmSpeakFastButton);
-			
-			var mmCloseMenuButton = new CloseMenuButtonModel("Options", "_mm_OptionsButton");
-			mmInteractArea.addCloseButtonToThisMenu(mmCloseMenuButton);
-
-			mmInteractArea.show();
-		}
-	}
-	
-	function SpeakSlowButtonModel()
-	{
-		// constructor
-		var iap_Button = new IAP_ButtonModel();
-		var speakSlowButton = iap_Button.template();
-		speakSlowButton.id = "_mm_SpeakSlowButton";
-		speakSlowButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADcElEQVQ4EaWVaWgTURDH/2/fJpttYs+09cCkXqVaY8GaVupRFbEVEfHCeoAK6hdBvKp4YOkHFUHED35URFErglqLfhEqCooHKHhgkXoXCm3UlqLJ7iabOC9pU2IiJjhkN/uO+c3szLxZFolEIISxgwU1u2btLspTy8Q4gsEFMfiHMAbu18zexx2+iwPX1z8S25kAuze1lK+bV9oyp7zYk2O3EjJm7B+8+DIjshEy8epT/7e2p1/3tR+rOy+zgh3Z+09uvLylrtSjKjKCoXBcIZMHLgFT3XlOVeHnpmy7GZDLVs1b6y11VthtMn5poUxYCXvJYYTMCLyTnKyqrPC0NCpPdWWRp2Lyf0VE0GqRkOuwFstgIFupRab3s3BGiQQ046/bEpQFXFxywuzgwGbl4BYFvp9hdHUPwAzqmDzGAYmSJIykIwlg0oNdtaGjW0NLayse3G3Dl3fP4V20HhdONlIQtbQrJg4W0CxVxdX7nTje1Iiel3eGHTMGwCQ5bW+FYhxsVxVcau/Evq0rYfg6hqH0JEmc7ukGIaZK1UeZlCV88IVwvPlAEjS2LfN71GOLouD2vafoft72V4IIFVWQ+CVJqoMqy+Stbkp48ewxKaQ+daJCFJUqgjsQ/oMSCZsw9EBSZyEsYBLvxw9fkidDE13v32Dv0YswjUBCqEXUmdWO7evq4S5UEw6ZHCaooBcUFg9xkv47H16DuFJJzsS52LF5JXVHYWY4wVKIyIpkwltVQwsi+5lJVW09RufbkppXtCoMw8CS+V64Zq7KiMpzS9DQ0AAbM5JiL1GauWiVJfkch5uPQR0zPT24nI2th86grtIFv2bEdaLFQzfpe5/RowVNaLqOpdVjcfrsNbiqV8c3pnrIGjsDO09dx/7N9QgFA+RtbJcoSZMGA36jn/f0VX6aXDFyRcX4gvwIxdszLh8LFy9D9oRZMCy5MCWVTtAIOIrGwT2tFvUbdqOpqRlrF5YjEtQguq1oTlxicKgyHr3txY2HX/ZEP02e7bdq1swuuVLrGekWixaZw2JV0E/V1dvvxy+/Rn3WAmeeHU4HBzN1BPRQvAainpKF15/7Aq1Puprbjiw4EQWLF2F156YurnY1OXNs04Z6tJVzKNRChSGTil2nz4QeJKBozdG0x0JAFrimm74XH/vOvD+7/KqY/Q0/dz9p8tGaIgAAAABJRU5ErkJggg==";
-		speakSlowButton.setAttribute("alt", "Speak at slow speed");
-		speakSlowButton.setAttribute("title", "Speak at slow speed");
-		speakSlowButton.setAttribute("value", "Slow");
-		speakSlowButton.addEventListener("click", speakSlow, false);
-		
-		this.asHtml = function()
-		{
-			return speakSlowButton;
-		}
-		
-		this.enable = function()
-		{
-			iap_Button.enableButton(speakSlowButton, "click", speakSlow);
-		}
-		
-		this.disable = function()
-		{
-			iap_Button.disableButton(speakSlowButton, "click", speakSlow);
-		}
-		
-		function speakSlow()
-		{
-			setSpeakingRate("Slow");
-			getAudio("Speak at slow speed selected, options menu closed", true, closeOptionsMenu);
-		}
-		
-		function closeOptionsMenu()
-		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.innerHTML = ""; 
-			mmInteractionArea.style.display = "none";
-			mmOptionsButton.focus();
-		}
-	}
-	
-	function SpeakNormalButtonModel()
-	{
-		// constructor
-		var iap_Button = new IAP_ButtonModel();
-		var speakNormalButton = iap_Button.template();
-		speakNormalButton.id = "_mm_SpeakNormalButton";
-		speakNormalButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAEB0lEQVQ4EZ1Va2xURRT+7vtud0tr6QNWg30XiZHSkvDoQkhNlVaNAYKpKSbUH0YNMS3+4IeGEG35QSEBH0GNIWm0oTEg5SEkRGtaAlooKa1BE5sopa1ppS1d2O3de+/eu57Z7V3ZbG02nt3ZmTkz8805Z75zlotEImAiv9he+VzlE/syPGJJBJwVVab4wyEiBELhsb5f7x2dOFn/AzvGMeB1Td89v6NqxYmNq3K9LkXE/F0pwhIIBximjf7hqdlvfx5p+vHg1nZRrT1eduB131e7ni3OsWwblhXzIGXU+Y08z6HYW5BJ3RcFDd9MiBvKC/dUFC3NYZazW/+vWDYZRN+1pdlyxVM5+/mMNHF5miIsainzQRZ5SNQW88cm42RJQHqanMezh1oopixuDMytSsh0y7hwfRxj9y24yYiF9jueMs/pY/GOwukJLwomqR6M+oHuob8x8Icf/QO3sPfAMUwGBahy0jHneLwX4yMaiBR5WXWh9/YkOjpP4UbvJUze+Q0N77QiO2sJ+k7uR7Ms4JPWvfBIEYQXeeg4sEBG2IILRzp68OnBdxEavxW/U+QM8JIanQ/0dMEfakKuR8Kcbv4neAyY/FfI0ravr+BI8ytEyuk4KBtwHN06H1iXewn8poKxBxYUQUKGYiFkJOdTFNgli7g+fB8ftzQngSbcQJPZ0UG89dp26PocVpStRVvLeyjLk/BQMxO2srACgoIzF85DGx9IWHQmHFHEDMc4HnowhZH+c9GliV++R+PUPRxta0X5k+lgCeaIKAoCgkYEQzd/cnRJvRXhsKaiEo0fniIKMktYY9GxMRcM4urgCEqXr4SLOOyISFSFHo5AC8w6uqT+WvdF+GemwTOWPZIhNmWbZ6kXDTWrCJQDSxBHRNOy4SJeZmYvc3RJ/e9XOsHaQlLsqwf/5k66T0tY5lnRcUs21lVVJyykOtlY/QKyXED4kfiyszwLd9g0sL1uM5aVv5QqXnRfRpEP9dvqKIH1hBCxRSIFJximhdI8Ge+3HIbqXZ0SuPBYEfa1fIQ1BenQ9HD8DOGx+izysw/1u8FQGLphYIevEMdOnEZ+1au0MZ6U8UPOwFvxMg592YXdtc9A00KOmh6XIxwL/qA5ymHL8fwP3thwtbGmxMs4rcgS7szY6Lp8DT3dl3F3eAi6FoSsqHi86Gn4ttRg29ZN5KGCOQJ1mMBAWTXs7PlTO9wxWBv9a1r99tlNOzfnt69fmVvgVkXIVDgkWUbA5DETMBGimqBQdmZRfUhXANPQoVP4HGEJxCy9OTw9cbZvZE/vobrTUWC2gVv/eUl1dX4z1d5CqtE2o6xIyaBQNRM4gSyL1YQwcf7f/IpBU/kXApo51j3012fGud03mPYfhruHeeE6UXgAAAAASUVORK5CYII=";
-		speakNormalButton.setAttribute("alt", "Speak at normal speed");
-		speakNormalButton.setAttribute("title", "Speak at normal speed"); 
-		speakNormalButton.addEventListener("click", speakNormal, false);
-		
-		this.asHtml = function()
-		{
-			return speakNormalButton;
-		}
-		
-		this.enable = function()
-		{
-			iap_Button.enableButton(speakNormalButton, "click", speakNormal);
-		}
-		
-		this.disable = function()
-		{
-			iap_Button.disableButton(speakNormalButton, "click", speakNormal);
-		}
-		
-		function speakNormal()
-		{
-			setSpeakingRate("Normal");
-			getAudio("Speak at normal speed selected, options menu closed", true, closeOptionsMenu);
-		}
-		
-		function closeOptionsMenu()
-		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.innerHTML = ""; 
-			mmInteractionArea.style.display = "none";
-			mmOptionsButton.focus();
-		}
-	}
-	
-	function SpeakFastButtonModel()
-	{
-		// constructor
-		var iap_Button = new IAP_ButtonModel();
-		var speakFastButton = iap_Button.template();
-		speakFastButton.id = "_mm_SpeakFastButton";
-		speakFastButton.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAEmUlEQVQ4EY1VfUxVZRj/nc97zwVDFEVdMBWMi0tZZn6AGqK4Nc3IYi4bs+Vf8Qd9sLayqX+kjARdzH+olm7mx8wUjL4mmRjuok7ZFJ0NdAoRQggpX/eec89Hz3Pg4mXi6tnOe97zPs/7e76fIziOA6an8g9lZs+b/tFEn5JKJ5Z7+IRFoPPhW8MCogC5b8hqDdzs3NN15I1aPhUYOOuDn155dVnyl5npU6dqqgQ7+tbw3TGrR5FgWjYsiwRJCwFDD9u43Nzz8GTgTtFvpS8dFGLWfzV/R8GSuoJVKfGGScKEyhaNR4IgwDBN1Fy6h/VLZ8EnW9DpDsuLxNM8Eo7V39XLjl5bJ2bOSy5akDo53iTtYRKyCZjBx3uYJ6sajp+owsflBxF0vBAJlGXD5EHQsPB86mTPc/6EreIETZnGmpj5JGKOKotQ6BElFbLRg+/KC1FSeRKCrII9YWLFHkUEYSaKju1YI/lzmZGFXeNYxmoqJsaoqL7Qjr8emPB5AEnRSMzE1Ytn4ZAizovEgSZiLMqbxZ6MIVYe41UgeXy402Pjl8YOXLn9AI2NjXhvRwW6Bsh6sopJ1WJxrx+422tDtxV4yKOI33IElQ9kSYDi0XDmagcOH/0WV+p/RndbMzYX70ZcrBcXjmxHcVw8QtbwtRv1J7Dh5WvQ9RCWrtqA8m2FZL3BFmMUmI0wRQ2lB37FF6XFMLpuRHRCEcIQlTj3+3rgByT6s9x9X+dt8MP04x916BsYwtZ330aMpgwDc3RUrw9lBLrvw42k4aErHFkEgbSOJEKWJCzMzsOctLmI9cqIU02EqBoc24ROkW1s6aJr1DF8WfPICNzsRmXJ+4+BRsAj779bLuHcN9thWxaS/YtQtusT+BMF9AcdSIKNju4+fHa8CTKXiiN6cPL7Guidj9yPAPGbE8o1zhTqv4/mQLW7v3WxBvltbajY/SkyZk4gZbZbzywvc3326w6uNza4wuMtliNiyQuLsKWkyq1nt49J0HFsDA0OINDUhmem++EdqRbGkCUKH7dycHBsXKMVnDt9Cl332iFyrUbqiQRs20ZcYhLezJ1LNU/fUQ0hh2mOaaqI+CkzorHG7FvOHwM/45F/ZQHEdyjhCI5hi2HTQqwKLF6WM4bxfz+yctYh3ks5p/hGEwWCDsM6Xl+7Eonz10bz/nM/yZ+DjXlrYJmhx2RpqgiSQVanTVOxbdceeGdkPCY03oEyJR1bd36O+Ukxbh1HZLgiqIwksXdAbx0IUXEbBl5bnoKK/ScwK2sTcUebMnJn5C0iaXE+9n5dhU2r0zEYfGQtD6Ih3ULfoNEmYPX+2Tu3LDi/eXXqdHeiUXpbex2cqm3A72dPo62lCXpwiDpTw9Opz2JFdi7y1mRidoJMoPro34ZBedYcrrvTX3b4Sq77a8ooPLU8f8WsA4vTElJ81IU8d1XVg8GwgH8GyJuwSeUk0/iUKdE01A3d/RVFXGH3ua0v37rfXh1oLWzYu67GBWYBYeG+lBdz5xRN8qkzKb82h0qhIueZLJElPLQNctOg7EeVsotNslJ/yPzzzKWOSqf2rSY+/BcA2eThBFXcgAAAAABJRU5ErkJggg==";
-		speakFastButton.setAttribute("alt", "Speak at fast speed");
-		speakFastButton.setAttribute("title", "Speak at fast speed"); 
-		speakFastButton.addEventListener("click", speakFast, false);
-		
-		this.asHtml = function()
-		{
-			return speakFastButton;
-		}
-		
-		this.enable = function()
-		{
-			iap_Button.enableButton(speakFastButton, "click", speakFast);
-		}
-		
-		this.disable = function()
-		{
-			iap_Button.disableButton(speakFastButton, "click", speakFast);
-		}
-		
-		function speakFast()
-		{
-			setSpeakingRate("Fast");
-			getAudio("Speak at fast speed selected, options menu closed", true, closeOptionsMenu);
-		}
-		
-		function closeOptionsMenu()
-		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea");
-			mmInteractionArea.innerHTML = ""; 
-			mmInteractionArea.style.display = "none";
-			mmOptionsButton.focus();
-		}
-	}
-	
 	function CurrentItemDisplayModel()
 	{
 		// constructor
@@ -3069,6 +1787,7 @@ function MMControlPanelModel()
 		var displayBox = new CP_DisplayBoxModel();
 		var currentItemDisplayArea = displayBox.template();
 		currentItemDisplayArea.id = "_mm_CurrentItemDisplayArea";
+		currentItemDisplayArea.setAttribute("data-mm-uicomponent", "");
 		currentItemDisplayArea.setAttribute("title", "Current item display area");
 		
 		this.add = function()
@@ -3082,14 +1801,462 @@ function MMControlPanelModel()
 		}
 	}
 	
-	// Utilities 
+	// Controller 
 	
-	function fireChangeEvt(onThisElement)
-	{
-		var changeEvt = document.createEvent("HTMLEvents");
-		changeEvt.initEvent("change", false, true); // bubbles - false, default action preventable
-		onThisElement.dispatchEvent(changeEvt);
+	var osmType;
+	var contentComponents;
+	
+	function osmItemChecker(node) 
+	{			
+		function textNodeOnlyChild()
+		{
+			if(node.parentElement.childNodes.length == 1)
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		function textNodeInSpecificElement()
+		{
+			var specificElements = ["AUDIO", "VIDEO", "IFRAME"]; // any which contain text to display if they are unsupported - removed CANVAS and OBJECT as text alternatives can be placed in the body
+			
+			if(specificElements.indexOf(node.parentElement.tagName) != -1)
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		function empty() // void elements are intended to be empty
+		{
+			var voidHtmlElements = ["AREA", "BASE", "BR", "COL", "COMMAND", "EMBED", "HR", "IMG", "INPUT", "KEYGEN", "LINK", "META", "PARAM", "SOURCE", "TRACK", "WBR"];
+			var htmlsWeAllowToBeEmpty = ["VIDEO", "AUDIO", "CANVAS"]; // any others? we don't support OBJECT currently?
+			
+			if ((voidHtmlElements.indexOf(node.nodeName) == -1) && (htmlsWeAllowToBeEmpty.indexOf(node.nodeName) == -1) && (node.childNodes.length == 0))  
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		osmType = null; // reset each time due to interact()
+		contentComponents = [];
+		
+		if(node.nodeName != "#text")
+		{
+			// detect and remove empty elements which are not designed to be empty
+			
+			if (empty() == false)
+			{
+				// need to skip over our tags 
+				if (node.hasAttribute("data-mm-uicomponent") == false) // data-mm-uicomponent on each metalmouth component 
+				{
+					var osmItemModel = osm.filter(node);
+			
+					if (osmItemModel != null) 
+					{
+						osmType = osmItemModel.osmType;
+						drawCurrentElementHighlighterAreaFromLive(osmType, node);
+						contentComponents = osmItemModel.osmContentComponents;
+						return NodeFilter.FILTER_ACCEPT;
+					}
+				}
+			}
+		}
+		else
+		{
+			if ((textNodeOnlyChild() == false)&&(textNodeInSpecificElement() == false))
+			{
+				if (node.data.trim() != "") // node.data != "\n"
+				{
+					osmType = "Text";
+					drawCurrentElementHighlighterAreaFromLive(osmType, node.parentElement);
+					contentComponents[0] = node.data;
+					return NodeFilter.FILTER_ACCEPT;
+				}
+			}
+		}
+		return NodeFilter.FILTER_SKIP;
 	}
+	
+	function jumpChecker(node) // jump to headers - this is what people do
+	{
+		osmType = null; // reset each time due to interact()
+		contentComponents = [];
+		
+		if ((node.nodeName == "H1")||(node.nodeName == "H2")||(node.nodeName == "H3")||(node.nodeName == "H4")||(node.nodeName == "H5")||(node.nodeName == "H6"))
+		{
+			var osmItemModel = osm.filter(node);
+			
+			if (osmItemModel != null) 
+			{
+				osmType = osmItemModel.osmType;
+				drawCurrentElementHighlighterAreaFromLive(osmType, node);
+				contentComponents = osmItemModel.osmContentComponents;
+				return NodeFilter.FILTER_ACCEPT;
+			}
+		}
+		return NodeFilter.FILTER_SKIP;
+	}
+	
+	var rootnode = document.body;
+	var walkerElementPlusText;
+	var walkerJump;
+	var walkerFirstChild;
+	var walkerLastChild;
+	var walker;
+	
+	function initWalker()
+	{
+		var walkerUnfiltered = document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT, null, false);
+		walkerFirstChild = walkerUnfiltered.firstChild();
+		walkerLastChild = walkerUnfiltered.lastChild();
+		walkerUnfiltered = null;
+		
+		walkerElementPlusText = document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT, osmItemChecker, false);
+		walkerJump = document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT, jumpChecker, false);
+		walker = walkerElementPlusText;
+	}
+	
+	var jumpAvailable = false;
+	
+	function initJump()
+	{
+		var headers = ["H1", "H2", "H3", "H4", "H5", "H6"];
+		
+		for (var i in headers)
+		{
+			if (document.getElementsByTagName(headers[i]).length > 0)
+			{
+				jumpAvailable = true;
+			}
+		}
+	}
+	
+	var readNodesStop;
+	
+	function startReadingNodes()
+	{
+		readNodesStop = false;
+		readOn();
+		
+		function readOn()
+		{
+			walkerElementPlusText.currentNode = walker.currentNode;
+			walker = walkerElementPlusText;
+		
+			if (readNodesStop != true)
+			{
+				walker.nextNode();
+			}
+			
+			if (osmType == null)
+			{
+				getAudio("no next item", false, null);
+			}
+			else
+			{
+				if (readNodesStop != true)
+				{
+					readNodeContents(contentComponents, readOn);
+				}
+			}
+		}
+	}
+	
+	function stopReadingNodes()
+	{
+		readNodesStop = true;
+	}
+	
+	function backToStart() // click and it enables and focuses on stop 
+	{
+		initWalker();
+		restoreHighlighter();
+		getAudio("Page start", false, null);
+	}
+	
+	function jump()
+	{	
+		if (jumpAvailable == true)
+		{
+			walkerJump.currentNode = walker.currentNode;
+			walker = walkerJump;
+			walker.nextNode();
+			if (osmType != null) 
+			{
+				readNodeContents(contentComponents);
+			}
+			else
+			{
+				initWalker(); // should allow a loop of headers
+				jump();
+			}
+		}
+		else
+		{
+			getAudio("page does not contain headers", false, null);
+		} 
+	}
+	
+	function moveTo(elementReference) // id or name, this is used for internal links
+	{
+		function moveToChecker(node)
+		{
+			if ((node.hasAttribute("id"))||(node.hasAttribute("name")))
+			{
+				if ((node.getAttribute("id") == elementReference)||(node.getAttribute("name") == elementReference))
+				{
+					osmType = null; // reset each time due to interact()
+					contentComponents = [];
+					
+					var osmItemModel = osm.filter(node);
+					
+					if (osmItemModel != null) 
+					{
+						osmType = osmItemModel.osmType;
+						drawCurrentElementHighlighterAreaFromLive(osmType, node);
+						contentComponents = osmItemModel.osmContentComponents;
+						return NodeFilter.FILTER_ACCEPT;
+					}	
+				}
+			}
+			return NodeFilter.FILTER_SKIP;
+		}
+		
+		var walkerMoveTo = document.createTreeWalker(rootnode, NodeFilter.SHOW_ELEMENT, moveToChecker, false);
+		walkerMoveTo.nextNode();
+		walker.currentNode = walkerMoveTo.currentNode;
+		readNodeContents(contentComponents);
+	}
+	
+	function readPrevNode()
+	{
+		readNodesStop == true; // to stop reading on
+		
+		walkerElementPlusText.currentNode = walker.currentNode;
+		walker = walkerElementPlusText;
+		
+		walker.previousNode();
+		
+		if (osmType == null)
+		{
+			getAudio("no previous items", false, null);
+		}
+		else
+		{
+			
+			readNodeContents(contentComponents);
+		}
+	}
+	
+	function readNextNode()
+	{
+		readNodesStop == true; // to stop reading on
+		
+		walkerElementPlusText.currentNode = walker.currentNode;
+		walker = walkerElementPlusText;
+		
+		walker.nextNode();
+		
+		if (osmType == null)
+		{
+			getAudio("no next item", false, null);
+		}
+		else
+		{
+			readNodeContents(contentComponents);
+		}
+	}
+	
+	function readNodeContents(contentComponentsFromModel, callbackFunction)
+	{
+		var textToRead = ""; 
+		for (var i in contentComponentsFromModel)
+		{
+			textToRead = textToRead + " " + contentComponentsFromModel[i];
+		}
+		getAudio(textToRead.trim(), false, callbackFunction);
+	}
+	
+	function interact()
+	{
+		if (osmType != null)
+		{
+			switch(osmType)
+			{
+				case "Link":
+					linkInteraction(walker.currentNode);
+					break;
+				case "Quote_Link":
+					linkInteraction(walker.currentNode);
+					break;
+				case "Map_Area":
+					linkInteraction(walker.currentNode);
+					break;
+				case "Skip_Link":
+					skipLinkInteraction(walker.currentNode);
+					break;
+				case "Text_Box":
+					textBoxInteraction(walker.currentNode, "text");
+					break;
+				case "Search_Box":
+					textBoxInteraction(walker.currentNode, "search");
+					break;
+				case "Password_Box":
+					textBoxInteraction(walker.currentNode, "password");
+					break;
+				case "Telephone_Box":
+					textBoxInteraction(walker.currentNode, "telephone");
+					break;
+				case "Url_Box":
+					textBoxInteraction(walker.currentNode, "url");
+					break;
+				case "Email_Box":
+					textBoxInteraction(walker.currentNode, "e-mail");
+					break;
+				case "Number_Box":
+					textBoxInteraction(walker.currentNode, "number");
+					break;
+				case "Date_Time_Box":
+					textBoxInteraction(walker.currentNode, "date time");
+					break;
+				case "Date_Box":
+					textBoxInteraction(walker.currentNode, "date");
+					break;
+				case "Month_Box":
+					textBoxInteraction(walker.currentNode, "month");
+					break;
+				case "Week_Box":
+					textBoxInteraction(walker.currentNode, "week");
+					break;
+				case "Time_Box":
+					textBoxInteraction(walker.currentNode, "time");
+					break;
+				case "Range_Input":
+					rangeInputInteraction(walker.currentNode);
+					break;
+				case "Button":
+					buttonInteraction(walker.currentNode);
+					break;
+				case "Check_Button":
+					checkButtonInteraction(walker.currentNode);
+					break;
+				case "Single_Select":
+					singleSelectInteraction(walker.currentNode);
+					break;
+				case "Audio":
+					audioInteraction(walker.currentNode);
+					break;
+				case "Video":
+					videoInteraction(walker.currentNode);
+					break;
+			}
+		}
+	}
+	
+	function linkInteraction(liveElementToInteractWith)
+	{
+		document.location.href = liveElementToInteractWith.getAttribute("href");
+	}
+	
+	function skipLinkInteraction(liveElementToInteractWith)
+	{
+		var targetHref = liveElementToInteractWith.getAttribute("href").replace("#", "");
+		moveTo(targetHref);
+	}
+	
+	function textBoxInteraction(liveElementToInteractWith, enteredDataType)
+	{
+		controlPanel.drawTextBoxInteract(liveElementToInteractWith, enteredDataType);
+		
+		getAudio(enteredDataType + " entry area entered", false, onFocus);
+		
+		function onFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	function rangeInputInteraction(liveElementToInteractWith)
+	{
+		controlPanel.drawRangeInputInteract(liveElementToInteractWith);
+		
+		getAudio("Range input entry area entered", false, onFocus);
+		
+		function onFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	function buttonInteraction(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	
+	function checkButtonInteraction(liveElementToInteractWith)
+	{
+		controlPanel.drawCheckButtonInteract(liveElementToInteractWith);
+		
+		getAudio("check button entry area entered", false, onFocus);
+		
+		function onFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	function singleSelectInteraction(liveElementToInteractWith)
+	{
+		controlPanel.drawSelectMenuInteract(liveElementToInteractWith);
+		
+		getAudio("single select drop-down menu entered", false, numberOfItems);
+		
+		function numberOfItems()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			getAudio((mmInteractionArea.children.length - 1)  + " selectable options, first option", false, changeFocus); // -1 takes into account the divider and the close button
+		}
+		
+		function changeFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	function audioInteraction(liveElementToInteractWith)
+	{
+		controlPanel.drawMediaInteract(liveElementToInteractWith, "audio");
+		
+		getAudio("audio control area entered", false, onFocus);
+		
+		function onFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	function videoInteraction(liveElementToInteractWith)
+	{
+		controlPanel.drawMediaInteract(liveElementToInteractWith, "video");
+		
+		getAudio("video control area entered", false, onFocus);
+		
+		function onFocus()
+		{
+			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+			mmInteractionArea.children[0].focus();
+		}
+	}
+	
+	// Utilities 
 	
 	function getPageTitle()
 	{
@@ -3248,28 +2415,6 @@ function MMControlPanelModel()
 	
 	// Highlighter
 	
-	function highlightCurrentNode()
-	{
-		var id = svb.getCurrentOSMNode();
-		
-		restoreHighlighter();
-		
-		var osmNodeToDehighlight = document.getElementById("_mm_Replacement" + svb.getHighlightedOSMNode()); // 0 in the first instance means nothing will be located which is ok
-		if (osmNodeToDehighlight != null)
-		{
-			osmNodeToDehighlight.removeAttribute("style"); 
-		}
-		
-		var osmNodeToHighlight = document.getElementById("_mm_Replacement" + id);
-		if (osmNodeToHighlight != null)
-		{
-			osmNodeToHighlight.setAttribute("style", "border:1px solid red;");
-			drawCurrentElementHighlighterArea(osmNodeToHighlight);
-		}
-		
-		svb.setHighlightedOSMNode(id);
-	}
-	
 	function calcPosition(positionElement)
 	{
 		var element_coordinates = [4];
@@ -3304,24 +2449,6 @@ function MMControlPanelModel()
 		element_coordinates[3] = height;
 		return element_coordinates; 
 	}
-		
-	function getElementFromOriginalId(originalId)
-	{
-		var element = null;
-		for (var i in document.all)
-		{
-			if (document.all[i].tagName != null)
-			{
-				var mmId = document.all[i].getAttribute("_mm_Id");
-				if (parseInt(originalId) == parseInt(mmId))
-				{
-					element = document.all[i];
-					break;
-				}
-			}
-		}
-		return element;
-	}
 	
 	function restoreHighlighter()
 	{
@@ -3329,9 +2456,9 @@ function MMControlPanelModel()
 		highlighter.style.cssText = "display:none;";
 	}
 	
-	function drawCurrentElementHighlighterArea(osmNodeToHighlight)
+	function drawCurrentElementHighlighterAreaFromLive(osmType, liveElement)
 	{	
-		var positions = calcPosition(getElementFromOriginalId(osmNodeToHighlight.getAttribute("originalId")));
+		var positions = calcPosition(liveElement);
 		
 		var x = positions[0];
 		var y = positions[1];
@@ -3340,11 +2467,11 @@ function MMControlPanelModel()
 		
 		if ((x <= 0)||(x >= document.body.scrollWidth)||(y <=0)||(y >= document.body.scrollHeight)||(width == 0)||(height == 0))
 		{
-			controlPanel.changeDisplayedCurrentItem(osmNodeToHighlight.className.replace("_mm_", "") + " (offscreen)");
+			controlPanel.changeDisplayedCurrentItem(osmType + " (offscreen)");
 		}
 		else
 		{
-			controlPanel.changeDisplayedCurrentItem(osmNodeToHighlight.className.replace("_mm_", ""));
+			controlPanel.changeDisplayedCurrentItem(osmType);
 			drawRectangleFromCoords(x, y, width, height, false);
 		}
 	}
@@ -3386,27 +2513,6 @@ function MMControlPanelModel()
 		return "Normal";
 	}
 	
-	function getSpeakingRates()
-	{
-		return ["Slow", "Normal", "Fast"];
-	}
-	
-	function setSpeakingRate(chosenRate)
-	{
-		switch(chosenRate)
-		{
-			case "Normal": 
-				speakingRateFloat = 0.7;
-				break;
-			case "Slow":
-				speakingRateFloat = 0.5;
-				break;
-			case "Fast":
-				speakingRateFloat = 0.9;
-				break;
-		}
-	}
-	
 	function tts(voice, callbackFunction)
 	{
 		chrome.extension.sendRequest({voice: JSON.stringify(voice)}, function(response) {
@@ -3430,656 +2536,288 @@ function MMControlPanelModel()
 		this.rate = rate;
 		this.enqueue = enqueue;
 	}
-	
-	// READ
-	// function read needs a mechanism to ensure that the contents are read before moving on 
-	
-	var readStop;
-	
-	function readOn() // runs recursively
-	{	
-		if (readStop == true)
-		{
-			readStop = false;
-			return;
-		}
-		else
-		{
-			if (svb.getCurrentOSMNode() == osm.elementCount())
-			{
-				svb.reset();
-				return;
-			}
-			else
-			{
-				readNextItem();
-			}
-		}
-	}
-	
-	function readNextItem()
-	{
-		svb.moveToAndReturnNextOSMNode();
-		controlPanel.update();
-		highlightCurrentNode();
-		readCurrentNode(readOn);
-	}
-	
-	function getTextToRead(osmNodeToRead)
-	{
-		// want to identify each span with className = static_text
-		var textToRead = ""; 
-		for (var i in osmNodeToRead.children)
-		{
-			if ((osmNodeToRead.children[i].tagName == "SPAN")&&(osmNodeToRead.children[i].className == "_mm_Static_Text"))
-			{
-				textToRead = textToRead + " " + osmNodeToRead.children[i].innerText;
-			}
-		}
-		return textToRead.trim();
-	}
-	
-	function readCurrentNode(callbackFunction, nodeDescription)
-	{
-		var osmNodeToRead = document.getElementById("_mm_Replacement" + svb.getCurrentOSMNode());
-		if (osmNodeToRead != null)
-		{
-			var textToRead = getTextToRead(osmNodeToRead);
-			if (nodeDescription != null)
-			{
-				textToRead = nodeDescription + " " + textToRead;
-			}
-			getAudio(textToRead, false, callbackFunction);
-		}
-	}
 }
 
 // OSM
 
-function OSMModel() // setUp
+function OSMModel()
 {
-	var osmIndex;
-	var typesInDOM = [];
-	
-	this.elementCount = function()
+	function OSMItemModel(osmType, osmContentComponents)
 	{
-		return osmIndex;
-	} 
-	 
-	this.getOSMFromMMId = function(mmId)
-	{		
-		var element = null;
-		var allDivElements = document.getElementsByTagName("div");
+		this.osmType = osmType;
+		this.osmContentComponents = osmContentComponents;
+	}
+	
+	this.filter = function(currentNode)
+	{
+		var relevantModel = null;
 		
-		for (var i in allDivElements)
+		switch(currentNode.tagName)
 		{
-			if (allDivElements[i].tagName != null)
-			{
-				var originalId = allDivElements[i].getAttribute("originalid");
-				if (parseInt(originalId) == parseInt(mmId))
-				{
-					element = allDivElements[i];
-					break;
-				}
-			}
-		}
-		return element;
-	}
-	
-	this.update = function(bodyDOMCode)
-	{
-		var tempOSMHolder = document.createElement("div");
-		tempOSMHolder.innerHTML = bodyDOMCode;
-		messAbout(tempOSMHolder);
-		var osmArea = document.getElementById("_mm_OSMArea");
-		osmArea.innerHTML = tempOSMHolder.innerHTML;
-		tempOSMHolder = null;
-		controlPanel.updateNavigatableItems();
-	}
-	
-	this.osmTypesInDOM = function()
-	{
-		return typesInDOM;
-	}
-	
-	function htmlElementToOSMType(liveElement)
-	{
-		// change html elements to osm object references
-		var elementSwitch = "unsupported";
-		
-		switch(liveElement.tagName)
-		{
-			// interaction 
 			case "A": 
-				var hrefValue = liveElement.getAttribute("href");
+				var hrefValue = currentNode.getAttribute("href");
 				if (hrefValue == null)
 				{
-					elementSwitch = "_mm_Skip_Target";
+					relevantModel = SkipTargetModel_ContentToRead; 
 				}
 				else
 				{
 					if (hrefValue[0] == "#")
 					{
-						elementSwitch = "_mm_Skip_Link";
+						relevantModel = SkipLinkModel_ContentToRead;
 					}
 					else
 					{
-						elementSwitch = "_mm_Link";
+						relevantModel = LinkModel_ContentToRead;
 					}
 				}
 				break; 
 			case "INPUT":
-				var typeValue = liveElement.getAttribute("type");
+				var typeValue = currentNode.getAttribute("type");
 				if (typeValue != null)
 				{
 					typeValue = typeValue.toLowerCase();
 					if (typeValue == "text") // 
 					{
-						elementSwitch = "_mm_Text_Box";
+						relevantModel = TextBoxModel_ContentToRead;
 					}
 					if (typeValue == "search") // 
 					{
-						elementSwitch = "_mm_Search_Box";
+						relevantModel = TextBoxModel_ContentToRead;
 					}
 					if (typeValue == "password") // 
 					{
-						elementSwitch = "_mm_Password_Box";
+						relevantModel = TextBoxModel_ContentToRead;
 					}
 					if ((typeValue == "button")||(typeValue == "image")||(typeValue == "submit")||(typeValue == "reset"))
 					{
-						elementSwitch = "_mm_Button"; 
+						relevantModel = ButtonModel_ContentToRead; 
 					}
 					if ((typeValue == "checkbox")||(typeValue == "radio"))
 					{
-						elementSwitch = "_mm_Check_Button";
+						relevantModel = CheckButtonModel_ContentToRead;
 					}
 					if (typeValue == "telephone")
 					{
-						elementSwitch = "_mm_Telephone_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "url")
 					{
-						elementSwitch = "_mm_Url_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "e-mail")
 					{
-						elementSwitch = "_mm_Email_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "number")
 					{
-						elementSwitch = "_mm_Number_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "datetime")
 					{
-						elementSwitch = "_mm_Date_Time_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "date")
 					{
-						elementSwitch = "_mm_Date_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "month")
 					{
-						elementSwitch = "_mm_Month_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "week")
 					{
-						elementSwitch = "_mm_Week_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "time")
 					{
-						elementSwitch = "_mm_Time_Box";
+						relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 					}
 					if (typeValue == "range")
 					{
-						elementSwitch = "_mm_Range_Input";
+						relevantModel = RangeInputModel_ContentToRead;
 					}
 				}
 				break;
 			case "BUTTON":
-				elementSwitch = "_mm_Button";
+				relevantModel = ButtonModel_ContentToRead;
 				break;
 			case "TEXTAREA":
-				elementSwitch = "_mm_Text_Box";
+				relevantModel = TextBoxModel_ContentToRead;
 				break;
 			case "SELECT":
-				if (liveElement.getAttribute("multiple") == null)
+				if (currentNode.getAttribute("multiple") == null) // need to collect relevant models for rest - doing this cuts out stages
 				{
-					if (liveElement.hasAttribute("_mm_selectedindex") == false)
-					{
-						liveElement.setAttribute("_mm_selectedindex", liveElement.selectedIndex); // need to preserve values which are not writted into the dom - as UponDomChange takes the text from the dom, rather than virtually held values (i.e. selectedIndex)
-					}
-					elementSwitch = "_mm_Single_Select";
+					relevantModel = SingleSelectModel_ContentToRead;
 				}
 				break;
-			case "OPTION":
-				elementSwitch = "_mm_Option";
-				break;
-				// semantic
 			case "FORM":
-				elementSwitch = "_mm_Form";
+				relevantModel = FormModel_ContentToRead;
 				break;
 			case "P":
-				elementSwitch = "_mm_Paragraph";
+				relevantModel = ParagraphModel_ContentToRead;
 				break; 
+			case "H1":
+				relevantModel = Level1HeaderModel_ContentToRead;
+				break;
+			case "H2":
+				relevantModel = Level2HeaderModel_ContentToRead;
+				break;
+			case "H3":
+				relevantModel = Level3HeaderModel_ContentToRead;
+				break;
+			case "H4":
+				relevantModel = Level4HeaderModel_ContentToRead;
+				break;
+			case "H5":
+				relevantModel = Level5HeaderModel_ContentToRead;
+				break;
+			case "H6":
+				relevantModel = Level6HeaderModel_ContentToRead;
+				break;
+			case "ABBR":
+				relevantModel = AbbrModel_ContentToRead;
+				break;
 			case "SPAN":
-				if ((liveElement.getAttribute("parentElement") == "BODY")||(liveElement.getAttribute("parentElement") == "DIV")||(liveElement.getAttribute("parentElement") == "UNSUPPORTED")) // parentElement introduced in DOMText at top of page, with UNSUPPORTED it is introduced in the model
+				if ((currentNode.parentElement.tagName == "BODY")||(currentNode.parentElement.tagName == "DIV")||(currentNode.parentElement.tagName == "UNSUPPORTED")) // parentElement introduced in DOMText at top of page, with UNSUPPORTED it is introduced in the model
 				{
-					elementSwitch = "_mm_Sentence";
+					relevantModel = SentenceModel_ContentToRead;
 				}
 				else
 				{
-					elementSwitch = "_mm_Static_Text";
+					relevantModel = StaticTextModel_ContentToRead;
 				}
 				break;
 			case "IMG":
-				if (liveElement.getAttribute("role") == "presentation")
+				if (currentNode.getAttribute("role") != "presentation")
 				{
-					elementSwitch = "_mm_Decorative_Image";
-				}
-				else
-				{
-					elementSwitch = "_mm_Semantic_Image";
+					relevantModel = SemanticImageModel_ContentToRead;
 				}
 				break; 
 			case "HEADER":
-				elementSwitch = "_mm_Page_Header_Area";
+				PageHeaderAreaModel_ContentToRead;
 				break;
 			case "NAV":
-				elementSwitch = "_mm_Site_Navigation_Area";
+				relevantModel = SiteNavigationAreaModel_ContentToRead;
 				break;
 			case "MENU":
-				var menuType = liveElement.getAttribute("type"); 
+				var menuType = currentNode.getAttribute("type"); 
 				if (menuType != null)
 				{
 					if (menuType.toLowerCase() == "list")
 					{
-						elementSwitch = "_mm_Menu";
+						relevantModel = MenuModel_ContentToRead;
 					}
 				}
 				break;
 			case "ARTICLE":
-				elementSwitch = "_mm_Section";
+				relevantModel = SectionModel_ContentToRead; // should be the same for DIV
 				break;
 			case "SECTION":
-				if (liveElement.getAttribute("role") == "main")
+				if (currentNode.getAttribute("role") == "main")
 				{
-					elementSwitch = "_mm_Main_Content_Area";
+					relevantModel = MainContentAreaModel_ContentToRead;
 				}
 				else
 				{
-					elementSwitch = "_mm_Section";
+					relevantModel = SectionModel_ContentToRead;
 				}
 				break;
 			case "FOOTER":
-				elementSwitch = "_mm_Page_Footer_Area";
+				relevantModel = PageFooterAreaModel_ContentToRead;
 				break;
 			case "ADDRESS":
-				elementSwitch = "_mm_Page_Contact_Details"; 
+				relevantModel = PageContactDetailsModel_ContentToRead; 
 				break;
 			case "DIV":
-				if (liveElement.getAttribute("was") == "th") // solution to table issue - contents of a table element cannot be changed to divs via the dom, as the whole contents changes i.e. tbody into div creates a new div below tbody rather than changing tbody
+				if (currentNode.getAttribute("role") != "presentation")
 				{
-					if (liveElement.getAttribute("role") == "presentation")
-					{
-						elementSwitch = "_mm_Layout_Header_Cell"; 
-					}
-					else
-					{
-						elementSwitch = "_mm_Header_Cell";
-					}
-				}
-				else if (liveElement.getAttribute("was") == "td")
-				{
-					if (liveElement.getAttribute("role") == "presentation")
-					{
-						elementSwitch = "_mm_Layout_Data_Cell"; 
-					}
-					else
-					{
-						elementSwitch = "_mm_Data_Cell";
-					}
-				}
-				else
-				{
-					elementSwitch = "_mm_Layout_Division";
+					relevantModel = SectionModel_ContentToRead;
 				}
 				break;
 			case "CANVAS":
-				elementSwitch = "_mm_Layout_Division"; // Any text inside the between <canvas> and </canvas> will be displayed in browsers that do not support the canvas element. As Chrome supports canvas we need to be able to change out the canvas element for its contents - the easiest way is to say it is a layout division
+				relevantModel = CanvasModel_ContentToRead; // Any text inside the between <canvas> and </canvas> will be displayed in browsers that do not support the canvas element. As Chrome supports canvas we need to be able to change out the canvas element for its contents - the easiest way is to say it is a layout division
 				break;
 			case "FIELDSET":
-				elementSwitch = "_mm_Input_Group";
+				relevantModel = InputGroupModel_ContentToRead;
 				break;
 			case "UL":
-				elementSwitch = "_mm_Bulleted_List";
+				relevantModel = BulletedListModel_ContentToRead;
 				break;
 			case "OL":
-				elementSwitch = "_mm_Numbered_List";
+				relevantModel = NumberedListModel_ContentToRead;
 				break;
 			case "LI":
-				if (liveElement.getAttribute("role") == "menuitem")
+				if (currentNode.getAttribute("role") == "menuitem")
 				{
-					elementSwitch = "_mm_Menu_Item";
+					relevantModel = MenuItemModel_ContentToRead;
 				}
 				else
 				{
-					elementSwitch = "_mm_List_Item";
+					relevantModel = ListItemModel_ContentToRead;
 				}
 				break;
 			case "MAP":
-				elementSwitch = "_mm_Map";
+				relevantModel = MapModel_ContentToRead;
 				break;
 			case "AREA":
-				elementSwitch = "_mm_Map_Area";
+				relevantModel = MapAreaModel_ContentToRead;
 				break;
 			case "TABLE":
-				if (liveElement.getAttribute("role") == "presentation")
+				if (currentNode.getAttribute("role") != "presentation")
 				{
-					elementSwitch = "_mm_Layout_Table"; 
+					relevantModel = DataTableModel_ContentToRead; 
 				}
-				else
+				break;
+			case "TH":
+				if (currentNode.getAttribute("role") != "presentation")
 				{
-					elementSwitch = "_mm_Data_Table";
+					relevantModel = HeaderCellModel_ContentToRead; 
+				}
+				break;
+			case "TD":
+				if (currentNode.getAttribute("role") != "presentation")
+				{
+					relevantModel = DataCellModel_ContentToRead; 
 				}
 				break;
 			case "BLOCKQUOTE":
-				if (liveElement.getAttribute("cite") == null)
+				if (currentNode.getAttribute("cite") == null)
 				{
-					elementSwitch = "_mm_Quote";
+					relevantModel = QuoteModel_ContentToRead;
 				}
 				else
 				{
-					elementSwitch = "_mm_Quote_Link";
+					relevantModel = QuoteLinkModel_ContentToRead;
 				}
 				break;
 			case "INS":
-				elementSwitch = "_mm_Insertion";
+				relevantModel = InsertionModel_ContentToRead;
 				break;
 			case "DEL":
-				elementSwitch = "_mm_Deletion";
+				relevantModel = DeletionModel_ContentToRead;
 				break;
 			case "CODE":
-				elementSwitch = "_mm_Code";
+				relevantModel = CodeModel_ContentToRead;
 				break;
 			case "AUDIO":
-				elementSwitch = "_mm_Audio";
+				relevantModel = AudioModel_ContentToRead;
 				break;
 			case "VIDEO":
-				elementSwitch = "_mm_Video";
+				relevantModel = VideoModel_ContentToRead;
 				break;
 		}
 		
-		// following done as a by product 
-		
-		if ((typesInDOM.indexOf(elementSwitch) == -1)&&(elementSwitch != "unsupported")&&(elementSwitch != "_mm_Static_Text")&&(elementSwitch != "_mm_Layout_Division")&&(elementSwitch != "_mm_Layout_Table")&&(elementSwitch != "_mm_Layout_Header_Cell")&&(elementSwitch != "_mm_Layout_Data_Cell")&&(elementSwitch != "_mm_Decorative_Image")) // static text is included as it is read out automatically within other osm items.  Noting a main content area should always be included even in the simplest pages.
+		if (relevantModel != null)
 		{
-			typesInDOM.push(elementSwitch);
+			var modelItem = new relevantModel(currentNode);
+			var osmItemModel = new OSMItemModel(modelItem.name, modelItem.contentComponents());
+			return osmItemModel;
 		}
-		
-		return elementSwitch;
+		return relevantModel;
 	}
 	
-	// MessAbout -
-	// DOM errors are generally to do with baseElement functions being called as non-functions in Models i.e. baseElement.value should be baseElement.value()
-	function messAbout(element)
-	{		
-		osmIndex = 0;
-		
-		var createModelElement = function(liveElement, model)
-		{
-			var modelItem = new model(liveElement);
-			var replacementElement = modelItem.replacementElement();
-			replacementElement.id = "_mm_Replacement" + osmIndex;
-			replacementElement.className = "_mm_" + modelItem.name;
-			replacementElement.setAttribute("originalId", liveElement.getAttribute("_mm_Id"));
-			replacementElement.setAttribute("originalChildren", modelItem.allChildrenIds().toString());
-			liveElement.outerHTML = replacementElement.outerHTML;
-		}
-		
-		var elements = element.getElementsByTagName("*"); // all 
-		
-		for (var j in elements)
-		{
-			if ((elements[j].tagName != null)&&(elements[j].tagName != "HTML")&&(elements[j].tagName != "BODY")&&(elements[j].tagName != "HEAD")&&(elements[j].parentElement.tagName != "HEAD")) // last one is for the suppressionScript
-			{
-				elements[j].className = "unchanged";
-			}
-		}
-		
-		while(element.getElementsByClassName("unchanged").length > 0)
-		{
-			var selectedElement = element.getElementsByClassName("unchanged")[0];
-			var elementSwitch = htmlElementToOSMType(selectedElement); // becomes default
-			
-			switch(elementSwitch)
-			{	
-				// interaction - containers
-				case "_mm_Skip_Link": // divs not allowed within a p - so link should be changed to span, also p should be changed to div
-					osmIndex++;
-					createModelElement(selectedElement, SkipLinkModel);
-					break;
-				case "_mm_Skip_Target": // divs not allowed within a p - so link should be changed to span, also p should be changed to div
-					osmIndex++;
-					createModelElement(selectedElement, SkipTargetModel);
-					break;
-				case "_mm_Link": // divs not allowed within a p - so link should be changed to span, also p should be changed to div
-					osmIndex++;
-					createModelElement(selectedElement, LinkModel);
-					break;
-				// interaction - non-container (have textToReadOut attributes)
-				case "_mm_Text_Box":
-					osmIndex++;
-					createModelElement(selectedElement, TextBoxModel);
-					break;
-				case "_mm_Search_Box":
-					osmIndex++;
-					createModelElement(selectedElement, TextBoxModel);
-					break;
-				case "_mm_Password_Box":
-					osmIndex++;
-					createModelElement(selectedElement, TextBoxModel);
-					break;
-				case "_mm_Button":
-					osmIndex++;
-					createModelElement(selectedElement, ButtonModel);
-					break;
-				case "_mm_Check_Button":
-					osmIndex++;
-					createModelElement(selectedElement, CheckButtonModel);
-					break;
-				case "_mm_Single_Select":
-					osmIndex++;
-					createModelElement(selectedElement, SingleSelectModel);
-					break;
-				case "_mm_Section":
-					osmIndex++;
-					createModelElement(selectedElement, SectionModel);
-					break;
-				case "_mm_Paragraph":
-					osmIndex++;
-					createModelElement(selectedElement, ParagraphModel);
-					break;
-				case "_mm_Static_Text":
-					osmIndex++;
-					createModelElement(selectedElement, StaticTextModel);
-					break;
-				case "_mm_Form":
-					osmIndex++;
-					createModelElement(selectedElement, FormModel);
-					break;
-				// semantic - non-containers 
-				case "_mm_Semantic_Image": // semantic image if no role=presentation
-					osmIndex++;
-					createModelElement(selectedElement, SemanticImageModel);
-					break;
-				case "_mm_Decorative_Image": // semantic image if no role=presentation
-					osmIndex++;
-					createModelElement(selectedElement, DecorativeImageModel);
-					break;
-				case "_mm_Page_Header_Area":
-					osmIndex++;
-					createModelElement(selectedElement, PageHeaderAreaModel);
-					break;
-				case "_mm_Site_Navigation_Area":
-					osmIndex++;
-					createModelElement(selectedElement, SiteNavigationAreaModel);
-					break;
-				case "_mm_Menu":
-					osmIndex++;
-					createModelElement(selectedElement, MenuModel);
-					break;
-				case "_mm_Main_Content_Area":
-					osmIndex++;
-					createModelElement(selectedElement, MainContentAreaModel);
-					break;
-				case "_mm_Page_Footer_Area":
-					osmIndex++;
-					createModelElement(selectedElement, PageFooterAreaModel);
-					break; 
-				case "_mm_Page_Contact_Details":
-					osmIndex++;
-					createModelElement(selectedElement, PageContactDetailsModel);
-					break;
-				case "_mm_Layout_Division":
-					osmIndex++;
-					createModelElement(selectedElement, LayoutDivisionModel);
-					break; 
-				case "_mm_Sentence":
-					osmIndex++;
-					createModelElement(selectedElement, SentenceModel);
-					break;
-				case "_mm_Input_Group":
-					osmIndex++;
-					createModelElement(selectedElement, InputGroupModel);
-					break;
-				case "_mm_Bulleted_List":
-					osmIndex++;
-					createModelElement(selectedElement, BulletedListModel);
-					break;
-				case "_mm_Numbered_List":
-					osmIndex++;
-					createModelElement(selectedElement, NumberedListModel);
-					break;
-				case "_mm_List_Item":
-					osmIndex++;
-					createModelElement(selectedElement, ListItemModel);
-					break;
-				case "_mm_Menu_Item":
-					osmIndex++;
-					createModelElement(selectedElement, MenuItemModel);
-					break;
-				case "_mm_Map":
-					osmIndex++;
-					createModelElement(selectedElement, MapModel);
-					break;
-				case "_mm_Map_Area":
-					osmIndex++;
-					createModelElement(selectedElement, MapAreaModel);
-					break;
-				case "_mm_Layout_Table":
-					osmIndex++;
-					createModelElement(selectedElement, LayoutTableModel);
-					break;
-				case "_mm_Layout_Header_Cell":
-					osmIndex++;
-					createModelElement(selectedElement, LayoutHeaderCellModel);
-					break;
-				case "_mm_Layout_Data_Cell":
-					osmIndex++;
-					createModelElement(selectedElement, LayoutDataCellModel);
-					break;
-				case "_mm_Data_Table":
-					osmIndex++;
-					createModelElement(selectedElement, DataTableModel);
-					break;
-				case "_mm_Header_Cell":
-					osmIndex++;
-					createModelElement(selectedElement, HeaderCellModel);
-					break;
-				case "_mm_Data_Cell":
-					osmIndex++;
-					createModelElement(selectedElement, DataCellModel);
-					break;	
-				case "_mm_Quote":
-					osmIndex++;
-					createModelElement(selectedElement, QuoteModel);
-					break;
-				case "_mm_Quote_Link":
-					osmIndex++;
-					createModelElement(selectedElement, QuoteLinkModel);
-					break;
-				case "_mm_Insertion":
-					osmIndex++;
-					createModelElement(selectedElement, InsertionModel);
-					break;
-				case "_mm_Deletion":
-					osmIndex++;
-					createModelElement(selectedElement, DeletionModel);
-					break;
-				case "_mm_Code":
-					osmIndex++;
-					createModelElement(selectedElement, CodeModel);
-					break;
-				case "_mm_Audio":
-					osmIndex++;
-					createModelElement(selectedElement, AudioModel);
-					break;
-				case "_mm_Video":
-					osmIndex++;
-					createModelElement(selectedElement, VideoModel);
-					break;
-				case "_mm_Telephone_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Url_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Email_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Number_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Date_Time_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Date_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Month_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Week_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Time_Box":
-					osmIndex++;
-					createModelElement(selectedElement, FormatSpecificEntryBoxModel);
-					break;
-				case "_mm_Range_Input":
-					osmIndex++;
-					createModelElement(selectedElement, RangeInputModel);
-					break;
-				// unsupported
-				case "unsupported":
-					osmIndex++;
-					createModelElement(selectedElement, UnsupportedModel);
-					break;
-			}
-		}
-	}
-	
-	// element object
-	
-	function ElementModel(baseElement) // 
+	function ElementModel_ContentToRead(baseElement) // element from live page DOM 
 	{
 		this.tagName = function()
 		{
@@ -4099,16 +2837,6 @@ function OSMModel() // setUp
 			return result;
 		}
 		
-		this.contents = function()
-		{
-			var elementContents = "";
-			if (baseElement.hasChildNodes() == true)
-			{
-				elementContents = baseElement.outerHTML.substring(baseElement.outerHTML.indexOf(">") + 1, baseElement.outerHTML.lastIndexOf("<")); // works for <a></a> not for <input />
-			}
-			return elementContents;
-		}
-		
 		this.getAttribute = function(attributeName)
 		{
 			var attributeValue = baseElement.getAttribute(attributeName);
@@ -4122,132 +2850,48 @@ function OSMModel() // setUp
 			return result;
 		}
 		
-		this.mmId = function()
+		this.children = function()
 		{
-			return baseElement.getAttribute("_mm_Id");
+			return baseElement.children;
 		}
-		
-		this.attributes = function()
-		{
-			return baseElement.attributes;
-		}
-		
-		var originalElement;
-		
-		var originalIds = [];
-		
-		function walkDOM(element)
-		{
-			do 
-			{
-				if (originalElement.nextSibling == element) // hold recursive behaviour within the original element
-				{
-					break;
-				} 
-				if (element.tagName != null)
-				{
-					if (element != originalElement) // otherwise original is included in the list 
-					{
-						originalIds.push(element.getAttribute("_mm_Id"));
-					}
-				}
-				if (element.hasChildNodes())
-				{
-					walkDOM(element.firstChild);
-				}
-			} 
-			while (element = element.nextSibling)
-		}
-		
-		this.allChildrenIds = function()
-		{
-			// collects all _mm_Ids for children in an array
-			originalElement = baseElement;
-			walkDOM(baseElement);
-			return originalIds;
-		}
-		
-		// next is only for select elements
 		
 		this.selectedTextValue = function()
 		{
-			return baseElement[baseElement.getAttribute("_mm_selectedindex")].innerText;
+			return baseElement[baseElement.selectedIndex].innerText;
 		}
-		
 	}
 	
-	// all OSM object models extends element obj
+	// SkipLinkModel-----------------------
 	
-	// Interaction container objects ---------------------
-	
-	// ANCHOR // Special as you will want to move focus within the model 
-	
-	// Next Interation with skip link, then link, then text box / submit button etc
-	
-	// e.g. <a href="#here">
-	
-	function SkipLinkModel(baseElement)
+	function SkipLinkModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Skip_Link"; 
+		this.name = "Skip_Link";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("href").substring(1));
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
 			
-			// need to change elements within the contents
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.innerHTML = elementContents;
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
 			
-			// check for and replace images included in links
-			if (element.getElementsByTagName("img").length > 0)
-			{
-				var possibleImgs = element.children;
-				
-				if (possibleImgs.length > 0)
-				{
-					for (var i in possibleImgs)
-					{
-						if (possibleImgs[i].tagName == "IMG")
-						{
-							var alt = possibleImgs[i].getAttribute("alt");
-							if ((alt == null)||(alt == ""))
-							{
-								alt = ""; 
-							}
-							else
-							{
-								alt = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + alt + "</span>";
-							}
-							possibleImgs[i].outerHTML = alt;
-						}
-					}
-				}
-			}
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
-			
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray; 
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Skip Link</span>";
+			return "Skip Link";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function titleValue()
@@ -4260,45 +2904,51 @@ function OSMModel() // setUp
 			{
 				title = ""; 
 			}
-			else
-			{
-				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
-			}
 			
 			return title;
 		}
 		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "") // originalElement.childNodes[0].data != "\n"
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// e.g. <a name="here">
+	// SkipTargetModels------------------------
 	
-	function SkipTargetModel(baseElement)
+	function SkipTargetModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Skip_Target"; 
+		this.name = "Skip_Target";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("name"));
-			element.innerHTML = whatAmI() + titleValue() + baseElement.contents();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
 			
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Skip Link Target</span>";
+			return "Skip Link Target";
 		}
 		
 		function titleValue()
@@ -4311,85 +2961,57 @@ function OSMModel() // setUp
 			{
 				title = ""; 
 			}
-			else
-			{
-				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
-			}
 			
 			return title;
 		}
 		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
-		}
-	}
-	
-	// LINK (text, image, both) // from a element - also, taking alt for any image which is used as a link image
-	
-	function LinkModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Link"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("href"));
-			
-			// need to change elements within the contents
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			if (originalElement.childNodes.length == 1)
 			{
-				element.innerHTML = elementContents;
-			}
-			
-			// check for and replace images included in links
-			if (element.getElementsByTagName("img").length > 0)
-			{
-				var possibleImgs = element.children;
-				
-				if (possibleImgs.length > 0)
+				if (originalElement.childNodes[0].nodeName == "#text")
 				{
-					for (var i in possibleImgs)
+					if (originalElement.childNodes[0].data.trim() != "")
 					{
-						if (possibleImgs[i].tagName == "IMG")
-						{
-							var alt = possibleImgs[i].getAttribute("alt");
-							if ((alt == null)||(alt == ""))
-							{
-								alt = ""; 
-							}
-							else
-							{
-								alt = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + alt + "</span>";
-							}
-							possibleImgs[i].outerHTML = alt;
-						}
+						return true;
 					}
 				}
 			}
-			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + titleValue() + element.innerHTML;
-			
-			return element;
+			return false;
 		}
+	}
+	
+	// LinkModels------------------------ 
+	
+	function LinkModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.allChildrenIds = function()
+		this.name = "Link";
+		
+		this.contentComponents = function()
 		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}			
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Link</span>";
+			return "Link";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function titleValue()
@@ -4402,52 +3024,57 @@ function OSMModel() // setUp
 			{
 				title = ""; 
 			}
-			else
-			{
-				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
-			}
 			
 			return title;
 		}
 		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
+		
+	// QuoteLinkModels------------------------
 	
-	// QUOTELINK 
-	
-	function QuoteLinkModel(baseElement)
+	function QuoteLinkModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Quote_Link"; 
+		this.name = "Quote_Link";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("cite"));
-				
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + titleValue() + baseElement.contents();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
 			
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Quote link</span>";
+			return "Quote link";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function titleValue()
@@ -4460,43 +3087,45 @@ function OSMModel() // setUp
 			{
 				title = ""; 
 			}
-			else
-			{
-				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
-			}
 			
 			return title;
 		}
 		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// MAP // map
+	// MapModels------------------------
 	
-	function MapModel(baseElement)
+	function MapModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Map"; 
+		this.name = "Map";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + titleValue() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Map</span>";
+			return "Map";
 		}
 		
 		function titleValue()
@@ -4509,47 +3138,36 @@ function OSMModel() // setUp
 			{
 				title = ""; 
 			}
-			else
-			{
-				title = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
-			}
 			
 			return title;
 		}
 	}
 	
-	// MAPAREA 
+	// MapAreaModels------------------------
 	
-	function MapAreaModel(baseElement)
+	function MapAreaModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Map_Area"; 
+		this.name = "Map_Area";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("href"));
-			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + altValue();
-			
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = altValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Map area</span>";
+			return "Map area";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function altValue()
@@ -4562,132 +3180,30 @@ function OSMModel() // setUp
 			{
 				alt = "Untitled"; 
 			}
-			else
-			{
-				alt = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + alt + "</span>";
-			}
 			
 			return alt;
 		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
-		}
 	}
 	
-	// LAYOUTTABLE // image map areas 
+	// DataTableModels------------------------
 	
-	function LayoutTableModel(baseElement)
+	function DataTableModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Layout_Table"; 
+		this.name = "Data_Table";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = changeTableContents(baseElement.contents());
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function changeTableContents(tableContents)
-		{
-			tableContents = tableContents.replace(/<tbody/gi, "<div role='presentation' was='tbody'"); // gi global insensitive
-			tableContents = tableContents.replace(/tbody>/gi, "div>");
-			tableContents = tableContents.replace(/<tr/gi, "<div role='presentation' was='tr'"); // gi global insensitive
-			tableContents = tableContents.replace(/tr>/gi, "div>");
-			tableContents = tableContents.replace(/<th/gi, "<div was='th'"); // gi global insensitive
-			tableContents = tableContents.replace(/th>/gi, "div>");
-			tableContents = tableContents.replace(/<td/gi, "<div was='td'"); // gi global insensitive
-			tableContents = tableContents.replace(/td>/gi, "div>");
-			return tableContents;
-		}
-	}
-	
-	// LAYOUTHEADERCELL // image map areas 
-	
-	function LayoutHeaderCellModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Layout_Header_Cell"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-	}
-	
-	// LAYOUTDATACELL // image map areas 
-	
-	function LayoutDataCellModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Layout_Data_Cell"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-	}
-	
-	// DATATABLE // image map areas 
-	
-	function DataTableModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Data_Table"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + summaryValue() + changeTableContents(baseElement.contents());
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function changeTableContents(tableContents)
-		{
-			tableContents = tableContents.replace(/<tbody/gi, "<div role='presentation' was='tbody'"); // gi global insensitive
-			tableContents = tableContents.replace(/tbody>/gi, "div>");
-			tableContents = tableContents.replace(/<tr/gi, "<div role='presentation' was='tr'"); // gi global insensitive
-			tableContents = tableContents.replace(/tr>/gi, "div>");
-			tableContents = tableContents.replace(/<th/gi, "<div was='th'"); // gi global insensitive
-			tableContents = tableContents.replace(/th>/gi, "div>");
-			tableContents = tableContents.replace(/<td/gi, "<div was='td'"); // gi global insensitive
-			tableContents = tableContents.replace(/td>/gi, "div>");
-			return tableContents;
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = summaryValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Data table</span>";
+			return "Data table";
 		}
 		
 		function summaryValue()
@@ -4700,119 +3216,156 @@ function OSMModel() // setUp
 			{
 				summary = ""; 
 			}
-			else
-			{
-				summary = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + summary + "</span>";
-			}
 			
 			return summary;
 		}
 	}
 	
-	// HEADERCELL // image map areas 
+	// HeaderCellModels------------------------
 	
-	function HeaderCellModel(baseElement)
+	function HeaderCellModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Header_Cell"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Header cell</span>";
-		}
-	}
-	
-	// DATACELL // image map areas 
-	
-	function DataCellModel(baseElement) 
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Data_Cell"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + labelValue() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Data cell</span>";
-		}
-		
-		function labelValue()
-		{
-			// label forms part of the text to read out
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
 			
-			var labelText = ""; 
-			var label = baseElement.getAttribute("headerCellTitles"); 
-			
-			if (label == null)
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				labelText = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>No specified row or column</span>";
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
-			else
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Header cell";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
 			{
-				var headerCellTitles = JSON.parse(label);
-				for (var i in headerCellTitles)
+				if (originalElement.childNodes[0].nodeName == "#text")
 				{
-					labelText = labelText + "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>relates to " + headerCellTitles[i] + "</span>";
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
 				}
-				labelText = labelText + "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>cell value</span>";
 			}
-			
-			return labelText;
+			return false;
 		}
 	}
 	
-	// AUDIO
+	// DataCellModels------------------------
 	
-	function AudioModel(baseElement) // allows play, pause, rewind
+	function DataCellModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Audio"; 
+		this.name = "Data_Cell";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = headerCellTitlesValue();
 			
-			// need to check contents to see if track elements are included - need to do a little more research on TRACK ELEMENT
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
 			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + titleValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Audio</span>";
+			return "Data cell";
+		}
+		
+		function headerCellTitlesValue()
+		{
+			var headerText = ""; 
+			var headersAttributeValue = baseElement.getAttribute("headers");
+			if (headersAttributeValue != null)
+			{
+				var headersAttributeValueArray = headersAttributeValue.split(',');
+				for (var k in headersAttributeValueArray)
+				{
+					var trimmedValue = headersAttributeValueArray[k].trim();
+					if (trimmedValue != "")
+					{
+						var relatedHeaderElement = document.getElementById(trimmedValue);
+						if (relatedHeaderElement != null)
+						{
+							if (headerText == "")
+							{
+								headerText = relatedHeaderElement.innerText;
+							}
+							else
+							{
+								headerText = headerText + " and " + relatedHeaderElement.innerText;
+							}
+						}
+					}
+				}
+			}
+			
+			if (headerText.trim() == "")
+			{
+				headerText = "No specified row or column";
+			}
+			else
+			{
+				headerText = "relates to " + headerText + "cell value";
+			}
+			
+			return headerText;
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// AudioModels------------------------
+	
+	function AudioModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Audio";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Audio";
 		}
 		
 		function titleValue()
@@ -4830,48 +3383,35 @@ function OSMModel() // setUp
 				title = "Entitled: " + title; 
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+			return title;
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Interactable";
 		}
 	}
 	
-	// VIDEO
+	// VideoModels------------------------
 	
-	function VideoModel(baseElement) // allows play, pause, rewind
+	function VideoModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Video"; 
+		this.name = "Video";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			
-			// need to check contents to see if track elements are included - need to do a little more research on TRACK ELEMENT
-			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + titleValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Video</span>";
+			return "Video";
 		}
 		
 		function titleValue()
@@ -4889,27 +3429,20 @@ function OSMModel() // setUp
 				title = "Entitled: " + title; 
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+			return title;
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Interactable";
 		}
 	}
 	
-	// Interaction non-container objects (have textToReadOut functions) ---------------------
+	// TextBoxModels------------------------
 	
-	// TEXTBOX // from texture, type=password, type=text, label
-	
-	function TextBoxModel(baseElement)
+	function TextBoxModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		var type;
 		
@@ -4937,45 +3470,56 @@ function OSMModel() // setUp
 				break;
 		}
 		
-		this.name = nameBasedOnType; 
+		this.name = nameBasedOnType;
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = stateValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + type + " box</span>";
+			return type + " box";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function labelValue()
 		{
-			// label forms part of the text to read out
+			var label = "";
 			
-			var label = baseElement.getAttribute("label"); 
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
+			{
+				if (labelElements[i].tagName != null)
+				{
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
+					{
+						if (forAttribute == id)
+						{
+							label = labelElements[i].innerText;
+							break;
+						}
+					}
+				}
+			}
 			
-			if (label == null)
+			if (label == "")
 			{
 				label = "Unlabelled";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+			return label;
 		}
 		
 		function stateValue()
@@ -4989,20 +3533,15 @@ function OSMModel() // setUp
 				state = "None";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Current value: " + state;
 		}
 	}
 	
-	// FORMATSPECIFICENTRYBOX // from texture, type=password, type=text, label
+	// FormatSpecificEntryBoxModels------------------------
 	
-	function FormatSpecificEntryBoxModel(baseElement)
+	function FormatSpecificEntryBoxModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		var type = baseElement.getAttribute("type").toLowerCase(); 
 		var nameBasedOnType = ""; 
 		
@@ -5039,43 +3578,55 @@ function OSMModel() // setUp
 		
 		this.name = nameBasedOnType; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = labelValue() + interactable() + whatAmI() + specifiedFormat() + stateValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = specifiedFormat();
+			contentComponentsArray[contentComponentsArray.length] = stateValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{		
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + type + " box</span>";
+			return type;
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function labelValue()
 		{
-			// label forms part of the text to read out
+			var label = "";
 			
-			var label = baseElement.getAttribute("label"); 
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
+			{
+				if (labelElements[i].tagName != null)
+				{
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
+					{
+						if (forAttribute == id)
+						{
+							label = labelElements[i].innerText;
+							break;
+						}
+					}
+				}
+			}
 			
-			if (label == null)
+			if (label == "")
 			{
 				label = "Unlabelled";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+			return label;
 		}
 		
 		function specifiedFormat()
@@ -5087,7 +3638,7 @@ function OSMModel() // setUp
 				title = "No format specified";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Specified format " + title + "</span>";
+			return title;
 		}
 		
 		function stateValue()
@@ -5101,215 +3652,197 @@ function OSMModel() // setUp
 				state = "None";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Current value: " + state;
 		}
 	}
 	
-	// RANGE // from type=range
+	// RangeInputModels------------------------
 	
-	function RangeInputModel(baseElement)
+	function RangeInputModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
-
-		this.name = "Range_Input"; 
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			// state forms part of the text to read out - same for check box and radio button - when we fill in the values and press return we should do a round trip / or be notified if something in the page being tracked changes
-			
-			var min = baseElement.getAttribute("min"); 
-			
-			if (min != null)
-			{
-				element.setAttribute("mmMin", min);
-			}
-
-			var max = baseElement.getAttribute("max"); 
-			
-			if (max != null)
-			{
-				element.setAttribute("mmMax", max);
-			}
-			
-			var step = baseElement.getAttribute("step"); 
-			
-			if (step != null)
-			{
-				element.setAttribute("mmStep", step);
-			}
-			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
-			return element;
-		}
+		this.name = "Range_Input";
 		
-		this.allChildrenIds = function()
+		this.contentComponents = function()
 		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = stateValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Range input</span>";
+			return "Range input";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
 		}
 		
 		function labelValue()
 		{
-			// label forms part of the text to read out
+			var label = "";
 			
-			var label = baseElement.getAttribute("label"); 
-			
-			if (label == null)
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
 			{
-				label = "Unlabelled";
-			}
-			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
-		}
-		
-		function stateValue()
-		{
-			// state forms part of the text to read out
-			
-			var state = baseElement.value(); 
-			
-			if (state == null)
-			{
-				state = "None";
-			}
-			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>"; // careful changing text as it is used in drawRangeInput above
-		}
-		
-		// state max / min 
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
-		}
-	}
-	
-	// PUSHBUTTON // from button, input type=image, input type=button, input type=submit, input type=reset, label
-	
-	function ButtonModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Button"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = labelValue() + interactable() + whatAmI();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Button</span>";
-		}
-		
-		function interactable()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
-		}
-		
-		function labelValue()
-		{
-			// label forms part of the text to read out
-			
-			var label = baseElement.getAttribute("label"); 
-			
-			if (label == null)
-			{
-				label = baseElement.getAttribute("value");
-				if (label == null)
+				if (labelElements[i].tagName != null)
 				{
-					label = baseElement.getAttribute("alt");;
-					if (label == null)
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
 					{
-						label = baseElement.getAttribute("title");;
-						if (label == null)
+						if (forAttribute == id)
 						{
-							label = "Unlabelled";
+							label = labelElements[i].innerText;
+							break;
 						}
 					}
 				}
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+			if (label == "")
+			{
+				label = "Unlabelled";
+			}
+			
+			return label;
 		}
 		
-		function storeValue(element, text)
+		function stateValue()
 		{
-			element.setAttribute("_mm_Store", text);
+			// state forms part of the text to read out
+			
+			var state = baseElement.value(); 
+			
+			if (state == null)
+			{
+				state = "None";
+			}
+			
+			return "Current value: " + state; // careful changing text as it is used in drawRangeInput above
 		}
 	}
 	
-	// CHECKBUTTON // from input type=checkbox, label // combined with input type=radio
+	// ButtonModels------------------------
 	
-	function CheckButtonModel(baseElement)
+	function ButtonModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Check_Button"; 
+		this.name = "Button";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
-			
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = labelValue() + interactable() + whatAmI() + stateValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Check Box</span>";
-		}
-		
-		function labelValue()
-		{
-			// label forms part of the text to read out
-			
-			var label = baseElement.getAttribute("label"); 
-			
-			if (label == null)
-			{
-				label = "No label";
-			}
-			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+			return "Button";
 		}
 		
 		function interactable()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
+			return "Interactable";
+		}
+		
+		function labelValue()
+		{
+			var label = "";
+			
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
+			{
+				if (labelElements[i].tagName != null)
+				{
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
+					{
+						if (forAttribute == id)
+						{
+							label = labelElements[i].innerText;
+							break;
+						}
+					}
+				}
+			}
+			
+			if (label == "")
+			{
+				label = "Unlabelled";
+			}
+			
+			return label;
+		}
+	}
+	
+	// CheckButtonModels------------------------
+	
+	function CheckButtonModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Check_Button";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = stateValue();
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Check Box";
+		}
+		
+		function labelValue()
+		{
+			var label = "";
+			
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
+			{
+				if (labelElements[i].tagName != null)
+				{
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
+					{
+						if (forAttribute == id)
+						{
+							label = labelElements[i].innerText;
+							break;
+						}
+					}
+				}
+			}
+			
+			if (label == "")
+			{
+				label = "Unlabelled";
+			}
+			
+			return label;
+		}
+		
+		function interactable()
+		{
+			return "Interactable";
 		}
 		
 		function stateValue()
@@ -5323,120 +3856,72 @@ function OSMModel() // setUp
 				state = "Unchecked";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Current value: " + state;
 		}
 	}
 	
-	// single select (no multiple attribute)
+	// SingleSelectModels------------------------
 	
-	function SingleSelectModel(baseElement)
+	function SingleSelectModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Single_Select"; 
+		this.name = "Single_Select";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id"));
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = interactable();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = labelValue();
+			contentComponentsArray[contentComponentsArray.length] = stateValue();
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Single select drop-down";
+		}
+		
+		function interactable()
+		{
+			return "Interactable";
+		}
+		
+		function labelValue()
+		{
+			var label = "";
 			
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			var id = baseElement.getAttribute("id");
+			var labelElements = document.getElementsByTagName("label");
+			for (var i in labelElements)
 			{
-				element.innerHTML = elementContents;
-			}
-			
-			// remove OPTGROUP elements
-			
-			if (element.getElementsByTagName("OPTGROUP").length > 0)
-			{
-				var possibleOptgroups = element.children;
-			
-				if (possibleOptgroups.length > 0)
+				if (labelElements[i].tagName != null)
 				{
-					for (var i in possibleOptgroups)
+					var forAttribute = labelElements[i].getAttribute("for");
+					if (forAttribute != null)
 					{
-						if (possibleOptgroups[i].tagName == "OPTGROUP")
+						if (forAttribute == id)
 						{
-							var optionsInOptGroups = possibleOptgroups[i].children;
-							if (optionsInOptGroups.length > 0)
-							{
-								for (var j in optionsInOptGroups)
-								{
-									// adds options to select element
-									if (optionsInOptGroups[j].tagName == "OPTION") 
-									{
-										element.appendChild(optionsInOptGroups[j]);
-									}
-								}
-								try
-								{
-									element.removeChild[i];
-								}
-								catch(err)
-								{
-									console.log(err)
-								}
-							}
+							label = labelElements[i].innerText;
+							break;
 						}
 					}
 				}
 			}
 			
-			// Deal with options
-			var possibleOptions = element.children; // direct children, should just be options
-			for (var k in possibleOptions)
+			if (label == "")
 			{
-				if (possibleOptions[k].tagName == "OPTION")
-				{
-					possibleOptions[k].outerHTML = "<span class='_mm_Option' _mm_Id='" + baseElement.mmId() + "'>" + possibleOptions[k].innerText + "</span>";
-				}
+				label = "Unlabelled";
 			}
 			
-			// finally
-			element.setAttribute("mmInteractable", true);
-			element.innerHTML = interactable() + whatAmI() + labelValue() + stateValue() + element.innerHTML;
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Single select drop-down</span>";
-		}
-		
-		function interactable()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Interactable</span>";
-		}
-		
-		function labelValue()
-		{
-			// label forms part of the text to read out
-			
-			var label = baseElement.getAttribute("label"); 
-			
-			if (label == null)
-			{
-				label = "No label";
-			}
-			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + label + "</span>";
+			return label;
 		}
 		
 		function stateValue()
 		{
 			// state forms part of the text to read out
-
+			
 			var state = baseElement.selectedTextValue();
 			
 			if (state == null)
@@ -5444,94 +3929,119 @@ function OSMModel() // setUp
 				state = "None";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Current value: " + state + "</span>";
-		}
-		
-		function storeValue(element, text)
-		{
-			element.setAttribute("_mm_Store", text);
+			return "Current value: " + state;
 		}
 	}
 	
-	//--------------------------
+	// PageHeaderAreaModels------------------------
 	
-	// Semantic container objects 
-	
-	// 	PAGE HEADER AREA //
-	
-	function PageHeaderAreaModel(baseElement)
+	function PageHeaderAreaModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Page_Header_Area"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page header area</span>";
-		}
-	}
-	
-	// 	SITE NAVIGATION AREA //
-	
-	function SiteNavigationAreaModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Site_Navigation_Area"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Site navigation area</span>";
+			return "Page header area";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// 	MENU //
+	// SiteNavigationAreaModels------------------------
 	
-	function MenuModel(baseElement)
+	function SiteNavigationAreaModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Site_Navigation_Area";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Site navigation area";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// MenuModels------------------------
+	
+	function MenuModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Menu"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = titleValue() + whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = titleValue();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Menu</span>";
+			return "Menu";
 		}
 		
 		function titleValue()
@@ -5543,383 +4053,690 @@ function OSMModel() // setUp
 				title = "None";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + title + "</span>";
+			return title;
 		}
-	}
-	
-	// 	MAIN CONTENT AREA //
-	
-	function MainContentAreaModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
 		
-		this.name = "Main_Content_Area"; 
-		
-		this.replacementElement = function()
+		function containsTextNodeOnly()
 		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
-			
-			// you need to fill the element first 
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			if (originalElement.childNodes.length == 1)
 			{
-				element.innerHTML = elementContents;
-			}
-			
-			// return And Remove First Child Header, as nodes are now set up in replacement element
-			
-			var header = null;
-			var children = element.children; // direct children
-			var headings = ["H1", "H2", "H3", "H4", "H5", "H6"];
-			
-			for (var i in children)
-			{
-				if (headings.indexOf(children[i].tagName) != -1)
+				if (originalElement.childNodes[0].nodeName == "#text")
 				{
-					header = children[i].innerText;
-					try
+					if (originalElement.childNodes[0].data.trim() != "")
 					{
-						element.removeChild[i];
+						return true;
 					}
-					catch(err)
-					{
-						console.log(err)
-					}
-					break;
 				}
 			}
-			
-			// finally
-			
-			element.innerHTML = whatAmI() + title(header) + element.innerHTML;
-			return element;
-			
+			return false;
 		}
+	}
+	
+	// MainContentAreaModel------------------------
+	
+	function MainContentAreaModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.allChildrenIds = function()
+		this.name = "Main_Content_Area";
+		
+		this.contentComponents = function()
 		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Main content area</span>";
+			return "Main content area";
 		}
 		
-		function title(selectionTitle)
-		{		
-			if (selectionTitle == null)
-			{
-				selectionTitle = "Untitled";
-			}
-			else
-			{
-				selectionTitle = "headed " + selectionTitle;
-			}
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + selectionTitle + "</span>";
-		}
-		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// 	PAGE FOOTER AREA //
+	// PageFooterAreaModel------------------------
 	
-	function PageFooterAreaModel(baseElement)
+	function PageFooterAreaModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Page_Footer_Area"; 
+		this.name = "Page_Footer_Area";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page footer area</span>";
+			return "Page footer area";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// 	PAGE CONTACT DETAILS //
+	// PageContactDetailsModel------------------------
 	
-	function PageContactDetailsModel(baseElement)
+	function PageContactDetailsModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Page_Contact_Details"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Page contact details</span>";
-		}
-	}
-	
-	// 	PAGE CONTACT DETAILS //
-	
-	function LayoutDivisionModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Layout_Division"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = baseElement.contents();
-			return element;
+			return "Page contact details";
 		}
 		
-		this.allChildrenIds = function()
+		function containsTextNodeOnly()
 		{
-			return baseElement.allChildrenIds();
-		}
-	}
-	
-	// SECTION + ARTICLE 
-	
-	function SectionModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Section"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
-			
-			// you need to fill the element first 
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			if (originalElement.childNodes.length == 1)
 			{
-				element.innerHTML = elementContents;
-			}
-			
-			// return And Remove First Child Header, as nodes are now set up in replacement element
-			
-			var header = null;
-			var children = element.children; // direct children
-			var headings = ["H1", "H2", "H3", "H4", "H5", "H6"];
-			
-			for (var i in children)
-			{
-				if (headings.indexOf(children[i].tagName) != -1)
+				if (originalElement.childNodes[0].nodeName == "#text")
 				{
-					header = children[i].innerText;
-					try
+					if (originalElement.childNodes[0].data.trim() != "")
 					{
-						element.removeChild[i];
+						return true;
 					}
-					catch(err)
-					{
-						console.log(err)
-					}
-					break;
 				}
 			}
-			
-			// finally
-	
-			element.innerHTML = whatAmI() + title(header) + element.innerHTML;
-			return element;
+			return false;
 		}
+	}
+	
+	// LayoutDivisionModel------------------------
+	
+	function CanvasModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.allChildrenIds = function()
+		this.name = "Canvas"; 
+		
+		this.contentComponents = function()
 		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Section</span>";
+			return "Canvas";
 		}
 		
-		function title(selectionTitle)
-		{		
-			if (selectionTitle == null)
-			{
-				selectionTitle = "Untitled";
-			}
-			else
-			{
-				selectionTitle = "headed " + selectionTitle;
-			}
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + selectionTitle + "</span>";
-		}
-		
-		function storeValue(element, text)
+		function containsTextNodeOnly()
 		{
-			element.setAttribute("_mm_Store", text);
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// SENTENCE //
+	// SectionModel------------------------
 	
-	function SentenceModel(baseElement)
+	function SectionModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Section";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			// contentComponentsArray[contentComponentsArray.length] = title();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Section";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// SentenceModel------------------------
+	
+	function SentenceModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Sentence"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
 			
-			// you need to fill the element first
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.innerHTML = elementContents;
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
 			
-			if ((element.innerHTML != "")&&(element.children.length == 0)) // removing the situation where you make a sentence which you cannot hear the content of
-			{
-				element.innerHTML = "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + element.innerHTML + "</span>"; 
-			}
-			
-			if (element.innerHTML == "")
-			{
-				element.setAttribute("mmEmpty", "true");
-			}
-		
-			element.innerHTML = whatAmI() + element.innerHTML;
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Sentence</span>";
+			return "Sentence";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// PARAGRAPH //
+	// Header 1
 	
-	function ParagraphModel(baseElement)
+	function Level1HeaderModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 1 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 1 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Header 2
+	
+	function Level2HeaderModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 2 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 2 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Header 3
+	
+	function Level3HeaderModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 3 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 3 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Header 4
+	
+	function Level4HeaderModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 4 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 4 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Header 5
+	
+	function Level5HeaderModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 5 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 5 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Header 6
+	
+	function Level6HeaderModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Level 6 Header"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Level 6 Header";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// Abbr 
+	
+	function AbbrModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Abbreviation"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			
+			if (containsExpandAbbr() == true)
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.getAttribute("title");
+			}
+			else
+			{
+				if (containsTextNodeOnly() == true)
+				{
+					contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+				}
+			}
+			return contentComponentsArray;
+		}
+		
+		function containsExpandAbbr()
+		{
+			if (originalElement.getAttribute("title") != null)
+			{
+				return true;
+			}
+			return false;
+		}
+				
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// ParagraphModel------------------------
+	
+	function ParagraphModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Paragraph"; 
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
 			
-			if (baseElement.contents() == "")
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.setAttribute("mmEmpty", "true");
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
 			
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Paragraph</span>";
+			return "Paragraph";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// QUOTE //
+	// QuoteModel------------------------
 	
-	function QuoteModel(baseElement)
+	function QuoteModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Quote"; 
+		this.name = "Quote";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
 			
-			if (baseElement.contents() == "")
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.setAttribute("mmEmpty", "true");
-			} 
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
 			
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Quote</span>";
+			return "Quote";
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// INSERTION //
+	// InsertionModel------------------------
 	
-	function InsertionModel(baseElement)
+	function InsertionModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Insertion"; 
+		this.name = "Insertion";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = insertedWhen();
 			
-			if (baseElement.contents() == "")
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.setAttribute("mmEmpty", "true");
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
 			
-			element.innerHTML = whatAmI() + insertedWhen() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Insertion</span>";
-		}
-		
-		function dateTimeValue()
-		{
-						
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + name + "</span>";
+			return "Insertion";
 		}
 		
 		function insertedWhen()
@@ -5943,42 +4760,53 @@ function OSMModel() // setUp
 					datetime = datetime.replace("T", " at ");
 				}
 				
-				datetime = "on the " + datetime; 
+				datetime = " on the " + datetime; 
 			}			
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>The following was inserted into the page" + datetime + "</span>";
+			return "The following was inserted into the page" + datetime;
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// DELETION //
+	// DeletionModel------------------------
 	
-	function DeletionModel(baseElement)
+	function DeletionModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Deletion"; 
+		this.name = "Deletion";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = deletedWhen();
 			
-			if (baseElement.contents() == "")
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.setAttribute("mmEmpty", "true");
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
 			
-			element.innerHTML = whatAmI() + deletedWhen() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Deletion</span>";
+			return "Deletion";
 		}
 		
 		function deletedWhen()
@@ -6003,136 +4831,91 @@ function OSMModel() // setUp
 				}
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>The following was deleted from the page" + datetime + "</span>";
+			return "The following was deleted from the page" + datetime;
 		}
-	}
-	
-	// CODE //
-	
-	function CodeModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
 		
-		this.name = "Code"; 
-		
-		this.replacementElement = function()
+		function containsTextNodeOnly()
 		{
-			var element = document.createElement("div");
-			
-			if (baseElement.contents() == "")
+			if (originalElement.childNodes.length == 1)
 			{
-				element.setAttribute("mmEmpty", "true");
-			}
-			
-			element.innerHTML = whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Code</span>";
-		}
-	}
-	
-	// 	BULLETED LIST //
-	
-	function BulletedListModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Bulleted_List"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			
-			// element needs to be filled
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
-			
-			element.innerHTML = whatAmI() + numberOfChildren(element.children.length) + element.innerHTML;
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Bulleted list</span>";
-		}
-		
-		function numberOfChildren(number)
-		{
-			var text = "items";
-			
-			if (number == 1)
-			{
-				text = "item"
-			}
-			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + number + " " + text + " listed</span>";
-		}
-	}
-	
-	// NUMBERED LIST //
-	
-	function NumberedListModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Numbered_List"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			
-			// element needs to be filled
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
-			
-			var children = element.children; // direct children
-			
-			var count = 1; 
-			
-			for (var i in children)
-			{
-				if (children[i].tagName == "LI")
+				if (originalElement.childNodes[0].nodeName == "#text")
 				{
-					children[i].setAttribute("positionInList", count);
-					count++;
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
 				}
 			}
-			
-			element.innerHTML = whatAmI() + numberOfChildren(element.children.length) + element.innerHTML;
-			return element;
+			return false;
 		}
+	}
+	
+	// CodeModel------------------------
+	
+	function CodeModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.allChildrenIds = function()
+		this.name = "Code";
+		
+		this.contentComponents = function()
 		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Numbered list</span>";
+			return "Code";
 		}
 		
-		function numberOfChildren(number)
+		function containsTextNodeOnly()
 		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// BulletedListModel------------------------
+	
+	function BulletedListModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Bulleted_List";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = numberOfChildren();
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Bulleted list";
+		}
+		
+		function numberOfChildren()
+		{
+			var number = baseElement.children().length;
 			var text = "items";
 			
 			if (number == 1)
@@ -6140,37 +4923,64 @@ function OSMModel() // setUp
 				text = "item"
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + number + " " + text + " listed</span>";
+			return number + " " + text + " listed";
 		}
 	}
 	
-	// LIST ITEM //
+	// NumberedListModel------------------------
 	
-	function ListItemModel(baseElement)
+	function NumberedListModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "List_Item"; 
+		this.name = "Numbered_List";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			
-			if (baseElement.contents() == "")
-			{
-				element.innerHTML = whatAmI() + empty();
-			}
-			else
-			{
-				element.innerHTML = whatAmI() + baseElement.contents();
-
-			}
-			return element;
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = numberOfChildren();
+			return contentComponentsArray;
 		}
 		
-		this.allChildrenIds = function()
+		function whatAmI()
 		{
-			return baseElement.allChildrenIds();
+			return "Numbered list";
+		}
+		
+		function numberOfChildren()
+		{
+			var number = baseElement.children().length;
+			var text = "items";
+			
+			if (number == 1)
+			{
+				text = "item"
+			}
+			
+			return number + " " + text + " listed";
+		}
+	}
+	
+	// ListItemModel------------------------
+	
+	function ListItemModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "List_Item";
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
@@ -6184,77 +4994,86 @@ function OSMModel() // setUp
 				text = " " + positionInList;
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>List item" + text + "</span>";
+			return "List item" + text;
 		}
 		
-		function empty()
+		function containsTextNodeOnly()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Empty</span>";
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// MENU ITEM //
+	// MenuItemModel------------------------
 	
-	function MenuItemModel(baseElement)
+	function MenuItemModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Menu_Item"; 
+		this.name = "Menu_Item";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			if (baseElement.contents() == "")
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 			{
-				element.innerHTML = whatAmI() + empty();
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 			}
-			else
-			{
-				element.innerHTML = whatAmI() + baseElement.contents();
-				
-			}
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{		
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Menu item</span>";
+			return "Menu item";
 		}
 		
-		function empty()
+		function containsTextNodeOnly()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Empty</span>";
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	
-	// FORM 
+	// FormModel------------------------
 	
-	function FormModel(baseElement)
+	function FormModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Form"; 
+		this.name = "Form";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = nameValue() + whatAmI() + baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = nameValue();
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Form</span>";
+			return "Form";
 		}
 		
 		function nameValue()
@@ -6266,129 +5085,111 @@ function OSMModel() // setUp
 				name = "Untitled";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + name + "</span>";
+			return name;
 		}
 	}
 	
-	// INPUT GROUP 
+	// InputGroupModel------------------------
 	
-	function InputGroupModel(baseElement)
+	function InputGroupModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
-		this.name = "Input_Group"; 
+		this.name = "Input_Group";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			// storeValue(element, baseElement.getAttribute("id")); // as divs can be used as targets for anchor links
-			
-			// you need to fill the element first
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
-			
-			// return And Remove First Child Header, as nodes are now set up in replacement element
-			
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = title();
+			return contentComponentsArray;
+		}
+		
+		function whatAmI()
+		{
+			return "Input group";
+		}
+		
+		function title(selectionTitle)
+		{		
 			var legend = null;
-			var children = element.children; // direct children
+			var children = baseElement.children(); // direct children
 			
 			for (var i in children)
 			{
 				if (children[i].tagName == "LEGEND")
 				{
 					legend = children[i].innerText;
-					try
-					{
-						element.removeChild[i];
-					}
-					catch(err)
-					{
-						console.log(err)
-					}
 					break;
 				}
 			}
 			
-			// finally
-			
-			element.innerHTML = whatAmI() + title(legend) + element.innerHTML;
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-		
-		function whatAmI()
-		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Input group</span>";
-		}
-		
-		function title(selectionTitle)
-		{		
-			if (selectionTitle == null)
+			if (legend == null)
 			{
-				selectionTitle = "Untitled";
+				legend = "Untitled";
 			}
 			else
 			{
-				selectionTitle = "headed " + selectionTitle;
+				legend = "headed " + legend;
 			}
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>" + selectionTitle + "</span>";
-		}
-	}	
-	
-	// STATICTEXT (should have a type attribute like type=quote or type=code) // from span, p, quote, abbr, code, etc… 
-	
-	function StaticTextModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Static_Text"; 
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("span");
-			element.innerHTML = baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			return legend;
 		}
 	}
 	
-	// IMAGE
+	// StaticTextModel------------------------
 	
-	// Semantic non-container objects
-	// text to read are given to non-containers 
-	
-	function SemanticImageModel(baseElement) // might be best to switch on wai-aria role - to differentiate it from decorative image alt="" decorative
+	function StaticTextModel_ContentToRead(originalElement)
 	{
-		var baseElement = new ElementModel(baseElement);
+		var baseElement = new ElementModel_ContentToRead(originalElement);
+		
+		this.name = "Static_Text"; 
+		
+		this.contentComponents = function()
+		{
+			var contentComponentsArray = [];
+			if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+			{
+				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			}
+			return contentComponentsArray;
+		}
+		
+		function containsTextNodeOnly()
+		{
+			if (originalElement.childNodes.length == 1)
+			{
+				if (originalElement.childNodes[0].nodeName == "#text")
+				{
+					if (originalElement.childNodes[0].data.trim() != "")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	
+	// SemanticImageModel------------------------
+	
+	function SemanticImageModel_ContentToRead(originalElement)
+	{
+		var baseElement = new ElementModel_ContentToRead(originalElement);
 		
 		this.name = "Semantic_Image";
 		
-		this.replacementElement = function()
+		this.contentComponents = function()
 		{
-			var element = document.createElement("div");
-			element.innerHTML = whatAmI() + altValue() + longdescValue();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
+			var contentComponentsArray = [];
+			contentComponentsArray[contentComponentsArray.length] = whatAmI();
+			contentComponentsArray[contentComponentsArray.length] = altValue();
+			contentComponentsArray[contentComponentsArray.length] = longdescValue();
+			return contentComponentsArray;
 		}
 		
 		function whatAmI()
 		{
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Semantic Image</span>";
+			return "Semantic Image";
 		}
 		
 		function altValue()
@@ -6402,7 +5203,7 @@ function OSMModel() // setUp
 				alt = "None";
 			}
 			
-			return "<span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Alternative Text: " + alt + "</span>";
+			return "Alternative Text: " + alt;
 		}
 		
 		function longdescValue()
@@ -6415,349 +5216,10 @@ function OSMModel() // setUp
 			}
 			else
 			{
-				longDesc = "<a href='" + longDesc + "' class='unchanged' _mm_Id='" + baseElement.mmId() + "'><span class='unchanged' _mm_Id='" + baseElement.mmId() + "'>Long Description</span></a>";
+				longDesc = "Long Description: " + longDesc;
 			}
-			
 			return longDesc;
 		}
 	}
-	
-	function DecorativeImageModel(baseElement) // might be best to switch on wai-aria role - to differentiate it from decorative image alt="" decorative
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Decorative_Image";
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");
-			element.innerHTML = baseElement.contents();
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-	}
-	
-	// Unsupported objects - (We need a big list: MULTISELECT,...) - some things are currently unsupported and others will not be supported even in the future...
-	
-	function UnsupportedModel(baseElement)
-	{
-		var baseElement = new ElementModel(baseElement);
-		
-		this.name = "Unsupported";
-		
-		this.replacementElement = function()
-		{
-			var element = document.createElement("div");// baseElement.tagName());
-			
-			// you need to fill the element first
-			var elementContents = baseElement.contents();
-			if (elementContents != null)
-			{
-				element.innerHTML = elementContents;
-			}
-			
-			// span elements which are direct children need to be given an "parentElement" attribute with a text value "UNSUPPORTED" - so that they will figure are sentences
-			
-			var children = element.children; // direct children
-			
-			if (children.length > 0)
-			{
-				for (var i in children)
-				{
-					if (children[i].tagName == "SPAN")
-					{
-						children[i].setAttribute("parentElement", "UNSUPPORTED");
-						if ((children[i].innerHTML != "")&&(children[i].children == 0)) // removing the situation where you make a sentence which you cannot hear the content of
-						{
-							children[i].innerHTML = "<span class='unchanged' _mm_Id='" + children[i].getAttribute("_mm_Id") + "'>" + children[i].innerHTML + "</span>"; 
-						}
-					}
-				}
-			}
-			
-			return element;
-		}
-		
-		this.allChildrenIds = function()
-		{
-			return baseElement.allChildrenIds();
-		}
-	}	
 }
 
-// SVB 
-
-// SVBMODEL 
-
-function SVBModel()
-{
-	var currentOSMNodeIndex = 0; 
-	var nextOSMNodeIndex = 1;
-	var highlightedOSMNodeIndex = 0;
-	var availableReadableNodes;
-	var jumpableNodeTypes = ["_mm_Section"]; // default value
-	var osmElementCount;
-	
-	this.update = function()
-	{
-		osmElementCount = osm.elementCount();
-	}
-	
-	this.setAvailableReadableNodes = function(availableNodes)
-	{
-		var all = ["All"];
-		availableReadableNodes = all.concat(availableNodes);
-	}
-	
-	// for Navigate by menu
-	
-	this.getJumpableNodes = function()
-	{
-		return nodesForNavigation(availableReadableNodes);
-	}
-	
-	function nodesForNavigation(availableReadableNodes) // you want to restrict the available nodes to those which are useful for navigation
-	{
-		var availableNavigationNodes = [];
-		var possibleNavigationNodes = ["_mm_Skip_Link", "_mm_Link", "_mm_Section", "_mm_Form"]; 
-		for (var i in availableReadableNodes)
-		{
-			if (possibleNavigationNodes.indexOf(availableReadableNodes[i]) != -1)
-			{
-				availableNavigationNodes[availableNavigationNodes.length] = availableReadableNodes[i];
-			}
-		}
-		return availableNavigationNodes;
-	}
-	
-	this.setJumpableNodes = function(groupName)
-	{
-		switch(groupName)
-		{
-			case "Link":
-				jumpableNodeTypes = ["_mm_Link"];
-				break;
-			case "Skip_Link":
-				jumpableNodeTypes = ["_mm_Skip_Link"];
-				break;
-			case "Section":
-				jumpableNodeTypes = ["_mm_Section"];
-				break;
-			case "Form":
-				jumpableNodeTypes = ["_mm_Form"];
-				break;
-		}
-	}
-	
-	this.reset = function()
-	{
-		currentOSMNodeIndex = 0; 
-		nextOSMNodeIndex = 1;
-		highlightedOSMNodeIndex = 0;
-		controlPanel.update();
-	}
-	
-	this.setHighlightedOSMNode = function(nodeIndex)
-	{
-		highlightedOSMNodeIndex = nodeIndex;
-	}
-	
-	this.getHighlightedOSMNode = function()
-	{
-		return highlightedOSMNodeIndex;
-	}
-	
-	this.getCurrentOSMNode = function()
-	{
-		return currentOSMNodeIndex;
-	}
-	
-	this.moveToDefinedOSMNode = function(nodeIndex)
-	{
-		currentOSMNodeIndex = nodeIndex;
-		nextOSMNodeIndex = currentOSMNodeIndex + 1;
-	}
-	
-	this.moveToAndReturnNextOSMNode = function() 
-	{
-		currentOSMNodeIndex = nextOSMNodeIndex;
-		nextOSMNodeIndex = nextOSMNodeIndex + 1;
-		
-		if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
-		{
-			var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(availableReadableNodes.indexOf(nodeType) == -1)
-				{
-					this.moveToAndReturnNextOSMNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					this.moveToAndReturnNextOSMNode();
-				}
-			}
-		}
-		return currentOSMNodeIndex;
-	}
-	
-	this.moveToAndReturnPrevOSMNode = function()
-	{
-		nextOSMNodeIndex = nextOSMNodeIndex - 1;
-		currentOSMNodeIndex = currentOSMNodeIndex - 1;
-		
-		if (currentOSMNodeIndex > 0)
-		{
-			var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(availableReadableNodes.indexOf(nodeType) == -1)
-				{
-					this.moveToAndReturnPrevOSMNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					this.moveToAndReturnPrevOSMNode();
-				}
-			}
-		}
-		return currentOSMNodeIndex;
-	}
-	
-	this.jumpToAndReturnNextOSMNode = function()
-	{
-		currentOSMNodeIndex = nextOSMNodeIndex;
-		nextOSMNodeIndex = nextOSMNodeIndex + 1;
-		
-		if (currentOSMNodeIndex <= osmElementCount) // osm.elementCount())
-		{
-			var node = document.getElementById("_mm_Replacement" + currentOSMNodeIndex);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(jumpableNodeTypes.indexOf(nodeType) == -1)
-				{
-					this.jumpToAndReturnNextOSMNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					this.jumpToAndReturnNextOSMNode();
-				}
-			}
-		}
-		return currentOSMNodeIndex;
-	}
-	
-	// The following help control buttons etc...
-	
-	var currentSimulated;
-	var nextSimulated;
-	
-	function setUpSimulated()
-	{
-		currentSimulated = currentOSMNodeIndex;
-		nextSimulated = nextOSMNodeIndex;
-	}
-	
-	function nextNode() // no move
-	{
-		currentSimulated = nextSimulated;
-		nextSimulated = nextSimulated + 1;
-		
-		if (currentSimulated <= osm.elementCount())
-		{
-			var node = document.getElementById("_mm_Replacement" + currentSimulated);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(availableReadableNodes.indexOf(nodeType) == -1)
-				{
-					nextNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					nextNode();
-				}
-			}
-		}
-		return currentSimulated;
-	}
-	
-	function prevNode() // no move
-	{
-		nextSimulated = nextSimulated - 1;
-		currentSimulated = currentSimulated - 1;
-		
-		if (currentSimulated > 0)
-		{
-			var node = document.getElementById("_mm_Replacement" + currentSimulated);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(availableReadableNodes.indexOf(nodeType) == -1)
-				{
-					prevNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					prevNode();
-				}
-			}
-		}
-		return currentSimulated;
-	}
-	
-	function nextJumpableNode() // no move
-	{
-		currentSimulated = nextSimulated;
-		nextSimulated = nextSimulated + 1;
-		
-		if (currentSimulated <= osm.elementCount())
-		{
-			var node = document.getElementById("_mm_Replacement" + currentSimulated);
-			if (node != null)
-			{
-				var nodeType = node.className;
-				if(jumpableNodeTypes.indexOf(nodeType) == -1)
-				{
-					nextJumpableNode();
-				}
-				// if the node only contains the osm item name
-				if (node.hasAttribute("mmEmpty") == true)
-				{
-					nextJumpableNode();
-				}
-			}
-		}
-		return currentSimulated;
-	}
-	
-	this.nextOSMNode = function()
-	{
-		setUpSimulated();
-		return nextNode();
-	}
-	
-	this.prevOSMNode = function()
-	{
-		setUpSimulated();
-		return prevNode();
-	}
-	
-	this.nextJumpableOSMNode = function()
-	{
-		setUpSimulated();
-		return nextJumpableNode();
-	}
-}
