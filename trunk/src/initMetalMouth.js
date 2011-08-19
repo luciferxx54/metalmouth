@@ -112,10 +112,7 @@ var audioStack; //  = new AudioStackModel(); // added
 
 function connectSpeech()
 {
-	if (audioStack == undefined)
-	{
-		audioStack = new AudioStackModel();
-	}
+	audioStack = new AudioStackModel();
 }
 
 // chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start metalmouth voice browser extension")}); temporarily commented out
