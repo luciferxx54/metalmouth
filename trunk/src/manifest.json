@@ -18,17 +18,19 @@
 */
 
 {
-  "name": "Project metalmouth",
-  "version": "1.6.0",
-  "description": "Project metalmouth - Developing an open source voice browser extension for Chrome",
+  "name": "metalmouth voice browser",
+  "version": "1.6.1",
+  "description": "A voice browser for Chrome",
   "background_page": "background.html",
   "browser_action": {
      "default_icon": "MetalMouthLogo.png",
-     "default_title": "Project metalmouth"
+     "default_title": "metalmouth voice browser"
    },
    "omnibox": { "keyword" : "mm" },
    "icons": {
-    "16": "MetalMouthLogo.png"
+    "16": "MetalMouthLogo.png",
+    "48": "MetalMouthLogo.png",
+    "128": "MetalMouthLogo.png"
    },
    "permissions": ["tabs", "http://*/*", "https://*/*"]
 }

@@ -19,6 +19,7 @@
 
 function init(id) 
 {
+	connectSpeech();
   	chrome.tabs.executeScript(id, {file: "MetalMouth.js"}, function(){ 		
 		chrome.tabs.executeScript(id, {code:"start();"}, function(){
 
@@ -104,10 +105,21 @@ chrome.browserAction.onClicked.addListener(function(tab){test(tab.id);});
 // Listen for omnibox keyword 
 
 // temp experimental.tts replacement
-var audioStack = new AudioStackModel(); // added
 
-// chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start Project metalmouth extension")}); temporarily commented out
-chrome.omnibox.onInputStarted.addListener(function(){audioStack.speakDirectly("Press space bar then enter to start Project metalmouth extension", null)});
+var audioStack; //  = new AudioStackModel(); // added
+
+// AUDIO
+
+function connectSpeech()
+{
+	if (audioStack == undefined)
+	{
+		audioStack = new AudioStackModel();
+	}
+}
+
+// chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start metalmouth voice browser extension")}); temporarily commented out
+chrome.omnibox.onInputStarted.addListener(function(){connectSpeech();audioStack.speakDirectly("Press space bar then enter to start metalmouth voice browser extension", null)});
 
 chrome.omnibox.onInputEntered.addListener(function(text){
 	chrome.tabs.getSelected(null, function(tab)
