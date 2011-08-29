@@ -19,28 +19,10 @@
 
 console.log("loaded Metal Mouth");
 
-chrome.extension.onRequest.addListener(
-	function(request, sender, sendResponse) {
-	if (request.greeting == "hello")
-	{
-		sendResponse({farewell: "goodbye"});
-	}
-	else if(request.augmentationScriptComplete == "true") // see getAugmentationScriptReference()
-	{
-		sequencer();
-		sendResponse({});
-	}
-	else
-	{
-		sendResponse({});
-	}
-});
-
 // start sequencer
 
 var startSequencerFunctions = 
 [
- getAugmentationScriptReference,
  removeExistingAccesskeys,
  initControlPanel,
  initOSM,
@@ -68,32 +50,6 @@ function start()
 	sequencerFunctions = startSequencerFunctions;
 	sequencer();
 }
-
-function getAugmentationScriptReference()
-{
-	var mmAugmentationScript = document.getElementById("_mm_AugmentationScript");
-	
-	if (mmAugmentationScript != null)
-	{
-		var augmentationScriptRef = mmAugmentationScript.getAttribute("href");
-		if ((augmentationScriptRef != null) && (augmentationScriptRef.toLowerCase().indexOf(".js") != -1))
-		{
-			chrome.extension.sendRequest({augmentationScriptRef: augmentationScriptRef}, function(response) {
-				mmAugmentationScript.outerHTML = ""; // this means that the augmentation is started see page top to show what happens when augmentation is complete
-			});
-		}
-		else
-		{
-			sequencer(); // no script
-		}
-	}
-	else
-	{
-		sequencer(); // no script
-	}
-}
-
-// <a id="_mm_AugmentationScript" href="js ref" style="display:none"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==" role="presentation" /></a>
 
 function removeExistingAccesskeys()
 {

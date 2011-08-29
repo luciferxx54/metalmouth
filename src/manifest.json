@@ -19,9 +19,10 @@
 
 {
   "name": "metalmouth voice browser",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A voice browser for Chrome",
   "background_page": "background.html",
+  "options_page": "options.html",
   "browser_action": {
      "default_icon": "MetalMouthLogo.png",
      "default_title": "metalmouth voice browser"

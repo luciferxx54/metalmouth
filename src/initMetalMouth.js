@@ -43,30 +43,6 @@ function init(id)
 	});});
 }
 
-function runAugmentationScript(augmentationScriptRef)
-{
-	var req = new XMLHttpRequest();
-	req.open("GET", augmentationScriptRef, true);
-	req.onreadystatechange = statusListener;
-	req.send(null);
-	
-	function statusListener()
-	{
-		if (req.readyState == 4) {
-			if (req.status == 200) {
-				chrome.tabs.getSelected(null, function(tab) {
-					chrome.tabs.executeScript(tab.id, {code: "var mmAugmentationScript = document.getElementById('_mm_AugmentationScript');mmAugmentationScript.outerHTML='';"}, function(){ // removed link to augmentationScript 
-						var codeToRun = req.responseText;
-						chrome.tabs.executeScript(tab.id, {code: codeToRun}, function(){ 		
-							console.log("executed");
-						});
-					});
-				});
-			}
-		}
-	}
-}
-
 function test(id)
 {
 	// this ensures that the page is fully loaded before init runs
@@ -265,20 +241,7 @@ function AudioStackModel()
 // chrome.experimental.tts has been commented out temporarily as it has become delayed in being taken out of experimental.
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-	if (request.augmentationScriptRef != undefined)
-	{
-		// there is an augmentation script present
-		runAugmentationScript(request.augmentationScriptRef); // signal to request.augmentationScriptComplete is held in augmentationScript						   
-	}
-	else if (request.augmentationScriptComplete == "true")
-	{
-		// the augmentation script complete
-		chrome.tabs.getSelected(null, function(tab)
-		{
-			chrome.tabs.sendRequest(tab.id, {augmentationScriptComplete: "true"});
-		});
-	}
-	else if (request.voice != undefined)
+	if (request.voice != undefined)
 	{
 		var voice = JSON.parse(request.voice);
 		try
