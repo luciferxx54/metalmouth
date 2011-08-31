@@ -1,0 +1,21 @@
+The compiler.jar can be downloaded from http://code.google.com/closure/compiler/docs/gettingstarted_app.html.
+
+This gets placed into the root directory.
+
+The closure-library is checked out to a directory called 'closure-library' in the root directory. Can be downloaded from http://code.google.com/closure/library/docs/gettingstarted.html.
+
+Could not get ClosureBuilder to work http://code.google.com/closure/library/docs/closurebuilder.html
+
+However, for the time being this seems to work.
+
+This is for metalmouth.js
+
+1) closure-library/closure/bin/calcdeps.py -i metalmouth/metalmouth.js \ -p closure-library/ -o script > metalmouth/metalmouth-precompiled.js
+2) java -jar compiler.jar --js metalmouth/metalmouth-precompiled.js --js_output_file metalmouth-compiled.js
+3) remove metalmouth/metalmouth-precompiled.js
+
+This is for metalmouthInit.js
+
+1) closure-library/closure/bin/calcdeps.py -i metalmouthInit/metalmouthInit.js \ -p closure-library/ -o script > metalmouthInit/metalmouthInit-precompiled.js
+2) java -jar compiler.jar --js metalmouthInit/metalmouthInit-precompiled.js --js_output_file metalmouthInit-compiled.js
+3) remove metalmouthInit/metalmouthInit-precompiled.js
