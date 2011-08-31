@@ -7,7 +7,11 @@ With an even bigger question to follow - "does such a baseline already exist, an
 
 In the meantime, the list of items on the to do list looks like this:
 
-==-1) Refactoring code / Adoption of Google's Closure Library ==
+== -3) Refactoring code / Adoption of Google's Closure Library ==
+
+== -1) Re-implement Google TTS ==
+
+== -2) Options button from toolbar - opens option page ==
 
 ==0) Support for certain WAI-ARIA items== 
 
