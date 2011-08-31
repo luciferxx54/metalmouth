@@ -1989,7 +1989,7 @@ function MMControlPanelModel()
 	
 	function readPrevNode()
 	{
-		readNodesStop == true; // to stop reading on
+		readNodesStop = true; // to stop reading on
 		
 		walkerElementPlusText.currentNode = walker.currentNode;
 		walker = walkerElementPlusText;
@@ -2009,7 +2009,7 @@ function MMControlPanelModel()
 	
 	function readNextNode()
 	{
-		readNodesStop == true; // to stop reading on
+		readNodesStop = true; // to stop reading on
 		
 		walkerElementPlusText.currentNode = walker.currentNode;
 		walker = walkerElementPlusText;
@@ -2651,7 +2651,7 @@ function OSMModel()
 				}
 				break; 
 			case "HEADER":
-				PageHeaderAreaModel_ContentToRead;
+				relevantModel = PageHeaderAreaModel_ContentToRead;
 				break;
 			case "NAV":
 				relevantModel = SiteNavigationAreaModel_ContentToRead;
