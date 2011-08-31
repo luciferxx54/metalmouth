@@ -9,8 +9,9 @@ In the meantime, the list of items on the to do list looks like this:
 
 == -3) Refactoring code / Adoption of Google's Closure Library ==
 
-This is underway - with initial source code for metalmouth + closure library integration coming soon...
-A new branch for this code has been created in the Source area.
+This is underway - with initial source code for metalmouth + closure library integration found in svn/branches/metalmouth_closure_src...
+
+Read the READ ME file to learn how to create the metalmouth-compiled.js and metalmouthInit-compiled.js files.
 
 == -2) Re-implement Google TTS ==
 
