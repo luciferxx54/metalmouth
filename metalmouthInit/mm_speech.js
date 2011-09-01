@@ -24,22 +24,22 @@ var audioStack; //  = new AudioStackModel(); // added
 
 // AUDIO
 
-mm_speechspeech.connect = function()
+mm_speech.connect = function()
 {
 	audioStack = new AudioStackModel();
 }
 
-mm_speechspeech.speakEnqueue = function(utterance, callback)
+mm_speech.speakEnqueue = function(utterance, callback)
 {
 	audioStack.speakEnqueue(utterance, callback);
 }
 
-mm_speechspeech.speakNext = function()
+mm_speech.speakNext = function()
 {
 	audioStack.speakNext();
 }
 
-mm_speechspeech.speakDirectly = function(utterance, callback)
+mm_speech.speakDirectly = function(utterance, callback)
 {
 	audioStack.speakDirectly(utterance, callback);
 }
