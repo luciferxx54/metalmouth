@@ -17,11 +17,15 @@ Read the READ ME file to learn how to create the metalmouth-compiled.js and meta
 
 == -1) Options button from toolbar - opens option page ==
 
+Fine control for the tts. Also, the ability to turn on/off features under test.
+
 ==0) Support for certain WAI-ARIA items== 
 
 ==1) Support for multiple select menus == 
 
 ==2) Support for data lists == 
+
+==3) MathML ==
 
 ==3) Iframes == 
 
