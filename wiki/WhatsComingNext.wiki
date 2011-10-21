@@ -13,26 +13,32 @@ This is underway - with initial source code for metalmouth + closure library int
 
 Read the READ ME file to learn how to create the metalmouth-compiled.js and metalmouthInit-compiled.js files.
 
-== -2) Re-implement Google TTS ==
+== 1) Re-implement Google TTS ==
 
-== -1) Options button from toolbar - opens option page ==
+== 2) Options button from toolbar - opens option page ==
 
 Fine control for the tts. Also, the ability to turn on/off features under test.
 
-==0) Support for certain WAI-ARIA items== 
+== 3) Improve mode ==
 
-==1) Support for multiple select menus == 
+Tells the user which parts of a page are missing i.e. "No page title defined", "missing skip link to main content".  This should allow people to better test their web content using this extension.
 
-==2) Support for data lists == 
+== 4) Overview function==
 
-==3) MathML ==
+Provides an overview of the content on the page, and an indication of the layout of the page.  This feature can be switched on and off from the options page.
 
-==3) Iframes == 
+== 5) Support for certain WAI-ARIA items== 
 
-==4) Support for input type=file == 
+== 6) Support for multiple select menus == 
 
-==5) Objects ==
+== 7) Support for data lists == 
 
-==6) Overview function==
+== 8) Iframes == 
 
-On loading the page a user will hear an "overview" of the page layout.
+== 9) Support for input type=file == 
+
+If the url for a local file server has been provided metalmouth will be able to override the native file call and open a window showing the local file server contents.
+
+== 10) Objects ==
+
+== 11) MathML ==
