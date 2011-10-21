@@ -7,7 +7,7 @@ With an even bigger question to follow - "does such a baseline already exist, an
 
 In the meantime, the list of items on the to do list looks like this:
 
-== -3) Refactoring code / Adoption of Google's Closure Library ==
+== 0) Refactoring code / Adoption of Google's Closure Library ==
 
 This is underway - with initial source code for metalmouth + closure library integration found in svn/branches/metalmouth_closure_src...
 
