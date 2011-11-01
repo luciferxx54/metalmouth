@@ -86,9 +86,9 @@ Two tabs when in navigation mode brings the Options location button into focus.
 
 ===Change location===
 
-When in "navigation mode" a single tab will bring the change location button into focus.  Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
+A single tab when in navigation mode brings the Change location button into focus.  As mentioned above, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-As mentioned above, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
+Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
 
 This change location sub-menu holds two options a user can arrow through which allow the location of web page currently loaded in the browser to be changed.  
 
@@ -107,7 +107,9 @@ When a url has been entered a user can tab once to the Go button.  By pressing e
 
 === Options ===
 
-When in "navigation mode" a hitting tab twice will bring the options button into focus.  Pressing enter when the options button is focused will cause the browser to take you to the options page.
+Two tabs when in navigation mode brings the Options location button into focus.  As mentioned above, pressing the "esc" when the change option button is focused will take you back into "navigation mode".
+
+Pressing enter when the options button is focused will cause the browser to take you to the options page.
 
 In the options page, features of metalmouth and the chrome text-to-speech engine can be altered.  To save the values you have set click the save and close button (bottom of the page) - this will take you back to the page you were looking at prior to selecting options. 
 
