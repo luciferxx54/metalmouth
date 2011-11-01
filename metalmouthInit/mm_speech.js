@@ -19,158 +19,38 @@
 
 goog.provide('mm_speech');
 
-// temp experimental.tts replacement
-var audioStack; //  = new AudioStackModel(); // added
+goog.require('mm_applicationData');
 
-// AUDIO
-
-mm_speech.connect = function()
+mm_speech.speak = function(utterance, enqueue, callback)
 {
-	audioStack = new AudioStackModel();
-}
-
-mm_speech.speakEnqueue = function(utterance, callback)
-{
-	audioStack.speakEnqueue(utterance, callback);
-}
-
-mm_speech.speakNext = function()
-{
-	audioStack.speakNext();
-}
-
-mm_speech.speakDirectly = function(utterance, callback)
-{
-	audioStack.speakDirectly(utterance, callback);
-}
-
-function AudioStackModel()
-{
-	// constructor
-	
-	var audio = null;
-
-	var audioTimer;
-	var audioInUse = false;
-	
-	var callbackFunction;
-	var spoken = true; 
-	
-	var utterances = [];
-	var callbacks = [];
-	
-	this.speakEnqueue = function(utterance, callback)
+	var handleCallback = function()
 	{
-		queueSpeak(utterance, callback);
-		
-		// if nothing is being played 
-		
-		if (audioInUse == false)
-		{
-			speakNextInQueue();
-		}
-	}
-	
-	this.speakNext = function()
-	{
-		speakNextInQueue();
-	}
-	
-	this.speakDirectly = function(utterance, callback)
-	{
-		clearStack();
-		speak(utterance, callback);
-	}
-	
-	function speak(utterance, callback)
-	{
-		callbackFunction = callback;
-		
-		if (utterance != null)
-		{
-			if (audioInUse == true)
-			{
-				audio.pause();
-				clearTimeout(audioTimer);
-			}
-			audio = new Audio();
-			
-			audio.addEventListener("play", onPlay, false);
-			audio.src = getSourceUrl(utterance);
-			audio.play();
-		}
-		
-		function onPlay()
-		{	
-			audioInUse = true;
-			
-			var currentTimeTracker;
-			
-			var functionToRun = function()
-			{
-				if ((audio.currentTime == audio.duration)||(audio.currentTime == currentTimeTracker))
-				{
-					ended();
-				}
-				else
-				{
-					if (audio.currentTime > 0)
-					{
-						currentTimeTracker = audio.currentTime;
-					}
-					audioTimer = window.setTimeout(functionToRun, 250);
-				}
-			};
-			audioTimer = window.setTimeout(functionToRun, 250);
-		}
-	}
-	
-	function getSourceUrl(utterance)
-	{
-		var foundationUrl = "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=";
-		return foundationUrl + escape(utterance);
-	}
-	
-	function clearStack()
-	{
-		utterances = [];
-		callbacks = [];
-	}
-	
-	function queueSpeak(utterance, callback)
-	{
-		utterances[utterances.length] = utterance;
-		callbacks[callbacks.length] = callback;
-	}
-	
-	function speakNextInQueue()
-	{
-		if (utterances.length > 0) 
-		{
-			var utterance = utterances[0]; // returns first item in array 
-			utterances = utterances.slice(1); // removes first;
-			var callback = callbacks[0];
-			callbacks = callbacks.slice(1);
-			speak(utterance, callback);	  
-		} 
-	}
-	
-	// Event handlers
-	
-	function ended()
-	{
-		audioInUse = false;
-		
 		try
 		{
-			if (callbackFunction != null)
+			if (callback != null)
 			{
-				callbackFunction();
+				callback();
 			}
 		}
 		catch(err)
 		{
 			console.log(err);
 		}
+	}
+	
+	if (utterance != null)
+	{
+		chrome.tts.speak(
+			utterance,
+			{
+				lang: 'en-US', 
+				rate: parseFloat(mm_applicationData.getSpecificData('speechRate')),
+				enqueue: enqueue,
+				onEvent: function(event) {
+					if (event.type == 'end') {
+						handleCallback();
+					}
+				}
+			});
 	}
 }

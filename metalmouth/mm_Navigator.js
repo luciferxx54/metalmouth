@@ -1,3 +1,22 @@
+/*
+
+ Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
+ Copyright (C) 2011 - Alistair Garrison
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+*/
+
 goog.provide('mm_Navigator');
 
 console.log("loaded navigator");
@@ -25,7 +44,7 @@ mm_Navigator.startReadingNodes = function()
 		
 		if (osmType == null)
 		{
-			mm_TTS.getAudio("no next item", false, null);
+			goBackToStart();
 		}
 		else
 		{
@@ -65,11 +84,10 @@ mm_Navigator.readPrevNode = function() // navigator.
 	
 	if (osmType == null)
 	{
-		mm_TTS.getAudio("no previous items", false, null);
+		goBackToStart();
 	}
 	else
 	{
-		
 		readNodeContents(contentComponents);
 	}
 }
@@ -85,7 +103,7 @@ mm_Navigator.readNextNode = function() // navigator.
 	
 	if (osmType == null)
 	{
-		mm_TTS.getAudio("no next item", false, null);
+		goBackToStart();
 	}
 	else
 	{
@@ -171,6 +189,13 @@ mm_Navigator.interact = function() // navigator.
 
 var osmType;
 var contentComponents;
+
+function goBackToStart()
+{
+	initWalker();
+	restoreHighlighter();
+	mm_TTS.getAudio("Page start", false, null);
+}
 
 function jump()
 {
@@ -290,8 +315,6 @@ function jumpChecker(node) // jump to headers - this is what people do
 }
 
 // this should be initiate - this should be a singleton object
-
-// var rootnode = document.body;
 
 var walkerElementPlusText;
 var walkerJump;

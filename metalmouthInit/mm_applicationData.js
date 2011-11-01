@@ -19,10 +19,7 @@
 
 goog.provide('mm_applicationData');
 
-// temp experimental.tts replacement
-var applicationData; //  = new AudioStackModel(); // added
-
-// AUDIO
+var applicationData;
 
 mm_applicationData.connect = function()
 {
@@ -52,14 +49,14 @@ mm_applicationData.getData = function()
 	return applicationData;
 }
 
-function ApplicationDataModel(data) // data in id and value pairs
+function ApplicationDataModel(data)
 {
 	var applicationDataModel; 
 	
 	if (data == undefined)
 	{
 		applicationDataModel = {
-		speechRate: '0.7'
+		speechRate: '0.9'
 		}
 	}
 	else

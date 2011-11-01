@@ -19,7 +19,7 @@
 
 {
   "name": "metalmouth voice browser",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "description": "A voice browser for Chrome",
   "background_page": "background.html",
   "options_page": "options.html",
@@ -33,5 +33,5 @@
     "48": "MetalMouthLogo.png",
     "128": "MetalMouthLogo.png"
    },
-   "permissions": ["tabs", "http://*/*", "https://*/*"]
+   "permissions": ["tabs", "http://*/*", "https://*/*", "tts"]
 }

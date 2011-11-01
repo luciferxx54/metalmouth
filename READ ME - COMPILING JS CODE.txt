@@ -6,6 +6,10 @@ The closure-library is checked out to a directory called 'closure-library' in th
 
 Could not get ClosureBuilder to work http://code.google.com/closure/library/docs/closurebuilder.html
 
+move to folded
+
+cd /Users/alistairgarrison/Desktop/metalmouth_SVN_Closure_Branch
+
 However, for the time being this seems to work.
 
 This is for metalmouth.js
@@ -19,3 +23,9 @@ This is for metalmouthInit.js
 1) closure-library/closure/bin/calcdeps.py -i metalmouthInit/metalmouthInit.js \ -p closure-library/ -o script > metalmouthInit/metalmouthInit-precompiled.js
 2) java -jar compiler.jar --js metalmouthInit/metalmouthInit-precompiled.js --js_output_file metalmouthInit-compiled.js
 3) remove metalmouthInit/metalmouthInit-precompiled.js
+
+This is for metalmouthOptions.js
+
+1) closure-library/closure/bin/calcdeps.py -i metalmouthOptions/metalmouthOptions.js \ -p closure-library/ -o script > metalmouthOptions/metalmouthOptions-precompiled.js
+2) java -jar compiler.jar --js metalmouthOptions/metalmouthOptions-precompiled.js --js_output_file metalmouthOptions-compiled.js
+3) remove metalmouthOptions/metalmouthOptions-precompiled.js

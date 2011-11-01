@@ -57,9 +57,6 @@ metalmouth.start = function()
 	sequencer();
 }
 
-// Ensures the symbol will be visible after compiler renaming.
-goog.exportSymbol('metalmouth.start', metalmouth.start);
-
 function removeExistingAccesskeys()
 {
 	var elements = document.all;
@@ -85,10 +82,12 @@ function initControlPanel()
 function readPageTitle()
 {
 	mm_TTS.getAudio(mm_ControlPanel.getPageTitle(), true, function(){sequencer();});
-	// not the best place for this, but otherwise init page description sequence is messed up
 }
 
 function bringFocus()
 {
 	mm_ControlPanel.bringFocus();
 }
+
+// Ensures the symbol will be visible after compiler renaming.
+goog.exportSymbol('metalmouth.start', metalmouth.start);
