@@ -31,8 +31,6 @@ The Project metalmouth extension will start working with the current page. The e
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
-[http://4.bp.blogspot.com/-gYDXph9GGlI/TgHG8xWZ64I/AAAAAAAAABI/kRYgRckz6tQ/s1600/storePromotionalImage2.png] 
-
 [http://2.bp.blogspot.com/-RSvXY5GD9Hg/TrAR9XR6d_I/AAAAAAAAAB4/3R45qCgWwZM/s1600/userGuideControlPanel.png]
 
 The control panel contains a single button (the change location button) and a display panel which serves only to show the item currently being read out.  
