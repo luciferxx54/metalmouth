@@ -17,44 +17,54 @@
 
 */
 
-// place a start function which contains all start stuff
-// then call the start function from the background file
-
-// then do the same for metalmouth - so it calls metalmouth.start()
-
 goog.provide('metalmouthInit.start');
 
+goog.require('mm_applicationData');
 goog.require('mm_speech');
+
+var mmTabId;
+var mmTabUrl;
 
 function init(id) 
 {
-	chrome.tabs.executeScript(id, {file: "metalmouth-compiled.js"}, function(){ 		
-		chrome.tabs.executeScript(id, {code:"metalmouth.start();"}, function(){
-
+	mmTabId = id;
+	chrome.tabs.get(id, function(tab) {
+		var insertUpdateListener = function()
+		{
 			var changeTab = function(tabId, changedProps) {
-		
-			if (tabId != id)
-			{
-				return; // to prevent Project metalmouth running when other tabs (not this one) are updated 
-			}
-			if (changedProps.status != "complete")
-			{
-				return;
-			}
-					   
-			chrome.tabs.onUpdated.removeListener(changeTab);
-					   
-			init(id);		   
-		};
-					   
-		chrome.tabs.onUpdated.addListener(changeTab);
-	});});
+				if (tabId != id)
+				{
+					return; // to prevent Project metalmouth running when other tabs (not this one) are updated 
+				}
+				if (changedProps.status != "complete")
+				{
+					return;
+				}
+				chrome.tabs.onUpdated.removeListener(changeTab);
+				init(id);		   
+			};
+			chrome.tabs.onUpdated.addListener(changeTab);
+		}
+						
+		if ((tab.url.indexOf('chrome-extension://') == -1) && (tab.url.indexOf('options.html') == -1))
+		{
+			mmTabUrl = tab.url;
+			chrome.tabs.executeScript(id, {file: "metalmouth-compiled.js"}, function() { 	
+				chrome.tabs.executeScript(id, {code:"metalmouth.start();"}, function() {
+					insertUpdateListener();
+				});
+			});
+		}
+		else
+		{
+			insertUpdateListener();
+		}
+	});
 }
 
 function test(id)
 {
 	// this ensures that the page is fully loaded before init runs
-	
 	var codeToRun = function()
 	{
 		chrome.tabs.get(id, function(tab)
@@ -66,7 +76,6 @@ function test(id)
 			else
 			{
 				// this code ensures against multiple loads if the extension is already loaded
-		
 				var functionToRun = function(){init(id)};
 				var timer = window.setTimeout(functionToRun, 500); 
 		
@@ -84,7 +93,7 @@ function test(id)
 
 metalmouthInit.start = function()
 {
-	mm_speech.connect();
+	mm_applicationData.connect();
 	
 	// Listen for a click on the Project metalmouth icon.  
 	
@@ -92,72 +101,52 @@ metalmouthInit.start = function()
 	
 	// Listen for omnibox keyword 
 	
-	// temp experimental.tts replacement
-	// removed today var audioStack = new AudioStackModel(); // added
-	
-	// chrome.omnibox.onInputStarted.addListener(function(){chrome.experimental.tts.speak("Press space bar then enter to start Project metalmouth extension")}); temporarily commented out
-	chrome.omnibox.onInputStarted.addListener(function(){mm_speech.speakDirectly("Press space bar then enter to start Project metalmouth extension", null)}); // {audioStack.speakDirectly("Press space bar then enter to start Project metalmouth extension", null)});
-	
+	chrome.omnibox.onInputStarted.addListener(function(){mm_speech.speak("Press space bar then enter to start Project metalmouth extension", false, null)});
+
 	chrome.omnibox.onInputEntered.addListener(function(text){
-											  chrome.tabs.getSelected(null, function(tab)
-																	  {
-																	  chrome.tabs.update(tab.id, {'url': 'http://labs.google.com/accessible/', 'selected': true}, function(tab){test(tab.id);}); // have to set a start page as permission for chrome://newtab/ is denied
-																	  });
-											  });
-	
-	// temp experimental.tts replacement
-	
-	// AUDIO
-	
-	// chrome.experimental.tts enqueue does not appear to work - error raised (which cannot be caught) when utterance is stopped prematurely - also tried .stop() and it also did not work
-	
-	// chrome.experimental.tts has been commented out temporarily as it has become delayed in being taken out of experimental.
+		chrome.tabs.getSelected(null, function(tab) {
+			chrome.tabs.update(tab.id, {'url': 'http://labs.google.com/accessible/', 'selected': true}, function(tab){test(tab.id);}); // have to set a start page as permission for chrome://newtab/ is denied
+		});
+	});
 	
 	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-										   // else if (request.voice != undefined)
-										   if (request.voice != undefined)
-										   {
-										   var voice = JSON.parse(request.voice);
-										   try
-										   {
-										   // temp experimental.tts replacement - start
-										   // if (enqueue == true)
-										   if (voice.enqueue == "true")
-										   {  
-										   var callbackEnqueue = function()
-										   {
-										   sendResponse({spoken: "true"});
-										   mm_speech.speakNext(); // audioStack.speakNext();
-										   }
-										   mm_speech.speakEnqueue(voice.utterance, callbackEnqueue); // audioStack.speakEnqueue(voice.utterance, callbackEnqueue);
-										   }
-										   else
-										   {								   
-										   var callbackDirect = function()
-										   {
-										   sendResponse({spoken: "true"}); 		   
-										   }
-										   mm_speech.speakDirectly(voice.utterance, callbackDirect); // audioStack.speakDirectly(voice.utterance, callbackDirect);
-										   }
-										   // end 
-										   
-										   /* temporarily commented out
-											chrome.experimental.tts.speak(voice.utterance, {'locale':voice.locale,'rate':parseFloat(voice.rate),'enqueue':enqueue}, function(){
-											sendResponse({spoken: "true"});
-											});
-											*/
-										   }
-										   catch(err)
-										   {
-										   console.log(err);
-										   }
-										   
-										   }
-										   else
-										   {
-										   sendResponse({});
-										   }
-										   });
+		if (request.voice != undefined)
+		{
+			var voice = JSON.parse(request.voice);
+			try
+			{
+				var callbackDirect = function() {
+					sendResponse({spoken: "true"}); 		   
+				}
+				mm_speech.speak(voice.utterance, voice.enqueue == "true" ? true : false, callbackDirect);
+			}
+			catch(err)
+			{
+				console.log(err);
+			}
+		}
+		else if(request.optionsPageOpen != undefined)
+		{
+			chrome.tabs.update(mmTabId, {url:"options.html"});
+		}
+		else if(request.optionsPageGetData != undefined)
+		{
+			sendResponse({options: JSON.stringify(mm_applicationData.getData())});
+		}
+		else if(request.optionsPageClose != undefined)
+		{
+			mm_applicationData.update(request.optionsPageClose);
+			chrome.tabs.update(mmTabId, {url:mmTabUrl});
+		}
+		else if (request.retrieveData != undefined)
+		{
+			sendResponse({data: JSON.stringify(mm_applicationData.getSpecificData(request.retrieveData))});
+		}
+		else
+		{
+			sendResponse({});
+		}
+	});
 }
 
 // Ensures the symbol will be visible after compiler renaming.

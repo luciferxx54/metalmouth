@@ -1,3 +1,22 @@
+/*
+
+ Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
+ Copyright (C) 2011 - Alistair Garrison
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+*/
+
 goog.provide('mm_OSEM');
 
 console.log("loaded offscreenElementModel");
@@ -37,17 +56,11 @@ mm_OSEM.filter = function(currentNode)
 				{
 					relevantModel = TextBoxModel_ContentToRead;
 				}
-				/*
-				if (typeValue == "search") // 
+				if (typeValue == "image")
 				{
-					relevantModel = TextBoxModel_ContentToRead;
+					relevantModel = ImageButtonModel_ContentToRead; 
 				}
-				if (typeValue == "password") // 
-				{
-					relevantModel = TextBoxModel_ContentToRead;
-				}
-				*/
-				if ((typeValue == "button")||(typeValue == "image")||(typeValue == "submit")||(typeValue == "reset"))
+				if ((typeValue == "button")||(typeValue == "submit")||(typeValue == "reset"))
 				{
 					relevantModel = ButtonModel_ContentToRead; 
 				}
@@ -59,40 +72,6 @@ mm_OSEM.filter = function(currentNode)
 				{
 					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
 				}
-				/*
-				if (typeValue == "url")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "e-mail")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "number")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "datetime")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "date")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "month")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "week")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "time")
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				*/
 				if (typeValue == "range")
 				{
 					relevantModel = RangeInputModel_ContentToRead;
@@ -460,13 +439,13 @@ function LinkModel_ContentToRead(originalElement)
 		var contentComponentsArray = [];
 		contentComponentsArray[contentComponentsArray.length] = interactable();
 		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		
+		contentComponentsArray[contentComponentsArray.length] = titleValue();		
+
 		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
 		{
 			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
 		}			
-		
+
 		return contentComponentsArray;
 	}
 	
@@ -1195,6 +1174,48 @@ function RangeInputModel_ContentToRead(originalElement)
 	}
 }
 
+// ImageButtonModels------------------------
+
+function ImageButtonModel_ContentToRead(originalElement)
+{
+	var baseElement = new ElementModel_ContentToRead(originalElement);
+	
+	this.name = "Image_Button";
+	
+	this.contentComponents = function()
+	{
+		var contentComponentsArray = [];
+		contentComponentsArray[contentComponentsArray.length] = labelValue();
+		contentComponentsArray[contentComponentsArray.length] = interactable();
+		contentComponentsArray[contentComponentsArray.length] = whatAmI();
+		return contentComponentsArray;
+	}
+	
+	function whatAmI()
+	{
+		return "Image button";
+	}
+	
+	function interactable()
+	{
+		return "Interactable";
+	}
+	
+	function labelValue()
+	{
+		// title forms part of the text to read out
+		
+		var alt = baseElement.getAttribute("alt");
+		
+		if ((alt == null)||(alt == ""))
+		{
+			alt = "Unlabelled"; 
+		}
+		
+		return alt;
+	}
+}
+
 // ButtonModels------------------------
 
 function ButtonModel_ContentToRead(originalElement)
@@ -1224,25 +1245,7 @@ function ButtonModel_ContentToRead(originalElement)
 	
 	function labelValue()
 	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
+		var label = baseElement.getAttribute("value");
 		
 		if (label == "")
 		{
