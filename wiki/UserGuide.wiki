@@ -33,7 +33,7 @@ The control panel is displayed at the top of the page, just under Chrome browser
 
 [http://2.bp.blogspot.com/-RSvXY5GD9Hg/TrAR9XR6d_I/AAAAAAAAAB4/3R45qCgWwZM/s1600/userGuideControlPanel.png]
 
-The control panel contains a single button (the change location button) and a display panel which serves only to show the item currently being read out.  
+The control panel contain two buttons (the change location button and the options button) and a display panel which serves only to show the item currently being read out.  
 
 ----
 
@@ -74,11 +74,19 @@ A user is able to use the left arrow to be taken back to the start of the page.
 
 A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
 
+==== One tab ====
+
+A single tab when in navigation mode brings the Change location button into focus.
+
+==== Two tabs ====
+
+Two tabs when in navigation mode brings the Options location button into focus.
+
 ----
 
 ===Change location===
 
-When in "navigation mode" a single tab will bring the change location button into focus.  Otherwise, holding down the hot key 'b' will do the same job.  Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
+When in "navigation mode" a single tab will bring the change location button into focus.  Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
 
 As mentioned above, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
@@ -95,6 +103,14 @@ By pressing enter when the New url button is focused a url entry area and go but
 When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
 When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+----
+
+=== Options ===
+
+When in "navigation mode" a hitting tab twice will bring the options button into focus.  Pressing enter when the options button is focused will cause the browser to take you to the options page.
+
+In the options page, features of metalmouth and the chrome text-to-speech engine can be altered.  To save the values you have set click the save and close button (bottom of the page) - this will take you back to the page you were looking at prior to selecting options. 
+
 ----
 
 ==Appendix==
