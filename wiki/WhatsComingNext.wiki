@@ -7,38 +7,22 @@ With an even bigger question to follow - "does such a baseline already exist, an
 
 In the meantime, the list of items on the to do list looks like this:
 
-== 0) Refactoring code / Adoption of Google's Closure Library ==
+== 0) HTML5 Speech Control ==
 
-This is underway - with initial source code for metalmouth + closure library integration found in svn/branches/metalmouth_closure_src...
+== 1) Support for certain WAI-ARIA items / HTML5 elements == 
 
-Read the READ ME file to learn how to create the metalmouth-compiled.js and metalmouthInit-compiled.js files.
+Also, using SSML markup to emphasis aspects of the off-screen model items.
 
-== 1) Re-implement Google TTS ==
+== 2) Support for multiple select menus == 
 
-== 2) Options button from toolbar - opens option page ==
+== 3) Support for multi-select boxes and data lists == 
 
-Fine control for the tts. Also, the ability to turn on/off features under test.
+== 4) Iframes == 
 
-== 3) Improve mode ==
-
-Tells the user which parts of a page are missing i.e. "No page title defined", "missing skip link to main content".  This should allow people to better test their web content using this extension.
-
-== 4) Overview function==
-
-Provides an overview of the content on the page, and an indication of the layout of the page.  This feature can be switched on and off from the options page.
-
-== 5) Support for certain WAI-ARIA items== 
-
-== 6) Support for multiple select menus == 
-
-== 7) Support for data lists == 
-
-== 8) Iframes == 
-
-== 9) Support for input type=file == 
+== 5) Support for input type=file == 
 
 If the url for a local file server has been provided metalmouth will be able to override the native file call and open a window showing the local file server contents.
 
-== 10) Objects ==
+== 6) Objects ==
 
-== 11) MathML ==
+== 7) MathML ==
