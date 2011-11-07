@@ -77,6 +77,9 @@ mm_ControlPanel.init = function()
 	mmNavigationModeFocus.setAttribute("title", "Navigation mode");
 	goog.dom.getElement('_mm_NavArea').appendChild(mmNavigationModeFocus);
 	
+	var mmVoiceInput = new VoiceInputControlModel();
+	goog.dom.getElement('_mm_InfoArea').appendChild(mmVoiceInput.asHtml());
+	
 	var mmChangeLocationButton = new ChangeLocationButtonModel(); // shortkey B
 	goog.dom.getElement('_mm_InfoArea').appendChild(mmChangeLocationButton.asHtml());
 	
@@ -120,7 +123,22 @@ mm_ControlPanel.init = function()
 
 mm_ControlPanel.bringFocus = function()
 {
-	mm_TTS.getAudio("Reading all items", true, function(){focusNoAudio('_mm_NavigationModeFocus');mm_Navigator.reset();mm_Navigator.startReadingNodes();});  // focusNoAudio should be turned into a function - so only an id needs to be provided 
+	chrome.extension.sendRequest({retrieveData: 'turnOnVoiceInput'}, function(response) {
+		if (response.data != undefined)
+		{
+			if (response.data.toString() == 'true')
+			{
+				mm_Navigator.reset();
+				var voiceInput = goog.dom.getElement('_mm_VoiceInput');
+				voiceInput.style.display = '';
+				voiceInput.focus();
+			}
+			else
+			{
+				mm_TTS.getAudio("Reading all items", true, function(){focusNoAudio('_mm_NavigationModeFocus');mm_Navigator.reset();mm_Navigator.startReadingNodes();});
+			}
+		}
+	});
 }
 
 mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
@@ -200,13 +218,13 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 	
 	function enter(e)
 	{
-		if (e.srcElement.value == "checked")
+		if (e.srcElement.value == "check")
 		{
-			liveCheckInputElement.setAttribute("checked", "checked")
+			liveCheckInputElement.checked = true;
 		}
 		else
 		{
-			liveCheckInputElement.removeAttribute("checked");
+			liveCheckInputElement.checked = false;
 		}
 	}
 	
@@ -261,7 +279,7 @@ mm_ControlPanel.drawSelectMenuInteract = function(liveSelectInputElement)
 			mmOptionButton.setAttribute("data-mm-uicomponent", "");
 			mmOptionButton.setAttribute("value", options[i].innerText);
 			mmOptionButton.addEventListener("click", function(e){goog.dom.getElement('_mm_CloseMenuButton').click();optionSelected(e)}, false); // mirror this above in text input for enter
-			mmInteractionArea.appendChild(mmOptionButton); // addOptionToThisMenu(mmOptionButton);
+			mmInteractionArea.appendChild(mmOptionButton);
 			count++;
 		}
 	}
@@ -1087,6 +1105,131 @@ function IAP_ButtonModel()
 	}
 }
 
+function VoiceInputControlModel()
+{
+	var voiceInput = goog.dom.createDom('input', {
+										'type':'text',
+										'id':'_mm_VoiceInput',
+										'style':'float:left;display:none;',
+										'title':'Voice input area'
+										});
+	
+	voiceInput.setAttribute('data-mm-uicomponent');
+	voiceInput.setAttribute('x-webkit-speech');
+	voiceInput.addEventListener("focus", function(e){voiceInput_Focus(e);}, false);
+	voiceInput.addEventListener("webkitspeechchange", function(e){voiceInput_Change(e);}, false);
+	
+	this.asHtml = function()
+	{
+		return voiceInput;
+	}
+	
+	function voiceInput_Focus(e)
+	{
+		voiceInput.addEventListener("blur", voiceInputLostFocus = function(e){voiceInput_Blur(e);}, false);
+		
+		if (e.srcElement.getAttribute("title") != "")
+		{
+			mm_TTS.getAudio(e.srcElement.getAttribute("title") + " has focus.", true, null);
+		}
+	}
+	
+	function voiceInput_Change(e)
+	{
+		var commandRecognised = false;
+		
+		var findWordFromSimilarWords = function() // this will locate similar words from those used to simplistically train the speech engine
+		{
+			var mmVoiceCommands = ['all', 'next', 'previous', 'do', 'stop', 'continue', 'jump', 'settings', 'location'];
+			
+			for (var i=0; i < 5; i++)
+			{
+				var utterance = e.results[i].utterance;
+				if (utterance != undefined)
+				{
+					if (mmVoiceCommands.indexOf(utterance) != -1) // best guess this is what people were after 
+					{
+						return utterance;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			return null;
+		}
+		
+		var command = findWordFromSimilarWords(command);
+		
+		console.log(command);
+		// reset box
+		e.srcElement.value = "";
+		
+		switch(command)
+		{
+			case 'all':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command all", true, null);
+				mm_Navigator.startReadingNodes();
+				break;
+			case 'next':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command next", true, null);
+				mm_Navigator.readNextNode();
+				break;
+			case 'previous':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command previous", true, null);
+				mm_Navigator.readPrevNode();
+				break;
+			case 'do':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command do", true, null);
+				mm_Navigator.interact();
+				break;
+			case 'stop':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command stop", true, null);
+				mm_Navigator.stopReadingNodes();
+				break;
+			case 'continue':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command continue", true, null);
+				mm_Navigator.startReadingNodes();
+				break;
+			case 'jump':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command jump", true, null);
+				mm_Navigator.jump();
+				break;
+			case 'settings':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command settings", true, null);
+				goog.dom.getElement('_mm_OptionsButton').click();
+				break;
+			case 'location':
+				commandRecognised = true;
+				mm_TTS.getAudio("recognised command location", true, null);
+				goog.dom.getElement('_mm_ChangeLocationButton').click();
+				break;
+			default:
+				if (commandRecognised == false)
+				{
+					mm_TTS.getAudio("command not recognised", true, null);
+				}
+				break;
+		}
+	}
+	
+	function voiceInput_Blur(e)
+	{
+		voiceInput.removeEventListener("blur", voiceInputLostFocus, false);
+		mm_TTS.getAudio("speak now", false, null);
+	}
+}
+
 function OptionsButtonModel()
 {
 	var optionsButton = document.createElement("input");
@@ -1106,7 +1249,7 @@ function OptionsButtonModel()
 	
 	function buttonHasFocus(e)
 	{
-		if (e.srcElement.getAttribute("title") != "")
+		if (e.srcElement.getAttribute("value") != "")
 		{
 			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " button has focus", false, null);
 		}
@@ -1140,7 +1283,7 @@ function ChangeLocationButtonModel()
 
 	function buttonHasFocus(e)
 	{
-		if (e.srcElement.getAttribute("title") != "")
+		if (e.srcElement.getAttribute("value") != "")
 		{
 			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " button has focus", false, null);
 		}
