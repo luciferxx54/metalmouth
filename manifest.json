@@ -19,7 +19,7 @@
 
 {
   "name": "metalmouth voice browser",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "A voice browser for Chrome",
   "background_page": "background.html",
   "options_page": "options.html",

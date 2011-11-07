@@ -55,6 +55,35 @@ mm_optionsView.init = function()
 	
 	goog.dom.appendChild(optionsFieldset, speechRate);
 	
+	// Experimental features
+	
+	var experimentalFeaturesFieldset = goog.dom.createDom('fieldset', {
+											 
+											 }); 
+	
+	goog.dom.appendChild(document.body, experimentalFeaturesFieldset);
+	
+	var experimentalFeaturesLegend = goog.dom.createDom('legend', {
+										   'innerText': 'Experimental Features'
+										   });
+	
+	goog.dom.appendChild(experimentalFeaturesFieldset, experimentalFeaturesLegend);
+	
+	var turnOnVoiceInputLabel = goog.dom.createDom('label', {
+											 'for':'_mmOptions_voiceInput',
+											 'innerText':'Turn on voice input:'
+											 });
+	
+	goog.dom.appendChild(experimentalFeaturesFieldset, turnOnVoiceInputLabel);
+	
+	var turnOnVoiceInput = goog.dom.createDom('input', {
+										'id': '_mmOptions_turnOnVoiceInput',
+										'type': 'checkbox'
+										});
+	
+	goog.dom.appendChild(experimentalFeaturesFieldset, turnOnVoiceInput);
+	
+	
 	// add in save button
 	var saveButton = goog.dom.createDom('input', {
 		'id': '_mmOptions_saveButton',
@@ -70,7 +99,8 @@ mm_optionsView.init = function()
 		function(){
 			   
 			var data = {
-				speechRate: document.getElementById('_mmOptions_speechRate').value
+				speechRate: document.getElementById('_mmOptions_speechRate').value,
+				turnOnVoiceInput: document.getElementById('_mmOptions_turnOnVoiceInput').checked
 			}
 
 			chrome.extension.sendRequest({optionsPageClose: JSON.stringify(data)});
@@ -82,5 +112,9 @@ mm_optionsView.update = function(data)
 	if (data.speechRate)
 	{
 		document.getElementById('_mmOptions_speechRate').value = data.speechRate;
+	}
+	if (data.turnOnVoiceInput)
+	{
+		document.getElementById('_mmOptions_turnOnVoiceInput').checked = data.turnOnVoiceInput;
 	}
 }

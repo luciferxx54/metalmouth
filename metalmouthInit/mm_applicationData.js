@@ -56,13 +56,15 @@ function ApplicationDataModel(data)
 	if (data == undefined)
 	{
 		applicationDataModel = {
-		speechRate: '0.9'
+		speechRate: '0.9',
+		turnOnVoiceInput: false
 		}
 	}
 	else
 	{
 		applicationDataModel = {
-		speechRate: data.speechRate
+		speechRate: data.speechRate,
+		turnOnVoiceInput: data.turnOnVoiceInput
 		}
 	}
 	return applicationDataModel;
