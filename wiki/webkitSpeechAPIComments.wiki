@@ -6,7 +6,7 @@ This short overview is intended to explain how the Project metalmouth extension 
 
 Google's implementation of the HTML5 Speech Input API allows HTML text input elements to be defined as able to accept voice input - simply by giving the HTML input element the x-webkit-speech attribute.
 
-'code' <input type="text" id="voiceInput" x-webkit-speech />
+'code' <input type="text" id="voiceInput" x-webkit-speech />'code'
 
 ==Event-handlers==
 
