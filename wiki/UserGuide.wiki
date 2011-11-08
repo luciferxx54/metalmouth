@@ -32,11 +32,11 @@ The Project metalmouth extension will start working with the current page. The e
 
 ===Limitations===
 
-The HTML5 Speech Input API, Google's implementation of which the Project metalmouth extension utilises for speech input, is still under development.  It is for this reason that the voice input function is marked as experimental - requiring the user to turn it on in Project metalmouth's options. 
+The [http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API], Google's implementation of which the Project metalmouth extension utilises for speech input, is still under development.  It is for this reason that the voice input function is marked as experimental - requiring the user to turn it on in Project metalmouth's options. 
 
 Several issues currently exist which degrade the usefulness of this API for people with visual disabilities - see [webkitSpeechAPIComments].
 
-Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers ([W3C Speech Input API http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html]) regarding possible issues affecting people with visual disabilities.
+Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers ([http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API]) regarding possible issues affecting people with visual disabilities.
 
 ===Turning on voice input=== 
 
