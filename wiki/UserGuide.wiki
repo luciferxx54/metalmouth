@@ -28,7 +28,23 @@ The Project metalmouth extension will start working with the current page. The e
 
 ----
 
-==Extension Control Panel==
+==Extension Control - Voice Commands==
+
+===Turning on voice input=== 
+
+===Using voice commands===
+
+===Limitations===
+
+The webkit-speech API, which the Project metalmouth extension utilises for speech input, is still under development.  It is for this reason that the voice input function is marked as experimental - requiring the user to turn it on in Project metalmouth's options. 
+
+Several issues currently exist which degrade the usefulness of this API for people with visual disabilities - see [webkitSpeechAPIComments].
+
+Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers regarding possible issues affecting people with visual disabilities.
+
+----
+
+==Extension Control - Keyboard==
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
