@@ -66,7 +66,23 @@ As mentioned earlier, there are still several limitations for a person with a vi
 
 ===Voice commands===
 
+Saying the following single words will execute the following commands:
+
+   * 'all' - Reads out all items;
+   * 'next' - Reads out the next item;
+   * ''previous' - Reads out the previous item;
+   * 'do' - Interact with the current item;
+   * 'stop' - Stop reading out all items.
+   * 'continue' - Continue to read out all items from the current position;
+   * 'jump' - Jump to the next heading;
+   * 'options' - Opens the options page;
+   * 'location' - Opens the navigation sub-menu.
+
+More and more use of the Speech Input API is planned, along with a change to the control panel which will aid both voice and keyboard users...
+
 ===Recommendation: Use a headset===
+
+It is strongly recommended to use a headset (headphones + microphone) when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
 
 ----
 
