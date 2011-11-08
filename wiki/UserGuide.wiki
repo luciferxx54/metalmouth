@@ -36,7 +36,7 @@ The webkit-speech API, which the Project metalmouth extension utilises for speec
 
 Several issues currently exist which degrade the usefulness of this API for people with visual disabilities - see [webkitSpeechAPIComments].
 
-Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers regarding possible issues affecting people with visual disabilities.
+Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers ([http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html]) regarding possible issues affecting people with visual disabilities.
 
 ===Turning on voice input=== 
 
