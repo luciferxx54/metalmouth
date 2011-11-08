@@ -52,7 +52,7 @@ Limitations aside, it is without doubt that voice input will be increasingly imp
 
 The control panel is displayed at the top of the page, just under Chrome browser's own controls (see highlighted area in the image below).
 
-[http://2.bp.blogspot.com/-RSvXY5GD9Hg/TrAR9XR6d_I/AAAAAAAAAB4/3R45qCgWwZM/s1600/userGuideControlPanel.png]
+[http://2.bp.blogspot.com/-D9bbiRqvMk0/TrkpSpt83II/AAAAAAAAACc/JcV_OX07f2M/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B14.04.42.png]
 
 The control panel contain two buttons (the change location button and the options button) and a display panel which serves only to show the item currently being read out.  
 
