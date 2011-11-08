@@ -1,0 +1,1 @@
+This will contain comments on the webkit speech implementation.  Current limitations for limited vision users and hopes for the future.
