@@ -1,1 +1,11 @@
-This will contain comments on the webkit speech implementation.  Current limitations for limited vision users and hopes for the future.
+= Using x-webkit-speech enabled voice input =
+
+
+
+==HTML5 Speech Input API==
+
+Google's implementation of the HTML5 Speech Input API allows HTML input elements to be defined as able to accept voice input - simply by giving the HTML input element the x-webkit-speech attribute.
+
+==Event-handlers==
+
+==Limitations for users with visual disabilities== 
