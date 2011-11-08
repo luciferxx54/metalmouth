@@ -24,7 +24,7 @@ After activating the speech input (clicking on the microphone or keyboard shortc
 
 This is fired when Google's off-site speech recognition system returns what it believes to be a reliable match to what has been said (best guess, with highest reliability).
 
-The event returns alot more useful information, including the top five guesses (best + rest)...  The additional guesses matched against the set of supported voice commands allows the Project metalmouth extension to be that little bit more intelligent...   
+The event returns alot more useful information, including the top five guesses (best + rest)...  The additional guesses matched against the set of supported voice commands allows the Project metalmouth extension to be that little bit more intelligent when guessing what the user said...   
 
 ===onspeechstart===
 
