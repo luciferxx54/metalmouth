@@ -14,7 +14,7 @@ After activating the speech input (clicking on the microphone or keyboard shortc
 
   # Focus is lost on the input element (which Project metalmouth uses to say 'speak now');
   # The microphone records what you say;
-  # What the microphone collected is sent somewhere (Google's off-site speech recognition system) for analysis;
+  # What the microphone collected is sent somewhere (I'll call it Google's off-site speech recognition system) for analysis;
   # If what the microphone collected is not recognised a model box opens with options to 'cancel' or 'try again'; or 
   # If what the microphone collected was recognised the onspeechchange event is fired and the top match result placed in the input box.
 
