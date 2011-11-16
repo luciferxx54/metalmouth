@@ -62,6 +62,8 @@ Using the mouse: click on the microphone inside the voice input area and, after 
 
 Using the keyboard: When the voice input is focused use the following shortkeys (from [http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=1407892]) - Ctrl+Shift+. (period) (Mac: ⌘-Shift-. (period)).
 
+Note: On the Mac under some circumstances the shortkeys do not appear to work - an issue has been raised with the Chromium Developers [http://code.google.com/p/chromium/issues/detail?id=97902#makechanges].  
+
 As mentioned earlier, there are still several limitations for a person with a visual disability to use this voice input - visit [webkitSpeechAPIComments] and see if you can add more... 
 
 ===Voice commands===
