@@ -1,0 +1,753 @@
+=Use Cases=
+
+For quality assurance all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release. Starting from version 1.8.0.  This document is incomplete and will be added to over time.
+
+----
+==Installation of packaged metalmouth extension==
+
+===Installation from Project metalmouth website===
+
+Precondition(s):
+  # Chrome browser installed.
+
+Action(s):
+  # Download / install extension from Project metalmouth website (http://code.google.com/p/metalmouth/downloads/list).
+
+Expected outcome(s):
+  # Extension is listed in chrome://settings/extensions.
+  # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
+
+===Installation from Chrome Web Store===
+
+Precondition(s):
+  # Chrome browser installed.
+
+Action(s):
+  # Download / install extension from Project metalmouth page on Chrome Web Store (https://chrome.google.com/webstore/detail/bmogbhmnbehfapbmjlaoflagfobahfli).
+
+Expected outcome(s):
+  # Extension is listed in chrome://extensions/.
+  # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
+
+----
+==Starting metalmouth extension==
+
+===Omnibox method===
+
+Precondition(s): 
+  # metalmouth extension is installed.  
+  # Chrome's omnibox has focus (to be certain use shortcut to focus omnibox Windows / Linux: Ctrl+L or Mac: ⌘-L.
+
+Action(s): 
+  # Press the 'm' key twice.
+
+Expected outcome(s):
+  # metalmouth extension should start with the words "metalmouth extension starting".
+  # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+
+===Metalmouth button method===
+
+Precondition(s): 
+  # metalmouth extension is installed.  
+
+Action(s): 
+  # Click the metalmouth icon button in the toolbar.
+
+Expected outcome(s):
+  # metalmouth extension should start with the words "metalmouth extension starting".
+  # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+
+----
+==Tab-level interaction==
+
+Window shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28650
+Mac shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28651&
+
+===Create new tab===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # metalmouth should say "Opening new tab (tab number) showing (url)".
+  
+===Close current tab===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+ 
+Action(s):
+  # Close the current tab (selected) using Chrome shortcuts (Windows / Linux: Ctrl+W or Mac: ⌘-W).
+
+Expected outcome(s):
+  # Current tab is closed.
+  # metalmouth should say "Closing tab (tab number)".
+  # Focus changes to an open tab.
+  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+
+===Cycle through open tabs===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+ 
+Action(s):
+  # Cycle from the current tab (selected) to another open tab using Chrome shortcuts (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
+
+Expected outcome(s):
+  # Focus changes to another open tab.
+  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+
+----
+==metalmouth menu bar==
+
+===Open metalmouth menu bar===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+ 
+Action(s):
+  # Press tab.
+
+Expected outcome(s):
+  # metalmouth should stop reading all.
+  # metalmouth menu bar should be visible.
+  # metalmouth should say "Opening metlmouth menu".
+
+===Close metalmouth menu bar using esc===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has focus.
+
+Action(s):
+  # Press esc.
+
+Expected outcome(s):
+  # metalmouth menu bar should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Close metalmouth menu bar using close button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has focus.
+
+Action(s):
+  # Press tab until close menu button is focused.
+  # Press enter when the close menu button is focused.
+
+Expected outcome(s):
+  # metalmouth menu bar should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Open change location menu===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has focus.
+
+Action(s):
+  # Press enter when the change location button is focused.
+
+Expected outcome(s):
+  # metalmouth menu bar should be invisible.
+  # Change location menu bar should be visible.
+  # metalmouth should say "Change location menu entered".
+
+===Open metalmouth options===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has focus.
+
+Action(s):
+  # Press tab until options button is focused.
+  # Press enter when the options button is focused.
+
+Expected outcome(s):
+  # metalmouth menu bar should be invisible.
+  # Current tab should be re-directed to options page.
+  # metalmouth should say "???".
+
+----
+==Change location menu==
+
+===(Within current tab) Go back to previous url===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter presses.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+
+Action(s):
+  # Press enter when the back button is focused.
+
+Expected outcome(s):
+  # The change location menu should be invisible.
+  # The tab should load the previous url loaded in the tab.
+
+===Open new url menu===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter presses.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+
+Action(s):
+  # Press enter when the new url button is focused.
+
+Expected outcome(s):
+  # The change location menu should be invisible.
+  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Focus should be on url text input box.
+
+===Open new tab menu===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter presses.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+
+Action(s):
+  # Press enter when the new tab button is focused.
+
+Expected outcome(s):
+  # The change location menu should be invisible.
+  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+===Close change location menu bar using esc===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter presses.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+
+Action(s):
+  # Press esc.
+
+Expected outcome(s):
+  # metalmouth change location bar should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Close change location menu bar using close button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening change location menu" - read all has stopped.
+  # Change location has focus.
+
+Action(s):
+  # Press tab until close menu button is focused.
+  # Press enter when the close menu button is focused.
+
+Expected outcome(s):
+  # metalmouth change location bar should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Enter url in new url menu===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New url button has been focused and enter pressed.
+  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Enter a url in the text entry box.
+  # Press tab to focus the enter button.
+  # Press enter.
+
+Expected outcome(s):
+  # The new url menu should be invisible.
+  # The tab should load the specified.
+
+===Close new url menu using esc===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New url button has been focused and enter pressed.
+  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press esc.
+
+Expected outcome(s):
+  # The new url menu should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Close new url menu using close button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New url button has been focused and enter pressed.
+  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press tab to focus the close button.
+  # Press enter.
+
+Expected outcome(s):
+  # The new url menu should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Enter url in new tab menu===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New tab button has been focused and enter pressed.
+  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Enter a url in the text entry box.
+  # Press tab to focus the enter button.
+  # Press enter.
+
+Expected outcome(s):
+  # The new tab menu should be invisible.
+  # A new tab should open, and focus, and load the url specified.
+
+===Close new tab menu using esc===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New tab button has been focused and enter pressed.
+  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press esc.
+
+Expected outcome(s):
+  # The new tab menu should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+===Close new tab menu using close button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
+  # Change location has been focused and enter pressed.
+  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # New tab button has been focused and enter pressed.
+  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press tab to focus the close button.
+  # Press enter.
+
+Expected outcome(s):
+  # The new tab menu should be invisible.
+  # metalmouth should say "Navigation mode entered".
+
+----
+==metalmouth options==
+
+===New Tab Page Option===
+
+====Entering url====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+ 
+Action(s):
+  # Use in-tab navigation to move down to "new tab page" text input box.
+  # Press enter to interact with the "new tab page" text input box.
+  # The text input interaction area is now visible.
+  # The text input area is focused.
+  # Type in "http://www.google.co.uk".
+  # Press enter. 
+
+Expected outcome(s):
+  # The text input interaction area is now invisible.
+  # "http://www.google.co.uk" has appeared in the "new tab page" text box.
+
+===Speech Rate Option===
+
+====Available on Windows====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+ 
+Action(s):
+  # Use in-tab navigation to move down to "speech rate" range input box.
+
+Expected outcome(s):
+  # metalmouth should say "speech rate range input current 0.9".
+
+====Not available on Mac====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+ 
+Action(s):
+  # Use in-tab navigation to move down to "speech rate" option.
+
+Expected outcome(s):
+  # metalmouth should say "Option disabled etc...".
+
+====Selecting====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # The speech rate range input box is available.
+ 
+Action(s):
+  # Use in-tab navigation to move down to "speech rate" range input box.
+  # Press enter to interact with the "speech rate" range input box.
+  # The range input interaction area is now visible.
+  # Focus the increase button and press enter to increase the speech rate.
+  # Focus the enter button and press enter.
+
+Expected outcome(s):
+  # The range input interaction area is now invisible.
+  # The value of the speech rate range input is increased to the selected value.
+
+===Always-On Option===
+
+====Selecting====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # "Always-on" option is not selected.
+ 
+Action(s):
+  # Use in-tab navigation to move down to "Always-on" checkbox.
+  # Press enter to interact with the "Always-on" checkbox.
+  # The checkbox input interaction area is now visible.
+  # Focus the check button and press enter.
+
+Expected outcome(s):
+  # The checkbox input interaction area is now invisible.
+  # A tick should have appeared in the "Always-on" checkbox.
+
+====Unselecting====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # "Always-on" option is selected.
+ 
+Action(s):
+  # Use in-tab navigation to move down to "Always-on" checkbox.
+  # Press enter to interact with the "Always-on" checkbox.
+  # The checkbox input interaction area is now visible.
+  # Focus the uncheck button and press enter.
+
+Expected outcome(s):
+  # The checkbox input interaction area is now invisible.
+  # A tick should have disappeared in the "Always-on" checkbox.
+
+===Voice Input Option=== 
+
+====Selecting====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # "Voice input" option is not selected.
+ 
+Action(s):
+  # Use in-tab navigation to move down to "Voice input" checkbox.
+  # Press enter to interact with the "Voice input" checkbox.
+  # The checkbox input interaction area is now visible.
+  # Focus the check button and press enter.
+
+Expected outcome(s):
+  # The checkbox input interaction area is now invisible.
+  # A tick should have appeared in the "Voice input" checkbox.
+
+====Unselecting====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # "Voice input" option is selected.
+ 
+Action(s):
+  # Use in-tab navigation to move down to "Voice input" checkbox.
+  # Press enter to interact with the "Voice input" checkbox.
+  # The checkbox input interaction area is now visible.
+  # Focus the uncheck button and press enter.
+
+Expected outcome(s):
+  # The checkbox input interaction area is now invisible.
+  # A tick should have disappeared in the "Voice input" checkbox.
+
+===Saving Options===
+
+====Save & Close====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # A url value has been entered into the "new tab page" text box.
+  # Speech rate has been selected.
+  # Always-on has been checked.
+  # Voice input has been checked.  
+ 
+Action(s):
+  # Use in-tab navigation to move down to "Save & Close" button.
+  # Press enter to click on the "Save & Close" button.
+
+Expected outcome(s):
+  # The options page should close.
+  # metalmouth should say "Closing tab (tab number)".
+  # Focus changes to an open tab.
+  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+
+====Confirming option(s) are saved====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+ 
+Action(s):
+  # Use in-tab navigation to move down to "new tab page" text input box.
+  # Then use in-tab navigation to move down to "Speech Rate" range input box.
+  # Then use in-tab navigation to move down to "Always-on" checkbox.
+  # Then use in-tab navigation to move down to "Voice input" checkbox.
+
+Expected outcome(s):
+  # When the "New tab page" text input box is focused metalmouth should say "new tab page text input box current value http://www.google.co.uk".
+  # When the "Speech rate" range input box is focused metalmouth should say "".
+  # When the "Always-on" checkbox is focused metalmouth should say "".
+  # When the "Speech rate" checkbox is focused metalmouth should say "".
+
+----
+==New Tab Page==
+
+===Default - No URL Entered===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # If the new tab shows chrome://newtab the contents should be updated to show (by default) Google's Accessible Search page.  
+  # metalmouth should say "Opening new tab (tab number) showing (url)".
+
+===URL Entered===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "new tab page" option has been set to a url in the metalmouth options page.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
+  # metalmouth should say "Opening new tab (tab number) showing (url)".
+
+----
+==Speech Rate - New Rate Selected== // windows
+
+===Slower Speech Rate Selected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "speech rate" option has been set to a slower than default speech rate.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
+  # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
+
+===Faster Speech Rate Selected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "speech rate" option has been set to a faster than default speech rate.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
+  # at a faster speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
+
+----
+==Always-On==
+
+===Selected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "always-on" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+  # Try to switch off metalmouth extension using omnibox or icon button method.
+
+Expected outcome(s):
+  # New tab is create.
+  # Focus changes to new tab.
+  # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
+  # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
+
+===Try to turn off extension using omnibox method===
+
+===Try to turn off extension using icon button method===
+
+===Metalmouth on after Chrome quit and restart===
+
+----
+==Voice Input==
+
+===Selected===
+
+===Unselected===
+
+----
+==Page-level navigation via keyboard==
+
+===Down arrow at page top===
+
+===Down arrow at mid page location===
+
+===Down arrow at page bottom===
+
+===Up arrow at page top===
+
+===Up arrow at mid page location===
+
+===Up arrow at page bottom===
+
+===Left arrow at page top===
+
+===Left arrow at mid page location===
+
+===Left arrow at page bottom===
+
+===Right arrow at page top===
+
+===Right arrow at mid page location===
+
+===Right arrow at page bottom===
+
+----
+==Interaction with OSEM items==
+
+----
+==Page-level navigation via voice commmand== 
+
