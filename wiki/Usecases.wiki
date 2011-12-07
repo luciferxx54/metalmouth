@@ -14,7 +14,7 @@ Action(s):
   # Download / install extension from Project metalmouth website (http://code.google.com/p/metalmouth/downloads/list).
 
 Expected outcome(s):
-  # Extension is listed in chrome://settings/extensions.
+  # Extension is listed in chrome://extensions.
   # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
 
 ===Installation from Chrome Web Store===
