@@ -1,6 +1,6 @@
 =Use Cases=
 
-For quality assurance all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release. Starting from version 1.8.0.  This document is incomplete and will be added to over time.
+For quality assurance all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release. Starting from version 1.8.0.  This document is incomplete and will be added to shortly, and updated over time.
 
 ----
 ==Installation of packaged metalmouth extension==
@@ -648,7 +648,7 @@ Expected outcome(s):
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==Speech Rate - New Rate Selected== // windows
+==Speech Rate - New Rate Selected==
 
 ===Slower Speech Rate Selected===
 
@@ -750,4 +750,3 @@ Expected outcome(s):
 
 ----
 ==Page-level navigation via voice commmand== 
-
