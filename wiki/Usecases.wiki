@@ -1,6 +1,6 @@
 =Use Cases=
 
-For quality assurance all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release. Starting from version 1.8.0.  This document is incomplete and will be added to shortly, and updated over time.
+For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension, all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release.   This document is incomplete and will be added to shortly, and updated over time.
 
 ----
 ==Installation of packaged metalmouth extension==
