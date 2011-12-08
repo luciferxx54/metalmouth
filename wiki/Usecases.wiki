@@ -208,7 +208,8 @@ Action(s):
 Expected outcome(s):
   # metalmouth "Top menu" is invisible.
   # Current tab should be re-directed to options page.
-  # metalmouth should say "???".
+  # metalmouth should say "metalmouth extensions option page".
+  # metalmouth should say "Reading all items".
 
 ----
 ==5) Change location menu==
@@ -514,7 +515,7 @@ Expected outcome(s):
 
 ==8) metalmouth options==
 
-===8.1) New Tab Page Option===
+===8.1) New tab url option===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -522,16 +523,17 @@ Precondition(s):
   # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
  
 Action(s):
-  # Use in-tab navigation to move down to "new tab page" text input box.
-  # Press enter to interact with the "new tab page" text input box.
+  # Press down arrow until "New tab url" text input box has focus.
+  # Press enter to interact with the "New tab url" text input box.
   # The text input interaction area is now visible.
   # The text input area is focused.
   # Type in "http://www.google.co.uk".
+  # Press tab until the "enter" button is focused.
   # Press enter. 
 
 Expected outcome(s):
-  # The text input interaction area is now invisible.
-  # "http://www.google.co.uk" has appeared in the "new tab page" text box.
+  # The text input interaction area is invisible.
+  # "http://www.google.co.uk" has appeared in the "new tab url" text input box.
 
 ===8.2) Speech Rate Option===
 
