@@ -88,9 +88,8 @@ Action(s):
 
 Expected outcome(s):
   # Current tab is closed.
-  # metalmouth should say "Closing tab (tab number)".
   # Focus changes to an open tab.
-  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+  # metalmouth should say "Closing tab (tab number) moving focus to tab (tab number) showing (url)".
 
 ===3.3) Cycle through open tabs===
 
@@ -120,9 +119,10 @@ Action(s):
   # Press tab.
 
 Expected outcome(s):
-  # metalmouth should stop reading all.
-  # metalmouth menu bar should be visible.
-  # metalmouth should say "Opening metlmouth menu".
+  # metalmouth has stopped reading all items.
+  # metalmouth "Top menu" is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
 
 ===4.2) Close metalmouth menu bar using esc===
 
@@ -131,14 +131,18 @@ Precondition(s):
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has focus.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
 
 Action(s):
   # Press esc.
 
 Expected outcome(s):
-  # metalmouth menu bar should be invisible.
+  # metalmouth "Top menu" is invisible.
+  # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
 
 ===4.3) Close metalmouth menu bar using close button===
@@ -148,15 +152,19 @@ Precondition(s):
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has focus.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
 
 Action(s):
   # Press tab until close menu button is focused.
-  # Press enter when the close menu button is focused.
+  # Press enter.
 
 Expected outcome(s):
-  # metalmouth menu bar should be invisible.
+  # metalmouth "Top menu" is invisible.
+  # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
 
 ===4.4) Open change location menu===
@@ -166,33 +174,40 @@ Precondition(s):
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has focus.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
 
 Action(s):
-  # Press enter when the change location button is focused.
+  # Press tab until "change location" button is focused.
+  # Press enter.
 
 Expected outcome(s):
-  # metalmouth menu bar should be invisible.
-  # Change location menu bar should be visible.
+  # metalmouth "Top menu" is invisible.
+  # "Change location menu" is visible.
   # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
 
 ===4.5) Open metalmouth options===
 
-Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has focus.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
 
 Action(s):
-  # Press tab until options button is focused.
-  # Press enter when the options button is focused.
+  # Press tab until "options" button is focused.
+  # Press enter.
 
 Expected outcome(s):
-  # metalmouth menu bar should be invisible.
+  # metalmouth "Top menu" is invisible.
   # Current tab should be re-directed to options page.
   # metalmouth should say "???".
 
