@@ -36,7 +36,7 @@ Expected outcome(s):
 
 Precondition(s): 
   # metalmouth extension is installed.  
-  # Chrome's omnibox has focus (to be certain use shortcut to focus omnibox Windows / Linux: Ctrl+L or Mac: ⌘-L.
+  # Chrome's omnibox has focus (to be certain use shortcut to focus the omnibox. Windows / Linux: Ctrl+L or Mac: ⌘-L).
 
 Action(s): 
   # Press the 'm' key twice.
@@ -687,7 +687,7 @@ Expected outcome(s):
 ----
 ==9) Always-On==
 
-===Selected===
+===Try to turn off extension using omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -696,27 +696,145 @@ Precondition(s):
   # The options page has been saved and closed, using the save & close button.
  
 Action(s):
-  # Create a new tab using Chrome shortcuts (Windows / Linux: Ctrl+T or Mac: ⌘-T).
-  # Try to switch off metalmouth extension using omnibox or icon button method.
+  # Focus the omnibox (Windows / Linux: Ctrl+L or Mac: ⌘-L).
+  # Press 'm' twice.
 
 Expected outcome(s):
-  # New tab is create.
-  # Focus changes to new tab.
-  # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
-  # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
-
-===Try to turn off extension using omnibox method===
+  # Nothing should happen.
 
 ===Try to turn off extension using icon button method===
 
-===Metalmouth on after Chrome quit and restart===
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "always-on" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Click on the metalmouth icon button.
+
+Expected outcome(s):
+  # Nothing should happen.
+
+===After Chrome restart===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "always-on" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # Chrome browser has been restarted.
+ 
+Action(s):
+  # Do nothing.
+
+Expected outcome(s):
+  # metalmouth should say "Starting metalmouth extension".
 
 ----
 ==10) Voice Input==
 
+===Unselected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been unselected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Right click the mouse.
+
+Expected outcome(s):
+  # Nothing should happen.
+
 ===Selected===
 
-===Unselected===
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Right click the mouse.
+
+Expected outcome(s):
+  # metalmouth should say "Voice input available".
+
+===Triggering voice command input===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+ 
+Action(s):
+  # Left click the mouse.  
+
+Expected outcome(s):
+  # metalmouth should say "speak now".
+
+===Inputting voice command - unknown command===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Say "Hello"
+
+Expected outcome(s):
+  # metalmouth should say "command not recognised.  Try again".
+
+===Inputting voice command - unknown command===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Say "Options"
+
+Expected outcome(s):
+  # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
+
+===Inputting voice command - silence===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Be silent.
+
+Expected outcome(s):
+  # After a few seconds metalmouth should say "No speech heard.  Try again".
 
 ----
 ==11) Page-level navigation via keyboard==
