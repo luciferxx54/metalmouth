@@ -337,6 +337,8 @@ Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
+----
+
 ==6) Change url menu==
 
 ===6.1) Enter url===
