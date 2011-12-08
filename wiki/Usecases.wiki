@@ -746,7 +746,37 @@ Expected outcome(s):
 ===Right arrow at page bottom===
 
 ----
-==12) Interaction with OSEM items==
+==12) OSEM items On Focus==
 
 ----
-==13) Page-level navigation via voice commmand== 
+==13) Interaction with OSEM items==
+
+===Link===
+===New_Tab_Link===
+===Quote_Link===
+===Map_Area===
+===Skip_Link===
+===Text_Box===
+===Search_Box===
+===Password_Box===
+===Telephone_Box===
+===Url_Box===
+===Email_Box===
+===Number_Box===
+===Date_Time_Box===
+===Date_Box===
+===Month_Box===
+===Week_Box===
+===Time_Box===
+===Range_Input===
+===Button===
+===Image_Button===
+===Submit_Button===		
+===Reset_Button===		
+===Check_Button===			
+===Single_Select===				
+===Audio===				
+===Video===
+
+----
+==14) Page-level navigation via voice commmand== 
