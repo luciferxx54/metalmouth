@@ -208,7 +208,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth "Top menu" is invisible.
   # Current tab should be re-directed to options page.
-  # metalmouth should say "metalmouth extensions option page".
+  # metalmouth should say "metalmouth voice browser options".
   # metalmouth should say "Reading all items".
 
 ----
