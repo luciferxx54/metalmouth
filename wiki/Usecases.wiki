@@ -748,6 +748,58 @@ Expected outcome(s):
 ----
 ==12) OSEM items (on focus)==
 
+===page header area===
+===site navigation area===
+===menu===
+===menu item===
+===main content area===
+===page footer area===
+===page contact details===
+===skip link===
+===skip target===
+===link===
+===new tab link===
+===text box===
+===search box===
+===password box===
+===button===
+===check button===
+===single select (drop-down menu with one selectable option)===
+===static text===
+===level 1 - 6 headers===
+===section===
+===paragraph===
+===sentence===
+===quote===
+===quote link===
+===insertion===
+===deletion===
+===code===
+===form===
+===input group===
+===telephone box===
+===url box===
+===email box===
+===number box===
+===datetime box===
+===date box===
+===month box===
+===week box===
+===time box===
+===range input===
+===bulleted list===
+===numbered list===
+===list item===
+===map===
+===map area===
+===data table===
+===header cell===
+===data cell===
+===audio===
+===video===
+===canvas===
+===semantic image===
+
 ----
 ==13) Interaction with OSEM items==
 
