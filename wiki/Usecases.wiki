@@ -159,7 +159,7 @@ Precondition(s):
   # metalmouth should say "Change location button" has focus.
 
 Action(s):
-  # Press tab until close menu button is focused.
+  # Press tab until "close menu" button is focused.
   # Press enter.
 
 Expected outcome(s):
@@ -181,7 +181,6 @@ Precondition(s):
   # metalmouth should say "Change location button" has focus.
 
 Action(s):
-  # Press tab until "change location" button is focused.
   # Press enter.
 
 Expected outcome(s):
@@ -214,24 +213,6 @@ Expected outcome(s):
 ----
 ==5) Change location menu==
 
-===(Within current tab) Go back to previous url===
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # New tab has been opened.
-  # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter presses.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-
-Action(s):
-  # Press enter when the back button is focused.
-
-Expected outcome(s):
-  # The change location menu should be invisible.
-  # The tab should load the previous url loaded in the tab.
-
 ===5.1) Open new url menu===
 
 Precondition(s): 
@@ -239,16 +220,23 @@ Precondition(s):
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter presses.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
 
 Action(s):
-  # Press enter when the new url button is focused.
+  # Press tab until "change url" button is focused.
+  # Press enter.
 
 Expected outcome(s):
   # The change location menu should be invisible.
-  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # The new url menu should be open, with metalmouth saying "opening change url menu".
   # Focus should be on url text input box.
 
 ===5.2) Open new tab menu===
@@ -258,9 +246,15 @@ Precondition(s):
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter presses.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus". 
 
 Action(s):
   # Press enter when the new tab button is focused.
@@ -270,16 +264,46 @@ Expected outcome(s):
   # The new tab menu should be open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
-===5.3) Close change location menu bar using esc===
+===5.3) Back button===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter presses.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # The change location menu should be invisible.
+  # The tab should load the previous url visited.
+
+===5.4) Close change location menu bar using esc===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
 
 Action(s):
   # Press esc.
@@ -288,36 +312,51 @@ Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.4) Close change location menu bar using close button===
+===5.5) Close change location menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening change location menu" - read all has stopped.
-  # Change location has focus.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
 
 Action(s):
-  # Press tab until close menu button is focused.
-  # Press enter when the close menu button is focused.
+  # Press tab until "close menu" button is focused.
+  # Press enter.
 
 Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.5) Enter url in new url menu===
+==6) Change url menu==
+
+===6.1) Enter url===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New url button has been focused and enter pressed.
-  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening change url menu".
   # Focus should be on url text input box.
 
 Action(s):
@@ -326,64 +365,83 @@ Action(s):
   # Press enter.
 
 Expected outcome(s):
-  # The new url menu should be invisible.
-  # The tab should load the specified.
+  # The "Change url" menu should be invisible.
+  # A current tab should load the contents of the url specified.
 
-===5.6) Close new url menu using esc===
+===6.2) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New url button has been focused and enter pressed.
-  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening change url menu".
   # Focus should be on url text input box.
 
 Action(s):
   # Press esc.
 
 Expected outcome(s):
-  # The new url menu should be invisible.
+  # The "Change url" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.7) Close new url menu using close button===
+===6.3) Close change url menu using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New url button has been focused and enter pressed.
-  # The new url menu should be open, with metalmouth saying "opening new url menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening change url menu".
   # Focus should be on url text input box.
 
 Action(s):
-  # Press tab to focus the close button.
+  # Press tab until the "close menu" button has focus.
   # Press enter.
 
 Expected outcome(s):
-  # The new url menu should be invisible.
+  # The "Change url" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.8) Enter url in new tab menu===
+==7) New tab menu==
 
-Precondition(s): 
+===7.1) Enter url===
+
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New tab button has been focused and enter pressed.
-  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "New tab" button has been focused and enter pressed.
+  # The "new tab" menu is open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
 Action(s):
@@ -392,58 +450,67 @@ Action(s):
   # Press enter.
 
 Expected outcome(s):
-  # The new tab menu should be invisible.
-  # A new tab should open, and focus, and load the url specified.
+  # The "new tab" menu should be invisible.
+  # A new tab should open, come into focus and then load the contents of the url specified.
 
-===5.9) Close new tab menu using esc===
+===7.2) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New tab button has been focused and enter pressed.
-  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "New tab" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
 Action(s):
   # Press esc.
 
 Expected outcome(s):
-  # The new tab menu should be invisible.
+  # The "New" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.10) Close new tab menu using close button===
+===7.3) Close change url menu using close button===
 
-Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # New tab has been opened.
   # metalmouth has started to read all.
-  # metalmouth menu has been opened, with metalmouth saying "opening metalmouth menu" - read all has stopped.
-  # Change location has been focused and enter pressed.
-  # Change location menu has been opened, with metalmouth saying "opening change location menu". 
-  # New tab button has been focused and enter pressed.
-  # The new tab menu should be open, with metalmouth saying "opening new tab menu".
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
 Action(s):
-  # Press tab to focus the close button.
+  # Press tab until the "close menu" button has focus.
   # Press enter.
 
 Expected outcome(s):
-  # The new tab menu should be invisible.
+  # The "New tab" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
-
 ----
-==6) metalmouth options==
 
-===6.1) New Tab Page Option===
+==8) metalmouth options==
 
-====Entering url====
+===8.1) New Tab Page Option===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -462,7 +529,7 @@ Expected outcome(s):
   # The text input interaction area is now invisible.
   # "http://www.google.co.uk" has appeared in the "new tab page" text box.
 
-===6.2) Speech Rate Option===
+===8.2) Speech Rate Option===
 
 ====Available on Windows====
 
@@ -509,7 +576,7 @@ Expected outcome(s):
   # The range input interaction area is now invisible.
   # The value of the speech rate range input is increased to the selected value.
 
-===6.3) Always-On Option===
+===8.3) Always-On Option===
 
 ====Selecting====
 
@@ -547,7 +614,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Always-on" checkbox.
 
-===6.4) Voice Input Option=== 
+===8.4) Voice Input Option=== 
 
 ====Selecting====
 
@@ -585,7 +652,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Voice input" checkbox.
 
-===6.5) Saving Options===
+===8.5) Saving Options===
 
 ====Save & Close====
 
@@ -628,9 +695,9 @@ Expected outcome(s):
   # When the "Speech rate" checkbox is focused metalmouth should say "".
 
 ----
-==7) New Tab Page==
+==9) New Tab Page==
 
-===7.1) Default - No URL Entered===
+===9.1) Default - No URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
