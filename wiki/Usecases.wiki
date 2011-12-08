@@ -519,7 +519,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
  
 Action(s):
   # Use in-tab navigation to move down to "new tab page" text input box.
@@ -540,7 +540,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
  
 Action(s):
   # Use in-tab navigation to move down to "speech rate" range input box.
@@ -553,7 +553,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
  
 Action(s):
   # Use in-tab navigation to move down to "speech rate" option.
@@ -566,7 +566,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # The speech rate range input box is available.
  
 Action(s):
@@ -587,7 +587,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # "Always-on" option is not selected.
  
 Action(s):
@@ -605,7 +605,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # "Always-on" option is selected.
  
 Action(s):
@@ -625,7 +625,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # "Voice input" option is not selected.
  
 Action(s):
@@ -643,7 +643,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # "Voice input" option is selected.
  
 Action(s):
@@ -663,7 +663,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
   # A url value has been entered into the "new tab page" text box.
   # Speech rate has been selected.
   # Always-on has been checked.
@@ -684,7 +684,7 @@ Expected outcome(s):
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # metalmouth options page has been opened via metalmouth toolbar option - see use case "" (below).
+  # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
  
 Action(s):
   # Use in-tab navigation to move down to "new tab page" text input box.
