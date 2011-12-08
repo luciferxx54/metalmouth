@@ -746,7 +746,7 @@ Expected outcome(s):
 ===Right arrow at page bottom===
 
 ----
-==12) OSEM items On Focus==
+==12) OSEM items (on focus)==
 
 ----
 ==13) Interaction with OSEM items==
