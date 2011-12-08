@@ -752,29 +752,29 @@ Expected outcome(s):
 ==13) Interaction with OSEM items==
 
 ===Link===
-===New_Tab_Link===
-===Quote_Link===
-===Map_Area===
-===Skip_Link===
-===Text_Box===
-===Search_Box===
-===Password_Box===
-===Telephone_Box===
-===Url_Box===
-===Email_Box===
-===Number_Box===
-===Date_Time_Box===
-===Date_Box===
-===Month_Box===
-===Week_Box===
-===Time_Box===
-===Range_Input===
+===New Tab Link===
+===Quote Link===
+===Map Area===
+===Skip Link===
+===Text Box===
+===Search Box===
+===Password Box===
+===Telephone Box===
+===Url Box===
+===Email Box===
+===Number Box===
+===Date Time Box===
+===Date Box===
+===Month Box===
+===Week Box===
+===Time Box===
+===Range Input===
 ===Button===
-===Image_Button===
-===Submit_Button===		
-===Reset_Button===		
-===Check_Button===			
-===Single_Select===				
+===Image Button===
+===Submit Button===		
+===Reset Button===		
+===Check Button===			
+===Single Select===				
 ===Audio===				
 ===Video===
 
