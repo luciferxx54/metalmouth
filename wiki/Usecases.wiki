@@ -423,6 +423,8 @@ Expected outcome(s):
   # The "Change url" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
+----
+
 ==7) New tab menu==
 
 ===7.1) Enter url===
@@ -712,7 +714,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the contents should be updated to show (by default) Google's Accessible Search page.  
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===7.2) URL Entered===
+===9.2) URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -730,9 +732,9 @@ Expected outcome(s):
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==8) Speech Rate - New Rate Selected==
+==10) Speech Rate - New Rate Selected==
 
-===8.1) Slower Speech Rate Selected===
+===10.1) Slower Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -749,7 +751,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
   # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===8.2) Faster Speech Rate Selected===
+===10.2) Faster Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -767,9 +769,9 @@ Expected outcome(s):
   # at a faster speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==9) Always-On==
+==11) Always-On==
 
-===9.1) Try to turn off extension using omnibox method===
+===11.1) Try to turn off extension using omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -784,7 +786,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===9.2) Try to turn off extension using icon button method===
+===11.2) Try to turn off extension using icon button method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -798,7 +800,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===9.3) After Chrome restart===
+===11.3) After Chrome restart===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -814,9 +816,9 @@ Expected outcome(s):
   # metalmouth should say "Starting metalmouth extension".
 
 ----
-==10) Voice Input==
+==12) Voice Input==
 
-===10.1) Unselected===
+===12.1) Unselected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -830,7 +832,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===10.2) Selected===
+===12.2) Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -844,7 +846,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Voice input available".
 
-===10.3) Triggering voice command input===
+===12.3) Triggering voice command input===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -861,7 +863,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "speak now".
 
-===10.4) Inputting voice command - unknown command===
+===12.4) Inputting voice command - unknown command===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -880,7 +882,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command not recognised.  Try again".
 
-===10.5) Inputting voice command - unknown command===
+===12.5) Inputting voice command - unknown command===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -899,7 +901,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
 
-===10.6) Inputting voice command - silence===
+===12.6) Inputting voice command - silence===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -919,7 +921,7 @@ Expected outcome(s):
   # After a few seconds metalmouth should say "No speech heard.  Try again".
 
 ----
-==11) Page-level navigation via keyboard==
+==13) Page-level navigation via keyboard==
 
 ===Down arrow at page top===
 
@@ -946,7 +948,7 @@ Expected outcome(s):
 ===Right arrow at page bottom===
 
 ----
-==12) OSEM items (on focus)==
+==14) OSEM items (on focus)==
 
 ===page header area===
 ===site navigation area===
@@ -1001,7 +1003,7 @@ Expected outcome(s):
 ===semantic image===
 
 ----
-==13) Interaction with OSEM items==
+==15) Interaction with OSEM items==
 
 ===Link===
 ===New Tab Link===
@@ -1031,4 +1033,4 @@ Expected outcome(s):
 ===Video===
 
 ----
-==14) Page-level navigation via voice commmand== 
+==16) Page-level navigation via voice commmand== 
