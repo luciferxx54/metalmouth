@@ -5,7 +5,7 @@ For quality assurance, starting from the soon to be release version 1.8.0 of the
 ----
 ==1) Installation of packaged metalmouth extension==
 
-===Installation from Project metalmouth website===
+===1.1) Installation from Project metalmouth website===
 
 Precondition(s):
   # Chrome browser installed.
@@ -17,7 +17,7 @@ Expected outcome(s):
   # Extension is listed in chrome://extensions.
   # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
 
-===Installation from Chrome Web Store===
+===1.2) Installation from Chrome Web Store===
 
 Precondition(s):
   # Chrome browser installed.
@@ -32,7 +32,7 @@ Expected outcome(s):
 ----
 ==2) Starting metalmouth extension==
 
-===Omnibox method===
+===2.1) Omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.  
@@ -45,7 +45,7 @@ Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension starting".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
 
-===Metalmouth button method===
+===2.2) Metalmouth button method===
 
 Precondition(s): 
   # metalmouth extension is installed.  
@@ -63,7 +63,7 @@ Expected outcome(s):
 Window shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28650
 Mac shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28651&
 
-===Create new tab===
+===3.1) Create new tab===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -77,7 +77,7 @@ Expected outcome(s):
   # Focus changes to new tab.
   # metalmouth should say "Opening new tab (tab number) showing (url)".
   
-===Close current tab===
+===3.2) Close current tab===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -92,7 +92,7 @@ Expected outcome(s):
   # Focus changes to an open tab.
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
 
-===Cycle through open tabs===
+===3.3) Cycle through open tabs===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -108,7 +108,7 @@ Expected outcome(s):
 ----
 ==4) metalmouth menu bar==
 
-===Open metalmouth menu bar===
+===4.1) Open metalmouth menu bar===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -124,7 +124,7 @@ Expected outcome(s):
   # metalmouth menu bar should be visible.
   # metalmouth should say "Opening metlmouth menu".
 
-===Close metalmouth menu bar using esc===
+===4.2) Close metalmouth menu bar using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -141,7 +141,7 @@ Expected outcome(s):
   # metalmouth menu bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Close metalmouth menu bar using close button===
+===4.3) Close metalmouth menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -159,7 +159,7 @@ Expected outcome(s):
   # metalmouth menu bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Open change location menu===
+===4.4) Open change location menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -177,7 +177,7 @@ Expected outcome(s):
   # Change location menu bar should be visible.
   # metalmouth should say "Change location menu entered".
 
-===Open metalmouth options===
+===4.5) Open metalmouth options===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -217,7 +217,7 @@ Expected outcome(s):
   # The change location menu should be invisible.
   # The tab should load the previous url loaded in the tab.
 
-===Open new url menu===
+===5.1) Open new url menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -236,7 +236,7 @@ Expected outcome(s):
   # The new url menu should be open, with metalmouth saying "opening new url menu".
   # Focus should be on url text input box.
 
-===Open new tab menu===
+===5.2) Open new tab menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -255,7 +255,7 @@ Expected outcome(s):
   # The new tab menu should be open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
-===Close change location menu bar using esc===
+===5.3) Close change location menu bar using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -273,7 +273,7 @@ Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Close change location menu bar using close button===
+===5.4) Close change location menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -291,7 +291,7 @@ Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Enter url in new url menu===
+===5.5) Enter url in new url menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -314,7 +314,7 @@ Expected outcome(s):
   # The new url menu should be invisible.
   # The tab should load the specified.
 
-===Close new url menu using esc===
+===5.6) Close new url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -335,7 +335,7 @@ Expected outcome(s):
   # The new url menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Close new url menu using close button===
+===5.7) Close new url menu using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -357,7 +357,7 @@ Expected outcome(s):
   # The new url menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Enter url in new tab menu===
+===5.8) Enter url in new tab menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -380,7 +380,7 @@ Expected outcome(s):
   # The new tab menu should be invisible.
   # A new tab should open, and focus, and load the url specified.
 
-===Close new tab menu using esc===
+===5.9) Close new tab menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -401,7 +401,7 @@ Expected outcome(s):
   # The new tab menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===Close new tab menu using close button===
+===5.10) Close new tab menu using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -426,7 +426,7 @@ Expected outcome(s):
 ----
 ==6) metalmouth options==
 
-===New Tab Page Option===
+===6.1) New Tab Page Option===
 
 ====Entering url====
 
@@ -447,7 +447,7 @@ Expected outcome(s):
   # The text input interaction area is now invisible.
   # "http://www.google.co.uk" has appeared in the "new tab page" text box.
 
-===Speech Rate Option===
+===6.2) Speech Rate Option===
 
 ====Available on Windows====
 
@@ -494,7 +494,7 @@ Expected outcome(s):
   # The range input interaction area is now invisible.
   # The value of the speech rate range input is increased to the selected value.
 
-===Always-On Option===
+===6.3) Always-On Option===
 
 ====Selecting====
 
@@ -532,7 +532,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Always-on" checkbox.
 
-===Voice Input Option=== 
+===6.4) Voice Input Option=== 
 
 ====Selecting====
 
@@ -570,7 +570,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Voice input" checkbox.
 
-===Saving Options===
+===6.5) Saving Options===
 
 ====Save & Close====
 
@@ -615,7 +615,7 @@ Expected outcome(s):
 ----
 ==7) New Tab Page==
 
-===Default - No URL Entered===
+===7.1) Default - No URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -630,7 +630,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the contents should be updated to show (by default) Google's Accessible Search page.  
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===URL Entered===
+===7.2) URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -650,7 +650,7 @@ Expected outcome(s):
 ----
 ==8) Speech Rate - New Rate Selected==
 
-===Slower Speech Rate Selected===
+===8.1) Slower Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -667,7 +667,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
   # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===Faster Speech Rate Selected===
+===8.2) Faster Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -687,7 +687,7 @@ Expected outcome(s):
 ----
 ==9) Always-On==
 
-===Try to turn off extension using omnibox method===
+===9.1) Try to turn off extension using omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -702,7 +702,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===Try to turn off extension using icon button method===
+===9.2) Try to turn off extension using icon button method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -716,7 +716,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===After Chrome restart===
+===9.3) After Chrome restart===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -734,7 +734,7 @@ Expected outcome(s):
 ----
 ==10) Voice Input==
 
-===Unselected===
+===10.1) Unselected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -748,7 +748,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===Selected===
+===10.2) Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -762,7 +762,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Voice input available".
 
-===Triggering voice command input===
+===10.3) Triggering voice command input===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -779,7 +779,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "speak now".
 
-===Inputting voice command - unknown command===
+===10.4) Inputting voice command - unknown command===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -798,7 +798,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command not recognised.  Try again".
 
-===Inputting voice command - unknown command===
+===10.5) Inputting voice command - unknown command===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -817,7 +817,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
 
-===Inputting voice command - silence===
+===10.6) Inputting voice command - silence===
 
 Precondition(s): 
   # metalmouth extension is installed.
