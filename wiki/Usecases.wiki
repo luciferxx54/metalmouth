@@ -543,12 +543,13 @@ Precondition(s):
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
+  # The speech rate range input box is available.
  
 Action(s):
-  # Use in-tab navigation to move down to "speech rate" range input box.
+  # Press down arrow until "Speech rate" range input box has focus.
 
 Expected outcome(s):
-  # metalmouth should say "speech rate range input current 0.9".
+  # metalmouth should say "speech rate range input current value 0.9".
 
 ====Not available on Mac====
 
@@ -569,18 +570,22 @@ Precondition(s):
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
   # metalmouth options page has been opened via metalmouth toolbar option - see previous use case "4.5) Open metalmouth options".
-  # The speech rate range input box is available.
  
 Action(s):
-  # Use in-tab navigation to move down to "speech rate" range input box.
-  # Press enter to interact with the "speech rate" range input box.
+  # Press down arrow until "Speech rate" range input box has focus.
+  # Press enter to interact with the "Speech rate" range input box.
   # The range input interaction area is now visible.
-  # Focus the increase button and press enter to increase the speech rate.
-  # Focus the enter button and press enter.
+  # metalmouth should say "increase value button has focus".  
+  # Press enter. 
+  # metalmouth should say "Value to enter increased to 1.1".
+  # Press down arrow until "Enter button" has focus.
+  # Press enter.
 
 Expected outcome(s):
   # The range input interaction area is now invisible.
-  # The value of the speech rate range input is increased to the selected value.
+  # metalmouth should say "range input menu closed".
+  # metalmouth should say "navigation mode entered".
+  # The value of the speech rate range input is increased to 1.1.
 
 ===8.3) Always-On Option===
 
