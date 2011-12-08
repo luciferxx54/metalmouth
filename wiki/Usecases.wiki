@@ -3,7 +3,7 @@
 For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension, all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release.   This document is incomplete and will be added to shortly, and updated over time.
 
 ----
-==Installation of packaged metalmouth extension==
+==1) Installation of packaged metalmouth extension==
 
 ===Installation from Project metalmouth website===
 
@@ -30,7 +30,7 @@ Expected outcome(s):
   # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
 
 ----
-==Starting metalmouth extension==
+==2) Starting metalmouth extension==
 
 ===Omnibox method===
 
@@ -58,7 +58,7 @@ Expected outcome(s):
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
 
 ----
-==Tab-level interaction==
+==3) Tab-level interaction==
 
 Window shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28650
 Mac shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28651&
@@ -106,7 +106,7 @@ Expected outcome(s):
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
 
 ----
-==metalmouth menu bar==
+==4) metalmouth menu bar==
 
 ===Open metalmouth menu bar===
 
@@ -197,7 +197,7 @@ Expected outcome(s):
   # metalmouth should say "???".
 
 ----
-==Change location menu==
+==5) Change location menu==
 
 ===(Within current tab) Go back to previous url===
 
@@ -424,7 +424,7 @@ Expected outcome(s):
   # metalmouth should say "Navigation mode entered".
 
 ----
-==metalmouth options==
+==6) metalmouth options==
 
 ===New Tab Page Option===
 
@@ -613,7 +613,7 @@ Expected outcome(s):
   # When the "Speech rate" checkbox is focused metalmouth should say "".
 
 ----
-==New Tab Page==
+==7) New Tab Page==
 
 ===Default - No URL Entered===
 
@@ -648,7 +648,7 @@ Expected outcome(s):
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==Speech Rate - New Rate Selected==
+==8) Speech Rate - New Rate Selected==
 
 ===Slower Speech Rate Selected===
 
@@ -685,7 +685,7 @@ Expected outcome(s):
   # at a faster speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==Always-On==
+==9) Always-On==
 
 ===Selected===
 
@@ -712,14 +712,14 @@ Expected outcome(s):
 ===Metalmouth on after Chrome quit and restart===
 
 ----
-==Voice Input==
+==10) Voice Input==
 
 ===Selected===
 
 ===Unselected===
 
 ----
-==Page-level navigation via keyboard==
+==11) Page-level navigation via keyboard==
 
 ===Down arrow at page top===
 
@@ -746,7 +746,7 @@ Expected outcome(s):
 ===Right arrow at page bottom===
 
 ----
-==Interaction with OSEM items==
+==12) Interaction with OSEM items==
 
 ----
-==Page-level navigation via voice commmand== 
+==13) Page-level navigation via voice commmand== 
