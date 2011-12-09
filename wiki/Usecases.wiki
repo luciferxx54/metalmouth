@@ -2015,7 +2015,7 @@ Expected outcome(s):
 
 ===14.11) Article===
 
-====14.11.1) Minimum definition====
+====14.11.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2024,7 +2024,42 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<article>}}}_content_{{{</article>}}}
+{{{<article></article>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.11.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<article>}}}_text only contents_{{{</article>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "article".
+
+Expected outcome(s):
+  # metalmouth should say "article".
+  # metalmouth should say "text only contents".
+
+====14.11.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<article>}}}_some html contents_{{{</article>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "article".
