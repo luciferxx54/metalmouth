@@ -932,29 +932,128 @@ Expected outcome(s):
 ----
 ==13) Page-level navigation via keyboard==
 
-===Down arrow at page top===
+===13.1) Down arrow===
 
-===Down arrow at mid page location===
+====13.1.1) Down arrow at page top====
 
-===Down arrow at page bottom===
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Left arrow has been pressed.
+  # metalmouth has been stopped from reading all items - and returned to page start.
+  # metalmouth has said "page start".
+ 
+Action(s):
+  # Press down arrow.
 
-===Up arrow at page top===
+Expected outcome(s):
+  # metalmouth should read out the next OSEM item.
 
-===Up arrow at mid page location===
+====13.1.2) Down arrow at mid page location====
 
-===Up arrow at page bottom===
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+ 
+Action(s):
+  # Press down arrow.
 
-===Left arrow at page top===
+Expected outcome(s):
+  # metalmouth should read out the next OSEM item.
 
-===Left arrow at mid page location===
+====13.1.3) Down arrow at page bottom====
 
-===Left arrow at page bottom===
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed to stop metalmouth at the bottom of the page.
+  # The last item on the page has been read out.
+ 
+Action(s):
+  # Press down arrow.
 
-===Right arrow at page top===
+Expected outcome(s):
+  # metalmouth should say "page start".
+  # The navigator should be reset.
 
-===Right arrow at mid page location===
+===13.2) Up arrow===
 
-===Right arrow at page bottom===
+====13.2.1) At page top====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Left arrow has been pressed.
+  # metalmouth has been stopped from reading all items - and returned to page start.
+  # metalmouth has said "page start".
+ 
+Action(s):
+  # Press down up.
+
+Expected outcome(s):
+  # metalmouth should say "page start".
+
+====13.2.2) Up arrow at mid page location====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+ 
+Action(s):
+  # Press up arrow.
+
+Expected outcome(s):
+  # metalmouth should read out the previous OSEM item.
+
+===13.2.3) Up arrow at page bottom===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed to stop metalmouth at the bottom of the page.
+  # The last item on the page has been read out.
+ 
+Action(s):
+  # Press up arrow.
+
+Expected outcome(s):
+  # metalmouth should read out the previous OSEM item.
+
+===Left arrow===
+
+====13.3.1) Left arrow at page top====
+
+====13.3.2) Left arrow at mid page location====
+
+====13.3.3) Left arrow at page bottom====
+
+===13.4) Right arrow===
+
+====13.4.1) Right arrow at page top====
+
+====13.4.2) Right arrow at mid page location====
+
+====13.4.3) Right arrow at page bottom====
+
+===13.5) Space bar===
+
+====13.5.1) Stop reading====
+
+====13.5.2) Continue reading==== 
 
 ----
 ==14) OSEM items (on focus)==
