@@ -1190,7 +1190,7 @@ Action(s):
   # Press down arrow until last OSEM has been read.
 
 Expected outcome(s):
-   # No OSEM item should have been formed for this empty header element.
+   # No OSEM item should have been formed for this empty element.
 
 ====14.1.2) Text content only====
 
@@ -1244,7 +1244,7 @@ Action(s):
   # Press down arrow until last OSEM has been read.
 
 Expected outcome(s):
-   # No OSEM item should have been formed for this empty header element.
+   # No OSEM item should have been formed for this empty element.
 
 ====14.2.1) Text only content====
 
@@ -1298,7 +1298,7 @@ Action(s):
   # Press down arrow until last OSEM has been read.
 
 Expected outcome(s):
-   # No OSEM item should have been formed for this empty header element.
+   # No OSEM item should have been formed for this empty element.
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
@@ -1405,7 +1405,7 @@ Expected outcome(s):
 
 ===14.4) Page footer area===
 
-====14.4.1) Minimum definition====
+====14.4.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1414,7 +1414,42 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<footer>}}}_contents_{{{</footer>}}}
+{{{<footer></footer>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.4.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<footer>}}}_text only contents_{{{</footer>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "page footer area".
+
+Expected outcome(s):
+  # metalmouth should say "page footer area".
+  # metalmouth should say "text only contents".
+
+====14.4.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<footer>}}}_some html contents_{{{</footer>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "page footer area".
@@ -1439,7 +1474,7 @@ Action(s):
   # Press down arrow until last OSEM has been read.
 
 Expected outcome(s):
-   # No OSEM item should have been formed for this empty header element.
+   # No OSEM item should have been formed for this empty element.
 
 ====14.5.2) Text only contents====
 
@@ -1478,7 +1513,7 @@ Expected outcome(s):
 
 ===14.6) Skip link===
 
-====14.6.1) Title attribute====
+====14.6.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1487,7 +1522,43 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<a href='#targetName' title='appropriate title'>}}}_any text content_{{{</a>}}}
+{{{<a href='#targetName' title='appropriate title'></a>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.6.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<a href='#targetName' title='appropriate title'>}}}_text only contents_{{{</a>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "skip link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable skip link".
+  # metalmouth should say "appropriate title".
+  # metalmouth should say "text only contents".
+
+====14.6.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<a href='#targetName' title='appropriate title'>}}}_some html contents_{{{</a>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "skip link".
@@ -1496,7 +1567,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable skip link".
   # metalmouth should say "appropriate title".
 
-====14.6.2) No title attribute====
+====14.6.4) Title attribute====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1505,7 +1576,25 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<a href='#targetName'>}}}_any text content_{{{</a>}}}
+{{{<a href='#targetName' title='appropriate title'>}}}_some html contents_{{{</a>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "skip link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable skip link".
+  # metalmouth should say "appropriate title".
+
+====14.6.5) No title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<a href='#targetName'>}}}_some html contents_{{{</a>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "skip link".
@@ -1513,7 +1602,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Interactable skip link".
 
-====14.6.3) Null title attribute====
+====14.6.6) Null title attribute====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1522,7 +1611,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<a href='#targetName' title=''>}}}_any text content_{{{</a>}}}
+{{{<a href='#targetName' title=''>}}}_some html contents_{{{</a>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "skip link".
@@ -1531,6 +1620,8 @@ Expected outcome(s):
   # metalmouth should say "Interactable skip link".
 
 ===14.7) Skip target===
+
+
 
 ====14.7.1) Title attribute====
 
