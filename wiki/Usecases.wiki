@@ -1580,14 +1580,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Interactable Link opens in a new tab".
 
-===Static text===
-
-
-
-===level 1 - 6 headers===
-===section===
-===paragraph===
-===sentence===
+===14.10) Section===
+===14.11) Level 1 - 6 headers===
+===14.12) Paragraph===
 ===quote===
 ===quote link===
 ===insertion===
@@ -1625,7 +1620,20 @@ Expected outcome(s):
 ===semantic image===
 
 ----
-==15) Interaction with OSEM items==
+==15) OSEM items (on focus) - WAI-ARIA based==
+===menu item===
+===main content area===
+
+----
+==16) Special OSEM items (on focus) - Node based, rather than element based==
+===Static text===
+===sentence===
+
+----
+==17) Unsupported elements==
+
+----
+==18) Interaction with OSEM items==
 
 ===Link===
 ===New Tab Link===
@@ -1655,10 +1663,4 @@ Expected outcome(s):
 ===Video===
 
 ----
-
-==15) OSEM items (on focus) - WAI-ARIA based==
-===menu item===
-===main content area===
-
-----
-==16) Page-level navigation via voice commmand== 
+==19) Page-level navigation via voice commmand== 
