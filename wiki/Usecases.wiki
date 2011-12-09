@@ -1182,8 +1182,9 @@ Precondition(s):
   # New tab has been opened.
   # metalmouth has started to read all.
   # Space bar has been pressed.
-  # An HTML5 Header element is present in the DOM - formed from the following code '<header>'_contents_'</header>'.
- 
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<header>}}}_contents_{{{</header>}}}
+
 Action(s):
   # Press down arrow until current OSEM is a "page header area".
 
