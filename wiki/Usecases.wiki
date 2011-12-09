@@ -1173,6 +1173,23 @@ Expected outcome(s):
 ==14) OSEM items (on focus)==
 
 ===page header area===
+
+====Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code '<header>'_contents_'</header>'.
+ 
+Action(s):
+  # Press down arrow until current OSEM is a "page header area".
+
+Expected outcome(s):
+   # metalmouth should say "".
+
 ===site navigation area===
 ===menu===
 ===menu item===
