@@ -1172,9 +1172,9 @@ Expected outcome(s):
 ----
 ==14) OSEM items (on focus)==
 
-===page header area===
+===14.1) Page header area===
 
-====Minimum definition====
+====14.1.1) Minimum definition====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1186,13 +1186,127 @@ Precondition(s):
 {{{<header>}}}_contents_{{{</header>}}}
 
 Action(s):
-  # Press down arrow until current OSEM is a "page header area".
+  # Press down arrow until current OSEM is the defined "page header area".
 
 Expected outcome(s):
-   # metalmouth should say "".
+   # metalmouth should say "page header area".
 
-===site navigation area===
-===menu===
+===14.2) Site navigation area===
+
+====14.2.1) Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<nav>}}}_contents_{{{</nav>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "site navigation area".
+
+Expected outcome(s):
+   # metalmouth should say "site navigation area".
+
+===14.3) Menu===
+
+====14.3.1) Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<menu type='list' title='appropriate title'>}}}_contents - 3 items_{{{</menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "menu".
+
+Expected outcome(s):
+  # metalmouth should say "appropriate title".
+  # metalmouth should say "menu".
+  # metalmouth should say "3 items listed".
+
+====14.3.2) No title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<menu type='list'>}}}_contents - 3 items_{{{</menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "menu".
+
+Expected outcome(s):
+  # metalmouth should say "untitled".
+  # metalmouth should say "menu".
+  # metalmouth should say "3 items listed".
+
+====14.3.3) Null title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<menu type='list' title=''>}}}_contents - 3 items_{{{</menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "menu".
+
+Expected outcome(s):
+  # metalmouth should say "untitled".
+  # metalmouth should say "menu".
+  # metalmouth should say "3 items listed".
+
+====14.3.4) No menu items====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<menu type='list' title='appropriate'></menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "menu".
+
+Expected outcome(s):
+  # metalmouth should say "appropriate title".
+  # metalmouth should say "menu".
+  # metalmouth should say "no items listed".
+
+====14.3.5) One menu item====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<menu type='list' title=''>}}}_contents - 1 item_{{{</menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "menu".
+
+Expected outcome(s):
+  # metalmouth should say "appropriate title".
+  # metalmouth should say "menu".
+  # metalmouth should say "1 item listed".
+
 ===menu item===
 ===main content area===
 ===page footer area===
