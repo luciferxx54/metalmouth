@@ -1297,7 +1297,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<menu type='list' title=''>}}}_contents - 1 item_{{{</menu>}}}
+{{{<menu type='list' title='appropriate title'>}}}_contents - 1 item_{{{</menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
