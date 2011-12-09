@@ -1774,7 +1774,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<a href='url'>}}}_any text content_{{{</a>}}}
+{{{<a href='url'>}}}_some html contents_{{{</a>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "link".
@@ -1791,7 +1791,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # An HTML5 Header element is present in the DOM - formed from the following code:
-{{{<a href='url' title=''>}}}_any text content_{{{</a>}}}
+{{{<a href='url' title=''>}}}_some html contents_{{{</a>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "link".
@@ -2280,10 +2280,353 @@ Expected outcome(s):
   # metalmouth should say "level 6 header".
 
 ===14.13) Paragraph===
+
+====14.13.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<p></p>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.13.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<p>}}}_text only contents_{{{</p>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "paragraph".
+
+Expected outcome(s):
+  # metalmouth should say "paragraph".
+  # metalmouth should say "text only contents".
+
+====14.13.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<p>}}}_some html contents_{{{</p>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "article".
+
+Expected outcome(s):
+  # metalmouth should say "paragraph".
+
 ===quote===
-===quote link===
-===insertion===
-===deletion===
+
+====14.13.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote></blockquote>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.13.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote>}}}_text only contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote".
+
+Expected outcome(s):
+  # metalmouth should say "quote".
+  # metalmouth should say "text only contents".
+
+====14.13.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote>}}}_some html contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote".
+
+Expected outcome(s):
+  # metalmouth should say "quote".
+
+===14.14) Quote link===
+
+====14.14.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote cite='url' title='appropriate title'></blockquote>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.14.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote cite='url' title='appropriate title'>}}}_text only contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable quote link".
+  # metalmouth should say "appropriate title".
+  # metalmouth should say "text only contents".
+
+====14.14.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote cite='url' title='appropriate title'>}}}_some html contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable quote link".
+  # metalmouth should say "appropriate title".
+
+====14.14.4) No title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote cite='url'>}}}_some html contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable quote link".
+
+====14.14.5) Null title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<blockquote cite='url' title=''>}}}_some html contents_{{{</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote link".
+
+Expected outcome(s):
+  # metalmouth should say "Interactable quote link".
+
+===14.15) Insertion===
+
+====14.15.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<ins datetime='2011-05-17T13:25:01'></ins>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.15.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<ins datetime='2011-05-17T13:25:01'>}}}_text only contents_{{{</ins>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "insertion".
+
+Expected outcome(s):
+  # metalmouth should say "Insertion".
+  # metalmouth should say "The following was inserted into the page on the".
+  # metalmouth should say "17th May 2011 at 13.25".
+  # metalmouth should say "text only contents".
+
+====14.15.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<ins datetime='2011-05-17T13:25:01'>}}}_some html contents_{{{</ins>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "insertion".
+
+Expected outcome(s):
+  # metalmouth should say "Insertion".
+  # metalmouth should say "The following was inserted into the page on the".
+  # metalmouth should say "17th May 2011 at 13.25".
+
+====14.15.4) No title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<ins>}}}_some html contents_{{{</ins>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "insertion".
+
+Expected outcome(s):
+  # metalmouth should say "Insertion".
+
+===14.16) Deletion===
+
+====14.16.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<del datetime='2011-05-17T13:25:01'></del>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.16.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<del datetime='2011-05-17T13:25:01'>}}}_text only contents_{{{</del>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "deletion".
+
+Expected outcome(s):
+  # metalmouth should say "Deletion".
+  # metalmouth should say "The following was deleted from the page on the".
+  # metalmouth should say "17th May 2011 at 13.25".
+  # metalmouth should say "text only contents".
+
+====14.16.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<del datetime='2011-05-17T13:25:01'>}}}_some html contents_{{{</del>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "deletion".
+
+Expected outcome(s):
+  # metalmouth should say "Deletion".
+  # metalmouth should say "The following was deleted into the page on the".
+  # metalmouth should say "17th May 2011 at 13.25".
+
+====14.16.4) No title attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<del>}}}_some html contents_{{{</del>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "insertion".
+
+Expected outcome(s):
+  # metalmouth should say "Insertion".
+
 ===code===
 ===form===
 ===input group===
