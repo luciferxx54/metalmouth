@@ -2756,9 +2756,64 @@ Expected outcome(s):
   # metalmouth should say "Untitled".
   # metalmouth should say "Form".
 
-===input group===
+===14.19) Input group===
 
+====14.19.1) Legend====
 
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<fieldset><legend>}}}_appropriate name_{{{</legend></fieldset>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "input group".
+
+Expected outcome(s):
+
+  # metalmouth should say "appropriateName".
+  # metalmouth should say "input group".
+
+====14.19.2) Empty legend element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<fieldset><legend></legend></fieldset>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "input group".
+
+Expected outcome(s):
+
+  # metalmouth should say "Untitled".
+  # metalmouth should say "input group".
+
+====14.19.3) No legend element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<fieldset></fieldset>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "input group".
+
+Expected outcome(s):
+
+  # metalmouth should say "Untitled".
+  # metalmouth should say "input group".
 
 ===text box===
 ===search box===
@@ -2776,6 +2831,7 @@ Expected outcome(s):
 ===week box===
 ===time box===
 ===range input===
+
 ===bulleted list===
 ===numbered list===
 ===list item===
