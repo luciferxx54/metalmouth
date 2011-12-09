@@ -538,7 +538,7 @@ Expected outcome(s):
 
 ===8.2) Speech Rate Option===
 
-====Available on Windows====
+====8.2.1) Available on Windows====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -552,7 +552,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "speech rate range input current value 0.9".
 
-====Not available on Mac====
+====8.2.2) Not available on Mac====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -565,7 +565,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Option disabled etc...".
 
-====Selecting====
+====8.2.3) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -590,7 +590,7 @@ Expected outcome(s):
 
 ===8.3) Always-On Option===
 
-====Selecting====
+====8.3.1) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -608,7 +608,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have appeared in the "Always-on" checkbox.
 
-====Unselecting====
+====8.3.2) Unselecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -628,7 +628,7 @@ Expected outcome(s):
 
 ===8.4) Voice Input Option=== 
 
-====Selecting====
+====8.4.1) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -646,7 +646,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have appeared in the "Voice input" checkbox.
 
-====Unselecting====
+====8.4.2) Unselecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -666,7 +666,7 @@ Expected outcome(s):
 
 ===8.5) Saving Options===
 
-====Save & Close====
+====8.5.1) Save & Close====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -687,7 +687,7 @@ Expected outcome(s):
   # Focus changes to an open tab.
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
 
-====Confirming option(s) are saved====
+====8.5.2) Confirming option(s) are saved====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1036,7 +1036,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the previous OSEM item.
 
-===Left arrow===
+===13.3) Left arrow===
 
 ====13.3.1) Left arrow at page top====
 
@@ -1171,7 +1171,7 @@ Expected outcome(s):
    # metalmouth should start to read the contents of the next OSEM item and continue to read each subsequent OSEM.
 
 ----
-==14) OSEM items (on focus)==
+==14) OSEM items (on focus) - Non-WAI-ARIA based==
 
 ===14.1) Page header area===
 
@@ -1308,11 +1308,47 @@ Expected outcome(s):
   # metalmouth should say "menu".
   # metalmouth should say "1 item listed".
 
-===menu item===
-===main content area===
-===page footer area===
-===page contact details===
+===14.4) Page footer area===
+
+====14.4.1) Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<footer>}}}_contents_{{{</footer>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "page footer area".
+
+Expected outcome(s):
+   # metalmouth should say "page footer area".
+
+===14.5) Page contact details===
+
+====14.5.1) Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<address>}}}_contents_{{{</address>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "page contact details".
+
+Expected outcome(s):
+   # metalmouth should say "age contact details".
+
 ===skip link===
+
+
 ===skip target===
 ===link===
 ===new tab link===
@@ -1386,6 +1422,12 @@ Expected outcome(s):
 ===Single Select===				
 ===Audio===				
 ===Video===
+
+----
+
+==15) OSEM items (on focus) - WAI-ARIA based==
+===menu item===
+===main content area===
 
 ----
 ==16) Page-level navigation via voice commmand== 
