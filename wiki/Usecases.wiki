@@ -1581,8 +1581,273 @@ Expected outcome(s):
   # metalmouth should say "Interactable Link opens in a new tab".
 
 ===14.10) Section===
-===14.11) Level 1 - 6 headers===
-===14.12) Paragraph===
+
+====14.10.1) Formed from SECTION element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<section>}}}_content_{{{</section>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "section".
+
+Expected outcome(s):
+  # metalmouth should say "section".
+
+====14.10.2) Formed from DIV element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<div>}}}_content_{{{</div>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "section".
+
+Expected outcome(s):
+  # metalmouth should say "section".
+
+===14.11) Article===
+
+====14.11.1) Minimum definition====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<article>}}}_content_{{{</article>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "article".
+
+Expected outcome(s):
+  # metalmouth should say "article".
+
+===14.12) Level 1 - 6 headers===
+
+====14.12.1) Formed from H1 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h1>}}}_text only content_{{{</h1>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 1 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 1 header".
+  # metalmouth should say "text only content".
+
+====14.12.2) Formed from H1 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h1>}}}_html content_{{{</h1>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 1 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 1 header".
+
+====14.12.3) Formed from H2 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h2>}}}_text only content_{{{</h2>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 2 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 2 header".
+  # metalmouth should say "text only content".
+
+====14.12.4) Formed from H2 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h2>}}}_html content_{{{</h2>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 2 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 2 header".
+
+====14.12.5) Formed from H3 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h3>}}}_text only content_{{{</h3>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 3 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 3 header".
+  # metalmouth should say "text only content".
+
+====14.12.6) Formed from H3 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h3>}}}_html content_{{{</h3>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 3 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 3 header".
+
+====14.12.7) Formed from H4 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h4>}}}_text only content_{{{</h4>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 4 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 4 header".
+  # metalmouth should say "text only content".
+
+====14.12.8) Formed from H4 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h4>}}}_html content_{{{</h4>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 4 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 4 header".
+
+====14.12.9) Formed from H5 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h5>}}}_text only content_{{{</h5>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 5 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 5 header".
+  # metalmouth should say "text only content".
+
+====14.12.10) Formed from H5 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h5>}}}_html content_{{{</h5>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 5 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 5 header".
+
+====14.12.11) Formed from H6 element - text content only====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h6>}}}_text only content_{{{</h6>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 6 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 6 header".
+  # metalmouth should say "text only content".
+
+====14.12.12) Formed from H6 element - html content====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # An HTML5 Header element is present in the DOM - formed from the following code:
+{{{<h6>}}}_html content_{{{</h6>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "level 6 header".
+
+Expected outcome(s):
+  # metalmouth should say "level 6 header".
+
+===14.13) Paragraph===
 ===quote===
 ===quote link===
 ===insertion===
@@ -1623,6 +1888,8 @@ Expected outcome(s):
 ==15) OSEM items (on focus) - WAI-ARIA based==
 ===menu item===
 ===main content area===
+===presentation item===
+Any element with role=presentation
 
 ----
 ==16) Special OSEM items (on focus) - Node based, rather than element based==
@@ -1631,6 +1898,8 @@ Expected outcome(s):
 
 ----
 ==17) Unsupported elements==
+===17.1) General===
+===17.2) WAI-ARIA role set to "presentation"===
 
 ----
 ==18) Interaction with OSEM items==
