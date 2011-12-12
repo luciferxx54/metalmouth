@@ -4038,7 +4038,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" />}}}
   # Select and enter a value into this range box.
 
 Action(s):
@@ -4059,7 +4059,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<input id="inputId" type="range" />}}}
+{{{<input id="inputId" type="range" min="1" max="10" />}}}
   # Select and enter a value into this range box.
 
 Action(s):
@@ -4080,7 +4080,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<input id="inputId" type="range" />}}}
+{{{<input id="inputId" type="range" min="1" max="10"  />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "range box".
@@ -4114,7 +4114,115 @@ Expected outcome(s):
   # metalmouth should say "Current value: _selected value_".
 
 ===14.33) Check button===
+
+====14.33.1) Label / checked / Formed from input type=radio ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="radio" />}}}
+  # Check this radio button.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "check button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable check button".
+  # metalmouth should say "Current value: checked".
+
+====14.33.2) Label / checked / Formed from input type=checkbox ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="checkbox" />}}}
+  # Check this check button.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "check button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable check button".
+  # metalmouth should say "Current value: checked".
+
+====14.33.3) No label / unchecked ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="checkbox" />}}}
+  # Uncheck this check button.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "check button".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable check button".
+  # metalmouth should say "Current value: unchecked".
+
+====14.33.4) No label / checked ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="checkbox" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "check button".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable check button".
+  # metalmouth should say "Current value: checked".
+
+====14.33.5) Label / checked / required ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="checkbox"  required="required" />}}}
+  # Check this check button.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "check button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable check button".
+  # metalmouth should say "Required".
+  # metalmouth should say "Current value: checked".
+
 ===14.34) Button===
+
+
 
 ===14.35) Single select (drop-down menu with one selectable option)===
 
