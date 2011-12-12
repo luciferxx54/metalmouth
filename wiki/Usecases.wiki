@@ -3402,8 +3402,8 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
-  # Enter "29" into this datetime box.
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" min="1" max="10" />}}}
+  # Enter "5" into this datetime box.
 
 Action(s):
   # Press down arrow until current OSEM is the defined "number box".
@@ -3423,8 +3423,8 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<input id="inputId" type="number" />}}}
-  # Enter "29" into this number box.
+{{{<input id="inputId" type="number" min="1" max="10" />}}}
+  # Enter "5" into this number box.
 
 Action(s):
   # Press down arrow until current OSEM is the defined "number box".
@@ -3444,7 +3444,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<input id="inputId" type="number" />}}}
+{{{<input id="inputId" type="number" min="1" max="10" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "number box".
@@ -3464,8 +3464,8 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" required="required" />}}}
-  # Enter "29" into this email box.
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" min="1" max="10" required="required" />}}}
+  # Enter "5" into this email box.
 
 Action(s):
   # Press down arrow until current OSEM is the defined "number box".
@@ -3475,7 +3475,7 @@ Expected outcome(s):
   # metalmouth should say "label text".
   # metalmouth should say "Interactable number box".
   # metalmouth should say "Required".
-  # metalmouth should say "Current value: 29".
+  # metalmouth should say "Current value: 5".
 
 ====14.26.5) Label / text value / title providing format information ====
 
@@ -3486,7 +3486,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" title="Enter numbers only" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" min="1" max="10" title="Enter numbers only" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "number box".
@@ -4028,6 +4028,91 @@ Expected outcome(s):
   # metalmouth should say "Formatted as a time".
 
 ===14.32) Range input===
+
+====14.32.1) Label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" />}}}
+  # Select and enter a value into this range box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable range box".
+  # metalmouth should say "Current value: _selected value_".
+
+====14.32.2) No label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="range" />}}}
+  # Select and enter a value into this range box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable range box".
+  # metalmouth should say "Current value: _selected value_".
+
+====14.32.3) No label / no text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="range" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable range box".
+  # metalmouth should say "Current value: None".
+
+====14.32.4) Label / text value / required ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Select and enter a value into this range box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable range box".
+  # metalmouth should say "Required".
+  # metalmouth should say "Current value: _selected value_".
+
 ===14.33) Check button===
 ===14.34) Button===
 
