@@ -4157,7 +4157,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable check button".
   # metalmouth should say "Current value: checked".
 
-====14.33.3) No label / unchecked ====
+====14.33.3) No label ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4220,24 +4220,338 @@ Expected outcome(s):
   # metalmouth should say "Required".
   # metalmouth should say "Current value: checked".
 
-===14.34) Button===
+===14.34) Input Button===
 
+====14.34.1) Value ====
 
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="button" value="label text"/>}}}
 
-===14.35) Single select (drop-down menu with one selectable option)===
+Action(s):
+  # Press down arrow until current OSEM is the defined "input button".
 
-===14.36) Bulleted list===
-===14.37) Numbered list===
-===14.38) List item===
-===14.39) Map===
-===14.40) Map area===
-===14.41) Data table===
-===14.42) Header cell===
-===14.43) Data cell===
-===14.44) Audio===
-===14.45) Video===
-===14.46) Canvas===
-===14.47) Semantic image===
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable input button".
+
+====14.34.2) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="button" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "input button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable input button".
+
+===14.35) Submit button===
+
+====14.35.1) Value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="submit" value="label text"/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "submit button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable submit button".
+
+====14.35.2) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="submit" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "submit button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable submit button".
+
+===14.36) Reset button===
+
+====14.36.1) Value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="reset" value="label text"/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "reset button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable reset button".
+
+====14.36.2) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="reset" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "reset button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable reset button".
+
+===14.37) Image button===
+
+====14.37.1) Label + alt====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="image" alt="altForImage" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "image button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text + altForImage".
+  # metalmouth should say "Interactable image button".
+
+====14.37.2) Label / no alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="image" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "image button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable image button".
+
+====14.37.3)No label / alt====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="image" alt="altForImage" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "image button".
+
+Expected outcome(s):
+
+  # metalmouth should say "altForImage".
+  # metalmouth should say "Interactable image button".
+
+====14.37.4) No label / no alt====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="image" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "image button".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable image button".
+
+===14.38) Button===
+
+???
+
+===14.39) Single select (drop-down menu with one selectable option)===
+
+====14.39.1) Label / selected value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId"><option id="1">Hello World</option></select>}}}
+  # Select an option in this select menu.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Single select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable Single select drop-down".
+  # metalmouth should say "Current value: selected option".
+
+====14.39.2) No label / selected value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="inputId"><option id="1">Hello World</option></select>}}}
+  # Select an option in this select menu.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Single select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable Single select drop-down".
+  # metalmouth should say "Current value: selected option".
+
+====14.39.3) No label / no selected value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="inputId"><option id="1">Hello World</option></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Single select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable Single select drop-down".
+  # metalmouth should say "Current value: None".
+
+====14.39.4) Label / no selected value / required ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" required="required"><option id="1">Hello World</option></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Interactable Single select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable Single select drop-down".
+  # metalmouth should say "Required".
+
+====14.39.5) Label / No contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId"></select>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.39.6) No label / No contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="inputId"></select>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+===14.40) Bulleted list===
+===14.41) Numbered list===
+===14.42) List item===
+===14.43) Map===
+===14.44) Map area===
+===14.45) Data table===
+===14.46) Header cell===
+===14.47) Data cell===
+===14.48) Audio===
+===14.49) Video===
+===14.50) Canvas===
+===14.51 Semantic image===
 
 ----
 ==15) OSEM items (on focus) - WAI-ARIA based==
