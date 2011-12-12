@@ -2815,35 +2815,225 @@ Expected outcome(s):
   # metalmouth should say "Untitled".
   # metalmouth should say "input group".
 
-===text box===
-===search box===
-===password box===
-===button===
-===check button===
-===single select (drop-down menu with one selectable option)===
-===telephone box===
-===url box===
-===email box===
-===number box===
-===datetime box===
-===date box===
-===month box===
-===week box===
-===time box===
-===range input===
+===14.20) Text box===
 
-===bulleted list===
-===numbered list===
-===list item===
-===map===
-===map area===
-===data table===
-===header cell===
-===data cell===
-===audio===
-===video===
-===canvas===
-===semantic image===
+====14.20.1) Label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+  # Write "hello world" into this text box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "text box".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable text box".
+  # metalmouth should say "Current value: hello world".
+
+====14.20.2) No label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="text" />}}}
+  # Write "hello world" into this text box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "text box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable text box".
+  # metalmouth should say "Current value: hello world".
+
+====14.20.3) No label / no text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="text" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "text box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable text box".
+  # metalmouth should say "Current value: None".
+
+===14.21) Search box===
+
+====14.21.1) Label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Write "hello world" into this search box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "search box".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable search box".
+  # metalmouth should say "Current value: hello world".
+
+====14.21.2) No label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="search" />}}}
+  # Write "hello world" into this search box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "search box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable search box".
+  # metalmouth should say "Current value: hello world".
+
+====14.21.3) No label / no text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="search" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "search box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable search box".
+  # metalmouth should say "Current value: None".
+
+===14.22) Password box===
+
+====14.22.1) Label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Write "helloworld" into this password box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "password box".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable password box".
+  # metalmouth should say "Current value: hello world".
+
+====14.22.2) No label / text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="password" />}}}
+  # Write "helloworld" into this password box.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "password box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable password box".
+  # metalmouth should say "Current value: hello world".
+
+====14.22.3) No label / no text value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="password" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "password box".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable password box".
+  # metalmouth should say "Current value: None".
+
+===14.23) Telephone box===
+===14.24) Url box===
+===14.25) Email box===
+===14.26) Number box===
+===14.27) Datetime box===
+===14.28) Date box===
+===14.29) Month box===
+===14.30) Week box===
+===14.31) Time box===
+
+===14.32) Range input===
+===14.33) Check button===
+===14.34) Button===
+
+===14.35) Single select (drop-down menu with one selectable option)===
+===14.36) Bulleted list===
+===14.37) Numbered list===
+===14.38) List item===
+===14.39) Map===
+===14.40) Map area===
+===14.41) Data table===
+===14.42) Header cell===
+===14.43) Data cell===
+===14.44) Audio===
+===14.45) Video===
+===14.46) Canvas===
+===14.47) Semantic image===
 
 ----
 ==15) OSEM items (on focus) - WAI-ARIA based==
