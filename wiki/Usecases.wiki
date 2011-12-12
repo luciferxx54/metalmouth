@@ -4541,9 +4541,208 @@ Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
 ===14.40) Bulleted list===
+
+====14.40.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ul></ul>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.40.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ul>_text only contents_</ul>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "bulleted list".
+
+Expected outcome(s):
+  # metalmouth should say "bulleted list".
+  # metalmouth should say "no items listed".
+
+====14.40.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ul>}}}_contents - 3 items_{{{</ul>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "bulleted list".
+
+Expected outcome(s):
+  # metalmouth should say "bulleted list".
+  # metalmouth should say "3 items listed".
+
+====14.40.4) One menu item====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ul>}}}_contents - 1 item_{{{</ul>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "bulleted list".
+
+Expected outcome(s):
+  # metalmouth should say "bulleted list".
+  # metalmouth should say "1 item listed".
+
 ===14.41) Numbered list===
+
+====14.41.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol></ol>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.41.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol>_text only contents_</ol>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "ordered list".
+
+Expected outcome(s):
+  # metalmouth should say "ordered list".
+  # metalmouth should say "no items listed".
+
+====14.41.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol>}}}_contents - 3 items_{{{</ol>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "ordered list".
+
+Expected outcome(s):
+  # metalmouth should say "ordered list".
+  # metalmouth should say "3 items listed".
+
+====14.41.4) One menu item====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol>}}}_contents - 1 item_{{{</ol>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "ordered list".
+
+Expected outcome(s):
+  # metalmouth should say "ordered list".
+  # metalmouth should say "1 item listed".
+
 ===14.42) List item===
+
+====14.42.1) list item - text only contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol><li>Hello World 1</li><li><p>Hello World 2</p></li><li></li></ol>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the first list item in the "ordered list".
+
+Expected outcome(s):
+  # metalmouth should say "list item 1".
+  # metalmouth should say "Hello World 1".
+
+====14.42.2) list item - some html contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol><li>Hello World 1</li><li><p>Hello World 2</p></li><li></li></ol>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the second list item in the "ordered list".
+
+Expected outcome(s):
+  # metalmouth should say "list item 2".
+
+====14.42.3) list item - text only contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<ol><li>Hello World 1</li><li><p>Hello World 2</p></li><li></li></ol>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
 ===14.43) Map===
+
+
 ===14.44) Map area===
 ===14.45) Data table===
 ===14.46) Header cell===
