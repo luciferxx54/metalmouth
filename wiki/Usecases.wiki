@@ -4723,7 +4723,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "list item 2".
 
-====14.42.3) list item - text only contents ====
+====14.42.3) list item - no content ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4742,6 +4742,59 @@ Expected outcome(s):
 
 ===14.43) Map===
 
+====14.43.1) Title ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map title="title text">}}}_some html content_ {{{</map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map".
+
+Expected outcome(s):
+
+  # metalmouth should say "map".
+  # metalmouth should say "title text".
+
+====14.43.2) No title ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map title="title text">}}}_some html content_ {{{</map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map".
+
+Expected outcome(s):
+
+  # metalmouth should say "map".
+
+====14.43.3) list item - no content ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map title="title text"></map>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
 
 ===14.44) Map area===
 ===14.45) Data table===
