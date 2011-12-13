@@ -5267,7 +5267,7 @@ Expected outcome(s):
    # metalmouth should say "Entitled".
    # metalmouth should say "canvasTitle".
 
-===14.51 Semantic image===
+===14.51) Semantic image===
 
 ====14.51.1) Alt ====
 
@@ -5310,20 +5310,301 @@ Expected outcome(s):
 
 ----
 ==15) OSEM items (on focus) - WAI-ARIA based==
-===menu item===
-===main content area===
-===presentation item===
-Any element with role=presentation
+===15.1) Menu item===
+
+====15.1.1) menu item - text only contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the first list item in the "menu".
+
+Expected outcome(s):
+  # metalmouth should say "menu item 1".
+  # metalmouth should say "Hello World 1".
+
+====15.1.2) menu item - some html contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the second list item in the "menu".
+
+Expected outcome(s):
+  # metalmouth should say "menu item 2".
+
+====15.1.3) menu item - no content ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+===15.2) Main content area===
+
+====15.2.1) Formed from SECTION element - no contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<section role="main"></section>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====15.2.2) Formed from SECTION element - text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<section role="main">}}}_text only contents_{{{</section>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "main content area".
+
+Expected outcome(s):
+  # metalmouth should say "Main content area".
+  # metalmouth should say "text only contents".
+
+====15.2.3) Formed from SECTION element - some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<section role="main">}}}_some html contents_{{{</section>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "main content area".
+
+Expected outcome(s):
+  # metalmouth should say "main content area".
+
+====15.2.4) Formed from DIV element - some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<div role="main">}}}_some html contents_{{{</div>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "main content area".
+
+Expected outcome(s):
+  # metalmouth should say "main content area".
+
+===15.3) Any element with role=presentation===
+
+====15.3.1) Formed from DIV element - some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<div role="presentation">_some html contents_</div>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.
+
+====15.3.2) Formed from IMG element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<img role="presentation" src="decorative.png" />}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.
 
 ----
 ==16) Special OSEM items (on focus) - Node based, rather than element based==
-===Static text===
-===sentence===
+
+===16.1) Static text===
+
+====16.1.1) Inside P element - some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<p>Hello <span>there</span> World</p>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "paragraph".
+  # Press down arrow twice.
+
+Expected outcome(s):
+  # metalmouth should say "there".
+
+===16.2) Sentence===
+
+====16.2.2) Child of Body element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<body>Hello World</body>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "sentence".
+  # Press down arrow once.
+
+Expected outcome(s):
+  # metalmouth should say "hello world".
+
+====16.2.2) Child of BODY element - text in SPAN====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<body>Hello <span>there</span> World</body>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "sentence".
+  # Press down arrow twice.
+
+Expected outcome(s):
+  # metalmouth should say "there".
+
+====16.2.3) Child of DIV element====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<div>Hello <span>there</span> World</div>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "sentence".
+  # Press down arrow twice.
+
+Expected outcome(s):
+  # metalmouth should say "there".
 
 ----
 ==17) Unsupported elements==
+
 ===17.1) General===
-===17.2) WAI-ARIA role set to "presentation"===
+
+====17.1.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<center></center>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.
+
+====17.1.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<center>Hello world</center>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.
+
+====17.1.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<center><span>Hello world</span></center>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.  The contents should still be reachable, and readable.
 
 ----
 ==18) Interaction with OSEM items==
