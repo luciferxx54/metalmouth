@@ -4949,7 +4949,7 @@ Expected outcome(s):
 
 ===14.47) Data cell===
 
-====14.46.1) No contents / headers ====
+====14.47.1) No contents / headers ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4958,20 +4958,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes">
-<tr>
-<th role="presentation"></th>
-<th id="column1">Mono plane</th>
-<th id="column2">Bi plane</th>
-<th id="column3">Tri plane</th>
-</tr>
-<tr>
-<th id="row1">Number of Wings</th>
-<td headers="column1, row1">1</td>
-<td headers="column2, row1"><span>2</span></td>
-<td headers="column3, row1"></td>
-</tr>
-</table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until last OSEM has been read.
@@ -4979,7 +4966,7 @@ Action(s):
 Expected outcome(s):
    # No OSEM item should have been formed for the empty TD element.
 
-====14.46.2) Text only contents / headers====
+====14.47.2) Text only contents / headers====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4988,20 +4975,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes">
-<tr>
-<th role="presentation"></th>
-<th id="column1">Mono plane</th>
-<th id="column2">Bi plane</th>
-<th id="column3">Tri plane</th>
-</tr>
-<tr>
-<th id="row1">Number of Wings</th>
-<td headers="column1, row1">1</td>
-<td headers="column2, row1"><span>2</span></td>
-<td headers="column3, row1"></td>
-</tr>
-</table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the first "data cell" in this table.
@@ -5011,7 +4985,7 @@ Expected outcome(s):
   # metalmouth should say "relates to Mono plane and number of wings".
   # metalmouth should say "cell value 1".
 
-====14.46.3) Some html contents / headers ====
+====14.47.3) Some html contents / headers ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5020,20 +4994,9 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes">
-<tr>
-<th role="presentation"></th>
-<th id="column1">Mono plane</th>
-<th id="column2">Bi plane</th>
-<th id="column3">Tri plane</th>
-</tr>
-<tr>
-<th id="row1">Number of Wings</th>
-<td headers="column1, row1">1</td>
-<td headers="column2, row1"><span>2</span></td>
-<td headers="column3, row1"></td>
-</tr>
-</table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th>
+<th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td>
+<td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second "data cell" in this table.
@@ -5042,7 +5005,7 @@ Expected outcome(s):
   # metalmouth should say "data cell".
   # metalmouth should say "relates to bi plane and number of wings".
 
-====14.46.4) Some html contents / No headers attribute====
+====14.47.4) Some html contents / No headers attribute====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5051,20 +5014,8 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes">
-<tr>
-<th role="presentation"></th>
-<th id="column1">Mono plane</th>
-<th id="column2">Bi plane</th>
-<th id="column3">Tri plane</th>
-</tr>
-<tr>
-<th id="row1">Number of Wings</th>
-<td headers="column1, row1">1</td>
-<td><span>2</span></td>
-<td headers="column3, row1"></td>
-</tr>
-</table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th>
+</tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second "data cell" in this table.
@@ -5073,7 +5024,7 @@ Expected outcome(s):
   # metalmouth should say "data cell".
   # metalmouth should say "No specified row or column".
 
-====14.46.5) Some html contents / headers attribute / missing id ====
+====14.47.5) Some html contents / headers attribute / missing id ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5082,20 +5033,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes">
-<tr>
-<th role="presentation"></th>
-<th id="column1">Mono plane</th>
-<th>Bi plane</th>
-<th id="column3">Tri plane</th>
-</tr>
-<tr>
-<th id="row1">Number of Wings</th>
-<td headers="column1, row1">1</td>
-<td headers="column2, row1"><span>2</span></td>
-<td headers="column3, row1"></td>
-</tr>
-</table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th>Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second "data cell" in this table.
@@ -5106,15 +5044,269 @@ Expected outcome(s):
 
 ===14.48) Audio===
 
+====14.48.1) No contents====
 
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/test.ogg" controls="controls"></audio>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "audio".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Audio".
+   # metalmouth should say "Untitled".
+
+====14.48.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/test.ogg" controls="controls">_text only contents_</audio>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "audio".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Audio".
+   # metalmouth should say "Untitled".
+
+====14.48.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/test.ogg" controls="controls">_some html contents_</audio>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "audio".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Audio".
+   # metalmouth should say "Untitled".
+
+====14.48.4) No contents / title ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" title="audioTitle" src="http://www.test.com/html5/test.ogg" controls="controls">_some html contents_</audio>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "audio".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Audio".
+   # metalmouth should say "Entitled".
+   # metalmouth should say "audioTitle".
 
 ===14.49) Video===
 
+====14.49.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/test.ogg"></video>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "video".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Video".
+   # metalmouth should say "Untitled".
+
+====14.49.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/test.ogg">_text only contents_</video>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "video".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Video".
+   # metalmouth should say "Untitled".
+
+====14.49.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/test.ogg">_some html contents_</video>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "video".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable Video".
+   # metalmouth should say "Untitled".
+
+====14.49.4) No contents / title ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" title="videoTitle" src="http://www.test.com/html5/test.ogg">_some html contents_</video>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "video".
+
+Expected outcome(s):
+   # metalmouth should say "Interactable video".
+   # metalmouth should say "Entitled".
+   # metalmouth should say "videoTitle".
 
 ===14.50) Canvas===
 
+====14.50.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<canvas id="canvas"></canvas>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "canvas".
+
+Expected outcome(s):
+   # metalmouth should say "Canvas".
+   # metalmouth should say "Untitled".
+
+====14.50.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<canvas id="canvas">_text only contents_</canvas>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "canvas".
+
+Expected outcome(s):
+   # metalmouth should say "Canvas".
+   # metalmouth should say "Untitled".
+
+====14.50.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<canvas id="canvas">_some html contents_</canvas>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "canvas".
+
+Expected outcome(s):
+   # metalmouth should say "Canvas".
+   # metalmouth should say "Untitled".
+
+====14.50.4) No contents / title ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<canvas id="canvas" title="canvasTitle"></canvas>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "canvas".
+
+Expected outcome(s):
+   # metalmouth should say "Canvas".
+   # metalmouth should say "Entitled".
+   # metalmouth should say "canvasTitle".
 
 ===14.51 Semantic image===
+
+====14.51.1) Alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<img src="test.png" alt="altValue" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "semantic image".
+
+Expected outcome(s):
+
+  # metalmouth should say "Semantic image".
+  # metalmouth should say "Alternative text".
+  # metalmouth should say "altValue".
+
+====14.51.2) No alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<img src="test.png" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "semantic image".
+
+Expected outcome(s):
+
+  # metalmouth should say "Semantic image".
+  # metalmouth should say "No alternative text".
 
 ----
 ==15) OSEM items (on focus) - WAI-ARIA based==
