@@ -5748,8 +5748,6 @@ Expected outcome(s):
 
 ===18.6) New Tab Map Area===
 
-===18.3) New Tab Link===
-
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
