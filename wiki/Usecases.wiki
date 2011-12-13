@@ -343,7 +343,61 @@ Expected outcome(s):
 
 ==6) Change url menu==
 
-===6.1) Enter url===
+===6.1) Add characters to url text input box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening change url menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the url text input box.
+
+===6.2) Remove characters from url text input box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "Change url" button has been focused and enter pressed.
+  # The "change url" menu is open, with metalmouth saying "opening change url menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the url text input box.
+
+===6.3) Enter url===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -372,7 +426,7 @@ Expected outcome(s):
   # The "Change url" menu should be invisible.
   # A current tab should load the contents of the url specified.
 
-===6.2) Close change url menu using esc===
+===6.4) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -399,7 +453,7 @@ Expected outcome(s):
   # The "Change url" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===6.3) Close change url menu using close button===
+===6.5) Close change url menu using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -431,7 +485,61 @@ Expected outcome(s):
 
 ==7) New tab menu==
 
-===7.1) Enter url===
+===7.1) Add characters to url text input box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "New tab" button has been focused and enter pressed.
+  # The "new tab" menu is open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the url text input box.
+
+===7.2) Remove characters from url text input box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+  # Enter has been pressed.
+  # "Change location menu" is visible.
+  # metalmouth should say "Change location menu entered".
+  # metalmouth should say "Back button has focus".
+  # "New tab" button has been focused and enter pressed.
+  # The "new tab" menu is open, with metalmouth saying "opening new tab menu".
+  # Focus should be on url text input box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the url text input box.
+
+===7.3) Enter url===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
@@ -459,7 +567,7 @@ Expected outcome(s):
   # The "new tab" menu should be invisible.
   # A new tab should open, come into focus and then load the contents of the url specified.
 
-===7.2) Close change url menu using esc===
+===7.4) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -486,7 +594,7 @@ Expected outcome(s):
   # The "New" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===7.3) Close change url menu using close button===
+===7.5) Close change url menu using close button===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
@@ -5766,27 +5874,1455 @@ Expected outcome(s):
   # The location of this new tab changes to the url defined in the link.
   # metalmouth starts to process this new tab page.
 
-===Text Box===
-===Search Box===
-===Password Box===
-===Telephone Box===
-===Url Box===
-===Email Box===
-===Number Box===
-===Date Time Box===
-===Date Box===
-===Month Box===
-===Week Box===
-===Time Box===
-===Range Input===
-===Button===
-===Image Button===
-===Submit Button===		
-===Reset Button===		
-===Check Button===			
-===Single Select===				
-===Audio===				
-===Video===
+===18.7) Text Box===
+
+===18.7.1) Activate text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "text box".
+  # Press enter.
+
+Expected outcome(s):
+  # text entry area box opens.
+  # metalmouth says "text entry area entered".
+  # metalmouth says "text entry area has focus".
+
+===18.7.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "text box".
+  # Enter has been pressed.
+  # The text entry area box has opened.
+  # metalmouth says "text entry area entered".
+  # metalmouth says "text entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.7.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "text box".
+  # Enter has been pressed.
+  # The text entry area box has opened.
+  # metalmouth says "text entry area entered".
+  # metalmouth says "text entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'text entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the text entry area box.
+
+===18.7.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "text box".
+  # Enter has been pressed.
+  # The text entry area box has opened.
+  # metalmouth says "text entry area entered".
+  # metalmouth says "text entry area has focus".
+  # A value has been typed - so this text now is shown in the text entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.7.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="text" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "text box".
+  # Enter has been pressed.
+  # The text entry area box has opened.
+  # metalmouth says "text entry area entered".
+  # metalmouth says "text entry area focus".
+  # A value has been typed - so this text now is shown in the text entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Text entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant text box.
+
+===18.8) Search Box===
+
+===18.8.1) Activate search entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "search box".
+  # Press enter.
+
+Expected outcome(s):
+  # search entry area box opens.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+
+===18.8.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.8.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'search entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the search entry area box.
+
+===18.8.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+  # A value has been typed - so this text now is shown in the search entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.8.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area focus".
+  # A value has been typed - so this text now is shown in the search entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Search entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant search box.
+
+===18.9) Password Box===
+
+===18.9.1) Activate password entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "password box".
+  # Press enter.
+
+Expected outcome(s):
+  # password entry area box opens.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+
+===18.9.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.9.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'password entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the password entry area box.
+
+===18.9.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+  # A value has been typed - so this text now is shown in the password entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.9.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area focus".
+  # A value has been typed - so this text now is shown in the password entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "password entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The value should now be the value shown in the relevant password box.
+
+===18.10) Telephone Box===
+
+===18.10.1) Activate telephone entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "telephone box".
+  # Press enter.
+
+Expected outcome(s):
+  # telephone entry area box opens.
+  # metalmouth says "telephone entry area entered".
+  # metalmouth says "telephone entry area has focus".
+
+===18.10.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "telephone box".
+  # Enter has been pressed.
+  # The telephone entry area box has opened.
+  # metalmouth says "telephone entry area entered".
+  # metalmouth says "telephone entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.10.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "telephone box".
+  # Enter has been pressed.
+  # The telephone entry area box has opened.
+  # metalmouth says "telephone entry area entered".
+  # metalmouth says "telephone entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'telephone entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the telephone entry area box.
+
+===18.10.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "telephone box".
+  # Enter has been pressed.
+  # The telephone entry area box has opened.
+  # metalmouth says "telephone entry area entered".
+  # metalmouth says "telephone entry area has focus".
+  # A value has been typed - so this text now is shown in the telephone entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.10.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "telephone box".
+  # Enter has been pressed.
+  # The telephone entry area box has opened.
+  # metalmouth says "telephone entry area entered".
+  # metalmouth says "telephone entry area focus".
+  # A value has been typed - so this text now is shown in the telephone entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "telephone entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant telephone box.
+
+===18.11) Url Box===
+
+===18.11.1) Activate url entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="url" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "url box".
+  # Press enter.
+
+Expected outcome(s):
+  # url entry area box opens.
+  # metalmouth says "url entry area entered".
+  # metalmouth says "url entry area has focus".
+
+===18.11.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="url" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "url box".
+  # Enter has been pressed.
+  # The url entry area box has opened.
+  # metalmouth says "url entry area entered".
+  # metalmouth says "url entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.11.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="url" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "url box".
+  # Enter has been pressed.
+  # The url entry area box has opened.
+  # metalmouth says "url entry area entered".
+  # metalmouth says "url entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'url entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the url entry area box.
+
+===18.11.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="url" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "url box".
+  # Enter has been pressed.
+  # The url entry area box has opened.
+  # metalmouth says "url entry area entered".
+  # metalmouth says "url entry area has focus".
+  # A value has been typed - so this text now is shown in the url entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.11.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="url" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "url box".
+  # Enter has been pressed.
+  # The url entry area box has opened.
+  # metalmouth says "url entry area entered".
+  # metalmouth says "url entry area focus".
+  # A value has been typed - so this text now is shown in the url entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "url entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant url box.
+
+===18.12) Email Box===
+
+===18.12.1) Activate email entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="email" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "email box".
+  # Press enter.
+
+Expected outcome(s):
+  # email entry area box opens.
+  # metalmouth says "email entry area entered".
+  # metalmouth says "email entry area has focus".
+
+===18.12.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="email" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "email box".
+  # Enter has been pressed.
+  # The email entry area box has opened.
+  # metalmouth says "email entry area entered".
+  # metalmouth says "email entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.12.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="email" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "email box".
+  # Enter has been pressed.
+  # The email entry area box has opened.
+  # metalmouth says "email entry area entered".
+  # metalmouth says "email entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'email entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the email entry area box.
+
+===18.12.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="email" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "email box".
+  # Enter has been pressed.
+  # The email entry area box has opened.
+  # metalmouth says "email entry area entered".
+  # metalmouth says "email entry area has focus".
+  # A value has been typed - so this text now is shown in the email entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.12.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="email" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "email box".
+  # Enter has been pressed.
+  # The email entry area box has opened.
+  # metalmouth says "email entry area entered".
+  # metalmouth says "email entry area focus".
+  # A value has been typed - so this text now is shown in the email entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "email entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant email box.
+
+===18.13) Date Time Box===
+
+===18.13.1) Activate datetime entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="datetime" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "datetime box".
+  # Press enter.
+
+Expected outcome(s):
+  # datetime entry area box opens.
+  # metalmouth says "datetime entry area entered".
+  # metalmouth says "datetime entry area has focus".
+
+===18.13.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="datetime" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "datetime box".
+  # Enter has been pressed.
+  # The datetime entry area box has opened.
+  # metalmouth says "datetime entry area entered".
+  # metalmouth says "datetime entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.13.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="datetime" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "datetime box".
+  # Enter has been pressed.
+  # The datetime entry area box has opened.
+  # metalmouth says "datetime entry area entered".
+  # metalmouth says "datetime entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'datetime entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the datetime entry area box.
+
+===18.13.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="datetime" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "datetime box".
+  # Enter has been pressed.
+  # The datetime entry area box has opened.
+  # metalmouth says "datetime entry area entered".
+  # metalmouth says "datetime entry area has focus".
+  # A value has been typed - so this text now is shown in the datetime entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.13.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="datetime" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "datetime box".
+  # Enter has been pressed.
+  # The datetime entry area box has opened.
+  # metalmouth says "datetime entry area entered".
+  # metalmouth says "datetime entry area focus".
+  # A value has been typed - so this text now is shown in the datetime entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "datetime entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant datetime box.
+
+===18.14) Date Box===
+
+===18.14.1) Activate date entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="date" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "date box".
+  # Press enter.
+
+Expected outcome(s):
+  # date entry area box opens.
+  # metalmouth says "date entry area entered".
+  # metalmouth says "date entry area has focus".
+
+===18.14.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="date" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "date box".
+  # Enter has been pressed.
+  # The date entry area box has opened.
+  # metalmouth says "date entry area entered".
+  # metalmouth says "date entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.14.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="date" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "date box".
+  # Enter has been pressed.
+  # The date entry area box has opened.
+  # metalmouth says "date entry area entered".
+  # metalmouth says "date entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'date entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the date entry area box.
+
+===18.14.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="date" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "date box".
+  # Enter has been pressed.
+  # The date entry area box has opened.
+  # metalmouth says "date entry area entered".
+  # metalmouth says "date entry area has focus".
+  # A value has been typed - so this text now is shown in the date entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.14.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="date" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "date box".
+  # Enter has been pressed.
+  # The date entry area box has opened.
+  # metalmouth says "date entry area entered".
+  # metalmouth says "date entry area focus".
+  # A value has been typed - so this text now is shown in the date entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "date entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant date box.
+
+===18.15) Month Box===
+
+===18.15.1) Activate month entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="month" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "month box".
+  # Press enter.
+
+Expected outcome(s):
+  # month entry area box opens.
+  # metalmouth says "month entry area entered".
+  # metalmouth says "month entry area has focus".
+
+===18.15.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="month" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "month box".
+  # Enter has been pressed.
+  # The month entry area box has opened.
+  # metalmouth says "month entry area entered".
+  # metalmouth says "month entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.15.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="month" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "month box".
+  # Enter has been pressed.
+  # The month entry area box has opened.
+  # metalmouth says "month entry area entered".
+  # metalmouth says "month entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'month entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the month entry area box.
+
+===18.15.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="month" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "month box".
+  # Enter has been pressed.
+  # The month entry area box has opened.
+  # metalmouth says "month entry area entered".
+  # metalmouth says "month entry area has focus".
+  # A value has been typed - so this text now is shown in the month entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.15.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="month" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "month box".
+  # Enter has been pressed.
+  # The month entry area box has opened.
+  # metalmouth says "month entry area entered".
+  # metalmouth says "month entry area focus".
+  # A value has been typed - so this text now is shown in the month entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "month entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant month box.
+
+===18.16) Week Box===
+
+===18.16.1) Activate week entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="week" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "week box".
+  # Press enter.
+
+Expected outcome(s):
+  # week entry area box opens.
+  # metalmouth says "week entry area entered".
+  # metalmouth says "week entry area has focus".
+
+===18.16.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="week" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "week box".
+  # Enter has been pressed.
+  # The week entry area box has opened.
+  # metalmouth says "week entry area entered".
+  # metalmouth says "week entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.16.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="week" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "week box".
+  # Enter has been pressed.
+  # The week entry area box has opened.
+  # metalmouth says "week entry area entered".
+  # metalmouth says "week entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'week entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the week entry area box.
+
+===18.16.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="week" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "week box".
+  # Enter has been pressed.
+  # The week entry area box has opened.
+  # metalmouth says "week entry area entered".
+  # metalmouth says "week entry area has focus".
+  # A value has been typed - so this text now is shown in the week entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.16.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="week" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "week box".
+  # Enter has been pressed.
+  # The week entry area box has opened.
+  # metalmouth says "week entry area entered".
+  # metalmouth says "week entry area focus".
+  # A value has been typed - so this text now is shown in the week entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "week entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant week box.
+
+===18.17) Time Box===
+
+===18.17.1) Activate time entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="time" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "time box".
+  # Press enter.
+
+Expected outcome(s):
+  # time entry area box opens.
+  # metalmouth says "time entry area entered".
+  # metalmouth says "time entry area has focus".
+
+===18.17.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="time" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "time box".
+  # Enter has been pressed.
+  # The time entry area box has opened.
+  # metalmouth says "time entry area entered".
+  # metalmouth says "time entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.17.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="time" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "time box".
+  # Enter has been pressed.
+  # The time entry area box has opened.
+  # metalmouth says "time entry area entered".
+  # metalmouth says "time entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'time entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the time entry area box.
+
+===18.17.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="time" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "time box".
+  # Enter has been pressed.
+  # The time entry area box has opened.
+  # metalmouth says "time entry area entered".
+  # metalmouth says "time entry area has focus".
+  # A value has been typed - so this text now is shown in the time entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.17.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="time" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "time box".
+  # Enter has been pressed.
+  # The time entry area box has opened.
+  # metalmouth says "time entry area entered".
+  # metalmouth says "time entry area focus".
+  # A value has been typed - so this text now is shown in the time entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "time entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant time box.
+
+===18.18) Number Box===
+
+===18.18.1) Activate number entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "number box".
+  # Press enter.
+
+Expected outcome(s):
+  # number entry area box opens.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+
+===18.18.2) Add characters to text area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+
+Action(s):
+  # Press 'b'.
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # 'b' is shown in the text entry area box.
+
+===18.18.3) Remove characters from text entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+  # 'b' has been pressed - so 'b' appears in the 'number entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the number entry area box.
+
+===18.18.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+  # A value has been typed - so this text now is shown in the number entry area box.
+
+Action(s):
+
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.18.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area focus".
+  # A value has been typed - so this text now is shown in the number entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "number entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant number box.
+
+===18.19) Range Input===
+===18.20) Button===
+===18.21) Image Button===
+===18.22) Submit Button===		
+===18.23) Reset Button===		
+===18.24) Check Button===			
+===18.25) Single Select===				
+===18.26) Audio===				
+===18.27) Video===
 
 ----
 ==19) Page-level navigation via voice commmand== 
