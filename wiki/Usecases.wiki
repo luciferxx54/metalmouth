@@ -4797,12 +4797,323 @@ Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
 ===14.44) Map area===
+
+====14.44.1) Alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="altValue" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area".
+  # metalmouth should say "altValue".
+
+====14.44.2) No alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area".
+  # metalmouth should say "Untitled".
+
 ===14.45) Data table===
+
+====14.45.1) Summary / Some contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="tableSummary">}}}_some contents_{{{</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "table".
+
+Expected outcome(s):
+
+  # metalmouth should say "Data table".
+  # metalmouth should say "tableSummary".
+
+====14.45.2) No summary / Some contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table>}}}_some contents_{{{</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "table".
+
+Expected outcome(s):
+
+  # metalmouth should say "Data table".
+  # metalmouth should say "No summary".
+
+====14.45.3) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table></table>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
 ===14.46) Header cell===
+
+====14.46.1) No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<th></th>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====14.46.2) Text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<th>}}}_text only contents_{{{</th>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "header cell".
+
+Expected outcome(s):
+  # metalmouth should say "header cell".
+  # metalmouth should say "text only contents".
+
+====14.46.3) Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<th>}}}_some html contents_{{{</th>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "header cell".
+
+Expected outcome(s):
+   # metalmouth should say "header cell".
+
 ===14.47) Data cell===
+
+====14.46.1) No contents / headers ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="this is a real datatable about planes">
+<tr>
+<th role="presentation"></th>
+<th id="column1">Mono plane</th>
+<th id="column2">Bi plane</th>
+<th id="column3">Tri plane</th>
+</tr>
+<tr>
+<th id="row1">Number of Wings</th>
+<td headers="column1, row1">1</td>
+<td headers="column2, row1"><span>2</span></td>
+<td headers="column3, row1"></td>
+</tr>
+</table>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for the empty TD element.
+
+====14.46.2) Text only contents / headers====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="this is a real datatable about planes">
+<tr>
+<th role="presentation"></th>
+<th id="column1">Mono plane</th>
+<th id="column2">Bi plane</th>
+<th id="column3">Tri plane</th>
+</tr>
+<tr>
+<th id="row1">Number of Wings</th>
+<td headers="column1, row1">1</td>
+<td headers="column2, row1"><span>2</span></td>
+<td headers="column3, row1"></td>
+</tr>
+</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the first "data cell" in this table.
+
+Expected outcome(s):
+  # metalmouth should say "data cell".
+  # metalmouth should say "relates to Mono plane and number of wings".
+  # metalmouth should say "cell value 1".
+
+====14.46.3) Some html contents / headers ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="this is a real datatable about planes">
+<tr>
+<th role="presentation"></th>
+<th id="column1">Mono plane</th>
+<th id="column2">Bi plane</th>
+<th id="column3">Tri plane</th>
+</tr>
+<tr>
+<th id="row1">Number of Wings</th>
+<td headers="column1, row1">1</td>
+<td headers="column2, row1"><span>2</span></td>
+<td headers="column3, row1"></td>
+</tr>
+</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the second "data cell" in this table.
+
+Expected outcome(s):
+  # metalmouth should say "data cell".
+  # metalmouth should say "relates to bi plane and number of wings".
+
+====14.46.4) Some html contents / No headers attribute====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="this is a real datatable about planes">
+<tr>
+<th role="presentation"></th>
+<th id="column1">Mono plane</th>
+<th id="column2">Bi plane</th>
+<th id="column3">Tri plane</th>
+</tr>
+<tr>
+<th id="row1">Number of Wings</th>
+<td headers="column1, row1">1</td>
+<td><span>2</span></td>
+<td headers="column3, row1"></td>
+</tr>
+</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the second "data cell" in this table.
+
+Expected outcome(s):
+  # metalmouth should say "data cell".
+  # metalmouth should say "No specified row or column".
+
+====14.46.5) Some html contents / headers attribute / missing id ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="this is a real datatable about planes">
+<tr>
+<th role="presentation"></th>
+<th id="column1">Mono plane</th>
+<th>Bi plane</th>
+<th id="column3">Tri plane</th>
+</tr>
+<tr>
+<th id="row1">Number of Wings</th>
+<td headers="column1, row1">1</td>
+<td headers="column2, row1"><span>2</span></td>
+<td headers="column3, row1"></td>
+</tr>
+</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the second "data cell" in this table.
+
+Expected outcome(s):
+  # metalmouth should say "data cell".
+  # metalmouth should say "relates to number of wings".
+
 ===14.48) Audio===
+
+
+
 ===14.49) Video===
+
+
 ===14.50) Canvas===
+
+
 ===14.51 Semantic image===
 
 ----
