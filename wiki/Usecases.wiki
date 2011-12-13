@@ -4836,9 +4836,49 @@ Expected outcome(s):
   # metalmouth should say "Interactable Map area".
   # metalmouth should say "Untitled".
 
-===14.45) Data table===
+===14.45) New Tab Map area===
 
-====14.45.1) Summary / Some contents ====
+====14.45.1) Alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="altValue" target="_blank"/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area opens in a new tab".
+  # metalmouth should say "altValue".
+
+====14.45.2) No alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="" target="_blank"/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area opens in a new tab".
+  # metalmouth should say "Untitled".
+
+===14.46) Data table===
+
+====14.46.1) Summary / Some contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4857,7 +4897,7 @@ Expected outcome(s):
   # metalmouth should say "Data table".
   # metalmouth should say "tableSummary".
 
-====14.45.2) No summary / Some contents ====
+====14.46.2) No summary / Some contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4876,7 +4916,7 @@ Expected outcome(s):
   # metalmouth should say "Data table".
   # metalmouth should say "No summary".
 
-====14.45.3) No contents====
+====14.46.3) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4893,9 +4933,9 @@ Action(s):
 Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
-===14.46) Header cell===
+===14.47) Header cell===
 
-====14.46.1) No contents====
+====14.47.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4912,7 +4952,7 @@ Action(s):
 Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
-====14.46.2) Text only contents====
+====14.47.2) Text only contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4930,7 +4970,7 @@ Expected outcome(s):
   # metalmouth should say "header cell".
   # metalmouth should say "text only contents".
 
-====14.46.3) Some html contents====
+====14.47.3) Some html contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4947,9 +4987,9 @@ Action(s):
 Expected outcome(s):
    # metalmouth should say "header cell".
 
-===14.47) Data cell===
+===14.48) Data cell===
 
-====14.47.1) No contents / headers ====
+====14.48.1) No contents / headers ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4966,7 +5006,7 @@ Action(s):
 Expected outcome(s):
    # No OSEM item should have been formed for the empty TD element.
 
-====14.47.2) Text only contents / headers====
+====14.48.2) Text only contents / headers====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4985,7 +5025,7 @@ Expected outcome(s):
   # metalmouth should say "relates to Mono plane and number of wings".
   # metalmouth should say "cell value 1".
 
-====14.47.3) Some html contents / headers ====
+====14.48.3) Some html contents / headers ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5005,7 +5045,7 @@ Expected outcome(s):
   # metalmouth should say "data cell".
   # metalmouth should say "relates to bi plane and number of wings".
 
-====14.47.4) Some html contents / No headers attribute====
+====14.48.4) Some html contents / No headers attribute====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5024,7 +5064,7 @@ Expected outcome(s):
   # metalmouth should say "data cell".
   # metalmouth should say "No specified row or column".
 
-====14.47.5) Some html contents / headers attribute / missing id ====
+====14.48.5) Some html contents / headers attribute / missing id ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5042,9 +5082,9 @@ Expected outcome(s):
   # metalmouth should say "data cell".
   # metalmouth should say "relates to number of wings".
 
-===14.48) Audio===
+===14.49) Audio===
 
-====14.48.1) No contents====
+====14.49.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5062,7 +5102,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Audio".
    # metalmouth should say "Untitled".
 
-====14.48.2) Text only contents====
+====14.49.2) Text only contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5080,7 +5120,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Audio".
    # metalmouth should say "Untitled".
 
-====14.48.3) Some html contents====
+====14.49.3) Some html contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5098,7 +5138,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Audio".
    # metalmouth should say "Untitled".
 
-====14.48.4) No contents / title ====
+====14.49.4) No contents / title ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5117,9 +5157,9 @@ Expected outcome(s):
    # metalmouth should say "Entitled".
    # metalmouth should say "audioTitle".
 
-===14.49) Video===
+===14.50) Video===
 
-====14.49.1) No contents====
+====14.50.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5137,7 +5177,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Video".
    # metalmouth should say "Untitled".
 
-====14.49.2) Text only contents====
+====14.50.2) Text only contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5155,7 +5195,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Video".
    # metalmouth should say "Untitled".
 
-====14.49.3) Some html contents====
+====14.50.3) Some html contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5173,7 +5213,7 @@ Expected outcome(s):
    # metalmouth should say "Interactable Video".
    # metalmouth should say "Untitled".
 
-====14.49.4) No contents / title ====
+====14.50.4) No contents / title ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5192,9 +5232,9 @@ Expected outcome(s):
    # metalmouth should say "Entitled".
    # metalmouth should say "videoTitle".
 
-===14.50) Canvas===
+===14.51) Canvas===
 
-====14.50.1) No contents====
+====14.51.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5212,7 +5252,7 @@ Expected outcome(s):
    # metalmouth should say "Canvas".
    # metalmouth should say "Untitled".
 
-====14.50.2) Text only contents====
+====14.51.2) Text only contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5230,7 +5270,7 @@ Expected outcome(s):
    # metalmouth should say "Canvas".
    # metalmouth should say "Untitled".
 
-====14.50.3) Some html contents====
+====14.51.3) Some html contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5248,7 +5288,7 @@ Expected outcome(s):
    # metalmouth should say "Canvas".
    # metalmouth should say "Untitled".
 
-====14.50.4) No contents / title ====
+====14.51.4) No contents / title ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5267,9 +5307,9 @@ Expected outcome(s):
    # metalmouth should say "Entitled".
    # metalmouth should say "canvasTitle".
 
-===14.51) Semantic image===
+===14.52) Semantic image===
 
-====14.51.1) Alt ====
+====14.52.1) Alt ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5289,7 +5329,7 @@ Expected outcome(s):
   # metalmouth should say "Alternative text".
   # metalmouth should say "altValue".
 
-====14.51.2) No alt ====
+====14.52.2) No alt ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -5705,6 +5745,28 @@ Action(s):
 Expected outcome(s):
   # Location of the current tab changes to the url defined in the link.
   # metalmouth starts to process this new page.
+
+===18.6) New Tab Map Area===
+
+===18.3) New Tab Link===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map><area href='http://www.test.com/' title='appropriate title' target="_blank">text only contents</area></map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab map area".
+  # Press enter.
+
+Expected outcome(s):
+  # A new tab is opened.
+  # The location of this new tab changes to the url defined in the link.
+  # metalmouth starts to process this new tab page.
 
 ===Text Box===
 ===Search Box===
