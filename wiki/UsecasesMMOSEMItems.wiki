@@ -1,5 +1,9 @@
 =Use Cases - Off-Screen Element Model - Items=
 
+For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension, all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release.   This document is incomplete and will be added to shortly, and updated over time.
+
+----
+
 ==14) OSEM items (on focus) - Non-WAI-ARIA based==
 
 ===14.1) Page header area===
