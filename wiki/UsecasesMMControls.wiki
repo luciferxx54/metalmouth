@@ -3,9 +3,9 @@
 For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension, all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release.   This document is incomplete and will be added to shortly, and updated over time.
 
 ----
-==1) Installation of packaged metalmouth extension==
+==A1) Installation of packaged metalmouth extension==
 
-===1.1) Installation from Project metalmouth website===
+===A1.1) Installation from Project metalmouth website===
 
 Precondition(s):
   # Chrome browser installed.
@@ -17,7 +17,7 @@ Expected outcome(s):
   # Extension is listed in chrome://extensions.
   # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
 
-===1.2) Installation from Chrome Web Store===
+===A1.2) Installation from Chrome Web Store===
 
 Precondition(s):
   # Chrome browser installed.
@@ -30,9 +30,9 @@ Expected outcome(s):
   # metalmouth icon button is added into toolbar.  The icon shows a closed mouth.
 
 ----
-==2) Starting metalmouth extension==
+==A2) Starting metalmouth extension==
 
-===2.1) Omnibox method===
+===A2.1) Omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.  
@@ -45,7 +45,7 @@ Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension starting".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
 
-===2.2) Metalmouth button method===
+===A2.2) Metalmouth button method===
 
 Precondition(s): 
   # metalmouth extension is installed.  
@@ -58,12 +58,12 @@ Expected outcome(s):
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
 
 ----
-==3) Tab-level interaction==
+==A3) Tab-level interaction==
 
 Window shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28650
 Mac shortcuts - http://www.google.com/support/chrome/bin/static.py?page=guide.cs&guide=25799&topic=28651&
 
-===3.1) Create new tab===
+===A3.1) Create new tab===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -77,7 +77,7 @@ Expected outcome(s):
   # Focus changes to new tab.
   # metalmouth should say "Opening new tab (tab number) showing (url)".
   
-===3.2) Close current tab===
+===A3.2) Close current tab===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -91,7 +91,7 @@ Expected outcome(s):
   # Focus changes to an open tab.
   # metalmouth should say "Closing tab (tab number) moving focus to tab (tab number) showing (url)".
 
-===3.3) Cycle through open tabs===
+===A3.3) Cycle through open tabs===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -105,9 +105,9 @@ Expected outcome(s):
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
 
 ----
-==4) metalmouth menu bar==
+==A4) metalmouth menu bar==
 
-===4.1) Open metalmouth menu bar===
+===A4.1) Open metalmouth menu bar===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -124,7 +124,7 @@ Expected outcome(s):
   # metalmouth should say "Top menu entered".
   # metalmouth should say "Change location button" has focus.
 
-===4.2) Close metalmouth menu bar using esc===
+===A4.2) Close metalmouth menu bar using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -145,7 +145,7 @@ Expected outcome(s):
   # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
 
-===4.3) Close metalmouth menu bar using close button===
+===A4.3) Close metalmouth menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -167,7 +167,7 @@ Expected outcome(s):
   # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
 
-===4.4) Open change location menu===
+===A4.4) Open change location menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -189,7 +189,7 @@ Expected outcome(s):
   # metalmouth should say "Change location menu entered".
   # metalmouth should say "Back button has focus".
 
-===4.5) Open metalmouth options===
+===A4.5) Open metalmouth options===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
@@ -212,9 +212,9 @@ Expected outcome(s):
   # metalmouth should say "Reading all items".
 
 ----
-==5) Change location menu==
+==A5) Change location menu==
 
-===5.1) Open new url menu===
+===A5.1) Open new url menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -240,7 +240,7 @@ Expected outcome(s):
   # The new url menu should be open, with metalmouth saying "opening change url menu".
   # Focus should be on url text input box.
 
-===5.2) Open new tab menu===
+===A5.2) Open new tab menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -265,7 +265,7 @@ Expected outcome(s):
   # The new tab menu should be open, with metalmouth saying "opening new tab menu".
   # Focus should be on url text input box.
 
-===5.3) Back button===
+===A5.3) Back button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -289,7 +289,7 @@ Expected outcome(s):
   # The change location menu should be invisible.
   # The tab should load the previous url visited.
 
-===5.4) Close change location menu bar using esc===
+===A5.4) Close change location menu bar using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -313,7 +313,7 @@ Expected outcome(s):
   # metalmouth change location bar should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===5.5) Close change location menu bar using close button===
+===A5.5) Close change location menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -340,9 +340,9 @@ Expected outcome(s):
 
 ----
 
-==6) Change url menu==
+==A6) Change url menu==
 
-===6.1) Add characters to url text input box===
+===A6.1) Add characters to url text input box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -363,13 +363,13 @@ Precondition(s):
   # Focus should be on url text input box.
 
 Action(s):
-  # Press 'b'.
+  # Press "b".
 
 Expected outcome(s):
   # metalmouth says "b".
-  # 'b' is shown in the url text input box.
+  # "b" is shown in the url text input box.
 
-===6.2) Remove characters from url text input box===
+===A6.2) Remove characters from url text input box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -396,7 +396,7 @@ Expected outcome(s):
   # metalmouth says "b removed".
   # no characters are shown in the url text input box.
 
-===6.3) Enter url===
+===A6.3) Enter url===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -425,7 +425,7 @@ Expected outcome(s):
   # The "Change url" menu should be invisible.
   # A current tab should load the contents of the url specified.
 
-===6.4) Close change url menu using esc===
+===A6.4) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -452,7 +452,7 @@ Expected outcome(s):
   # The "Change url" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===6.5) Close change url menu using close button===
+===A6.5) Close change url menu using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -482,9 +482,9 @@ Expected outcome(s):
 
 ----
 
-==7) New tab menu==
+==A7) New tab menu==
 
-===7.1) Add characters to url text input box===
+===A7.1) Add characters to url text input box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -505,13 +505,13 @@ Precondition(s):
   # Focus should be on url text input box.
 
 Action(s):
-  # Press 'b'.
+  # Press "b".
 
 Expected outcome(s):
   # metalmouth says "b".
-  # 'b' is shown in the url text input box.
+  # "b" is shown in the url text input box.
 
-===7.2) Remove characters from url text input box===
+===A7.2) Remove characters from url text input box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -538,7 +538,7 @@ Expected outcome(s):
   # metalmouth says "b removed".
   # no characters are shown in the url text input box.
 
-===7.3) Enter url===
+===A7.3) Enter url===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
@@ -566,7 +566,7 @@ Expected outcome(s):
   # The "new tab" menu should be invisible.
   # A new tab should open, come into focus and then load the contents of the url specified.
 
-===7.4) Close change url menu using esc===
+===A7.4) Close change url menu using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -593,7 +593,7 @@ Expected outcome(s):
   # The "New" menu should be invisible.
   # metalmouth should say "Navigation mode entered".
 
-===7.5) Close change url menu using close button===
+===A7.5) Close change url menu using close button===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
@@ -621,9 +621,9 @@ Expected outcome(s):
   # metalmouth should say "Navigation mode entered".
 ----
 
-==8) metalmouth options==
+==A8) metalmouth options==
 
-===8.1) New tab url option===
+===A8.1) New tab url option===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -643,9 +643,9 @@ Expected outcome(s):
   # The text input interaction area is invisible.
   # "http://www.google.co.uk" has appeared in the "new tab url" text input box.
 
-===8.2) Speech Rate Option===
+===A8.2) Speech Rate Option===
 
-====8.2.1) Available on Windows====
+====A8.2.1) Available on Windows====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -659,7 +659,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "speech rate range input current value 0.9".
 
-====8.2.2) Not available on Mac====
+====A8.2.2) Not available on Mac====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -672,7 +672,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Option disabled etc...".
 
-====8.2.3) Selecting====
+====A8.2.3) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -695,9 +695,9 @@ Expected outcome(s):
   # metalmouth should say "navigation mode entered".
   # The value of the speech rate range input is increased to 1.1.
 
-===8.3) Always-On Option===
+===A8.3) Always-On Option===
 
-====8.3.1) Selecting====
+====A8.3.1) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -715,7 +715,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have appeared in the "Always-on" checkbox.
 
-====8.3.2) Unselecting====
+====A8.3.2) Unselecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -733,9 +733,9 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Always-on" checkbox.
 
-===8.4) Voice Input Option=== 
+===A8.4) Voice Input Option=== 
 
-====8.4.1) Selecting====
+====A8.4.1) Selecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -753,7 +753,7 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have appeared in the "Voice input" checkbox.
 
-====8.4.2) Unselecting====
+====A8.4.2) Unselecting====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -771,9 +771,9 @@ Expected outcome(s):
   # The checkbox input interaction area is now invisible.
   # A tick should have disappeared in the "Voice input" checkbox.
 
-===8.5) Saving Options===
+===A8.5) Saving Options===
 
-====8.5.1) Save & Close====
+====A8.5.1) Save & Close====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -794,7 +794,7 @@ Expected outcome(s):
   # Focus changes to an open tab.
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
 
-====8.5.2) Confirming option(s) are saved====
+====A8.5.2) Confirming option(s) are saved====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -814,9 +814,9 @@ Expected outcome(s):
   # When the "Speech rate" checkbox is focused metalmouth should say "".
 
 ----
-==9) New Tab Page==
+==A9) New Tab Page==
 
-===9.1) Default - No URL Entered===
+===A9.1) Default - No URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -831,7 +831,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the contents should be updated to show (by default) Google's Accessible Search page.  
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===9.2) URL Entered===
+===A9.2) URL Entered===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -849,9 +849,9 @@ Expected outcome(s):
   # metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==10) Speech Rate - New Rate Selected==
+==A10) Speech Rate - New Rate Selected==
 
-===10.1) Slower Speech Rate Selected===
+===A10.1) Slower Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -868,7 +868,7 @@ Expected outcome(s):
   # If the new tab shows chrome://newtab the tab should be updated to the url defined by the user in the "new tab page" option.  
   # at a slower speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
-===10.2) Faster Speech Rate Selected===
+===A10.2) Faster Speech Rate Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -886,9 +886,9 @@ Expected outcome(s):
   # at a faster speech rate metalmouth should say "Opening new tab (tab number) showing (url)".
 
 ----
-==11) Always-On==
+==A11) Always-On==
 
-===11.1) Try to turn off extension using omnibox method===
+===A11.1) Try to turn off extension using omnibox method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -903,7 +903,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===11.2) Try to turn off extension using icon button method===
+===A11.2) Try to turn off extension using icon button method===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -917,7 +917,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===11.3) After Chrome restart===
+===A11.3) After Chrome restart===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -933,9 +933,9 @@ Expected outcome(s):
   # metalmouth should say "Starting metalmouth extension".
 
 ----
-==12) Voice Input==
+==A12) Voice Input==
 
-===12.1) Unselected===
+===A12.1) Unselected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -949,7 +949,7 @@ Action(s):
 Expected outcome(s):
   # Nothing should happen.
 
-===12.2) Selected===
+===A12.2) Selected===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -963,7 +963,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "Voice input available".
 
-===12.3) Triggering voice command input===
+===A12.3) Triggering voice command input===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -980,7 +980,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "speak now".
 
-===12.4) Inputting voice command - unknown command===
+===A12.4) Inputting voice command - unknown command===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -999,19 +999,19 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command not recognised.  Try again".
 
-===12.5) Inputting voice command - known commands===
+===A12.5) Inputting voice command - known commands===
 
-====12.5.1) Next====
+====A12.5.1) Next====
 ???
-====12.5.2) Previous====
+====A12.5.2) Previous====
 ???
-====12.5.3) Do====
+====A12.5.3) Do====
 ???
-====12.5.4) Continue====
+====A12.5.4) Continue====
 ???
-====12.5.5) Jump====
+====A12.5.5) Jump====
 ???
-====12.5.6) Options====
+====A12.5.6) Options====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1030,10 +1030,10 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
 
-====12.5.7) Location====
+====A12.5.7) Location====
 ???
 
-===12.6) No speech heard===
+===A12.6) No speech heard===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1053,11 +1053,11 @@ Expected outcome(s):
   # After a few seconds metalmouth should say "No speech heard.  Try again".
 
 ----
-==13) Page-level navigation via keyboard==
+==A13) Page-level navigation via keyboard==
 
-===13.1) Down arrow===
+===A13.1) Down arrow===
 
-====13.1.1) Down arrow at page top====
+====A13.1.1) Down arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1074,7 +1074,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the next OSEM item.
 
-====13.1.2) Down arrow at mid page location====
+====A13.1.2) Down arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1090,7 +1090,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the next OSEM item.
 
-====13.1.3) Down arrow at page bottom====
+====A13.1.3) Down arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1107,9 +1107,9 @@ Expected outcome(s):
   # metalmouth should say "page start".
   # The navigator should be reset.
 
-===13.2) Up arrow===
+===A13.2) Up arrow===
 
-====13.2.1) Up arrow at page top====
+====A13.2.1) Up arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1126,7 +1126,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====13.2.2) Up arrow at mid page location====
+====A13.2.2) Up arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1142,7 +1142,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the previous OSEM item.
 
-===13.2.3) Up arrow at page bottom===
+===A13.2.3) Up arrow at page bottom===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1158,9 +1158,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the previous OSEM item.
 
-===13.3) Left arrow===
+===A13.3) Left arrow===
 
-====13.3.1) Left arrow at page top====
+====A13.3.1) Left arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1177,7 +1177,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====13.3.2) Left arrow at mid page location====
+====A13.3.2) Left arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1193,7 +1193,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====13.3.3) Left arrow at page bottom====
+====A13.3.3) Left arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1209,9 +1209,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-===13.4) Right arrow===
+===A13.4) Right arrow===
 
-====13.4.1) Right arrow at page top====
+====A13.4.1) Right arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1228,7 +1228,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-====13.4.2) Right arrow at mid page location====
+====A13.4.2) Right arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1244,7 +1244,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-====13.4.3) Right arrow at page bottom====
+====A13.4.3) Right arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1260,9 +1260,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-===13.5) Space bar===
+===A13.5) Space bar===
 
-====13.5.1) Stop reading====
+====A13.5.1) Stop reading====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1276,7 +1276,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read the contents of the current OSEM item and come to a stop.
 
-====13.5.2) Continue reading==== 
+====A13.5.2) Continue reading==== 
 
 Precondition(s): 
   # metalmouth extension is installed.
