@@ -352,3 +352,121 @@ Expected outcome(s):
   # metalmouth says "Search entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant search box.
+
+===18.9) Password Box===
+
+===18.9.1) Activate password entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "password box".
+  # Press enter.
+
+Expected outcome(s):
+  # password entry area box opens.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+
+===18.9.2) Add characters to password area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+
+Action(s):
+  # Press "b".
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # "b" is shown in the text entry area box.
+
+===18.9.3) Remove characters from password entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+  # "b" has been pressed - so "b" appears in the 'password entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the password entry area box.
+
+===18.9.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area has focus".
+  # A value has been typed - so this text now is shown in the password entry area box.
+
+Action(s):
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.9.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="password" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "password box".
+  # Enter has been pressed.
+  # The password entry area box has opened.
+  # metalmouth says "password entry area entered".
+  # metalmouth says "password entry area focus".
+  # A value has been typed - so this text now is shown in the password entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "password entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The value should now be the value shown in the relevant password box.
