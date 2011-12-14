@@ -234,3 +234,121 @@ Expected outcome(s):
   # metalmouth says "Text entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant text box.
+
+===18.8) Search Box===
+
+===18.8.1) Activate search entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "search box".
+  # Press enter.
+
+Expected outcome(s):
+  # search entry area box opens.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+
+===18.8.2) Add characters to search area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+
+Action(s):
+  # Press "b".
+
+Expected outcome(s):
+  # metalmouth says "b".
+  # "b" is shown in the text entry area box.
+
+===18.8.3) Remove characters from search entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+  # "b" has been pressed - so "b" appears in the 'search entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "b removed".
+  # no characters are shown in the search entry area box.
+
+===18.8.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area has focus".
+  # A value has been typed - so this text now is shown in the search entry area box.
+
+Action(s):
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.8.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="search" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "search box".
+  # Enter has been pressed.
+  # The search entry area box has opened.
+  # metalmouth says "search entry area entered".
+  # metalmouth says "search entry area focus".
+  # A value has been typed - so this text now is shown in the search entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Search entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant search box.
