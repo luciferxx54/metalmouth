@@ -1533,3 +1533,141 @@ Expected outcome(s):
   # metalmouth says "number entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant number box.
+
+===18.19) Range Input===
+
+====18.19.1) Activate range entry area box====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+  # Press enter.
+
+Expected outcome(s):
+  # range entry area box opens.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+
+====18.19.2) Increase value to enter====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "range box".
+  # Enter has been pressed.
+  # The range entry area box has opened.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+
+Action(s):
+  # Press enter until maximum value reached.
+
+Expected outcome(s):
+  # metalmouth says "value to enter increased to x + step", for each value until the maximum value is reached.
+  # metalmouth says "maximum value x reached".
+
+====18.19.3) Focus decrease value button====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "range box".
+  # Enter has been pressed.
+  # The range entry area box has opened.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+
+Action(s):
+  # Press tab to focus "Decrease value button".
+
+Expected outcome(s):
+  # metalmouth says "decrease value button has focus".
+
+====18.19.4) Decrease value to enter====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "range box".
+  # Enter has been pressed.
+  # The range entry area box has opened.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+  # Tab has been pressed to focus "decrease value button".
+
+Action(s):
+  # Press enter until minimum value reached.
+
+Expected outcome(s):
+  # metalmouth says "value to enter decreased to x - step", for each value until the minimum value is reached.
+  # metalmouth says "minimum value x reached".
+
+====18.19.5) Focus enter button====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "range box".
+  # Enter has been pressed.
+  # The range entry area box has opened.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+
+Action(s):
+  # Press tab to focus "enter button".
+
+Expected outcome(s):
+  # metalmouth says "enter button has focus".
+
+===18.19.6) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "range box".
+  # Enter has been pressed.
+  # The range entry area box has opened.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "range entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant range box.
