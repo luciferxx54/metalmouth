@@ -49,6 +49,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+  # The tab is refreshed - metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.1.2) Omnibox method - Turning Off====
 
@@ -80,6 +81,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+  # The tab is refreshed - metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.1.4) Metalmouth button method - Turning Off====
 
@@ -113,7 +115,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
-  # metalmouth scripts should be injected automatically, and all items should start to be read out.
+  # The tab is refreshed - metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.2.2) Omnibox method - Turning Off====
 
@@ -146,7 +148,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
-  # metalmouth scripts should be injected automatically, and all items should start to be read out.
+  # The tab is refreshed - metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.2.4) Metalmouth button method - Turning Off====
 
