@@ -1414,3 +1414,122 @@ Expected outcome(s):
   # metalmouth says "time entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant time box.
+
+===18.18) Number Box===
+
+===18.18.1) Activate number entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "number box".
+  # Press enter.
+
+Expected outcome(s):
+  # number entry area box opens.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+
+===18.18.2) Add characters to number area entry box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+
+Action(s):
+  # Press "5".
+
+Expected outcome(s):
+  # metalmouth says "five".
+  # "5" is shown in the number entry area box.
+
+===18.18.3) Remove characters from number entry area box===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+  # "5" has been pressed - so "5" appears in the 'number entry area' box.
+
+Action(s):
+  # Press delete.
+
+Expected outcome(s):
+  # metalmouth says "five removed".
+  # no characters are shown in the number entry area box.
+
+===18.18.4) Focus enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area has focus".
+  # A value has been typed - so this text now is shown in the number entry area box.
+
+Action(s):
+  # Press tab to focus "Enter button".
+
+Expected outcome(s):
+  # metalmouth says "Enter button has focus".
+
+===18.18.5) Press enter button===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="number" />}}}
+  # Down arrow has been pressed until current OSEM is the defined "number box".
+  # Enter has been pressed.
+  # The number entry area box has opened.
+  # metalmouth says "number entry area entered".
+  # metalmouth says "number entry area focus".
+  # A value has been typed - so this text now is shown in the number entry area box.
+  # Tab has been pressed to focus "Enter button".
+
+Action(s):
+
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "number entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The typed value should now be the value shown in the relevant number box.
