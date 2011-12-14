@@ -1771,3 +1771,513 @@ Action(s):
 
 Expected outcome(s):
   # Any actions attached to the click of the button are fired.
+
+===18.25) Check Button===
+
+====18.25.1) Activate check entry area box / input type=radio ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="radio" name="sex" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="radio" name="sex" value="female" /><label for="manuRadiobox2">Female</label>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the first defined "check box" of the two.
+  # Press enter.
+
+Expected outcome(s):
+  # check entry area box opens.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+====18.25.2) Check the checkbox / input type=radio ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="radio" name="sex" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="radio" name="sex" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "check entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The first of the two "check boxes" should be checked, the second "check box" should be unchecked.
+
+====18.25.3) Focus the uncheck button / input type=radio ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="radio" name="sex" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="radio" name="sex" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+Action(s):
+  # Press tab to focus "uncheck button".
+
+Expected outcome(s):
+  # metalmouth says "uncheck button has focus".
+
+====18.25.4) Uncheck the checkbox / input type=radio ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="radio" name="sex" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="radio" name="sex" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+  # Tab has been pressed to focus "uncheck button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "check entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The first of the two "check boxes" should be unchecked, the second "check box" should be checked.
+
+====18.25.5) Activate check entry area box / input type=checkbox ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="checkbox" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="checkbox" value="female" /><label for="manuRadiobox2">Female</label>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the first defined "check box" of the two.
+  # Press enter.
+
+Expected outcome(s):
+  # check entry area box opens.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+====18.25.6) Check the checkbox / input type=checkbox ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="checkbox" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="checkbox" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "check entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The first of the two "check boxes" should be checked, there should be no impact on the second.
+			
+====18.25.7) Focus the uncheck button / input type=checkbox ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="checkbox" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="checkbox" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+
+Action(s):
+  # Press tab to focus "uncheck button".
+
+Expected outcome(s):
+  # metalmouth says "uncheck button has focus".
+
+====18.25.8) Uncheck the checkbox / input type=checkbox ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="manuRadiobox1" type="checkbox" value="male" /><label for="manuRadiobox1">Male</label><br /><input id="manuRadiobox2" type="checkbox" value="female" /><label for="manuRadiobox2">Female</label>}}}
+  # Down arrow has been pressed until current OSEM is the first defined "check box" of the two.
+  # Enter has been pressed.
+  # The check entry area box has opened.
+  # metalmouth says "check entry area entered".
+  # metalmouth says "check button has focus".
+  # Tab has been pressed to focus "uncheck button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "check entry area closed".
+  # metalmouth says "Navigation mode entered".
+  # The first of the two "check boxes" should be checked, there should be no impact on the second.
+
+===18.26) Single Select===	
+???
+
+===18.27) Multi Select===
+???
+		
+===18.27) Audio===	
+
+====18.27.1) Activate audio control area box ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is defined "audio".
+  # Press enter.
+
+Expected outcome(s):
+  # audio control area box opens.
+  # metalmouth says "audio control area entered".
+  # metalmouth says "play button has focus".
+
+====18.27.2) Play audio====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+  # Down arrow pressed until current OSEM is the defined "audio".
+  # Enter pressed.
+  # Audio control area box has opened.
+  # metalmouth has said "audio control area entered".
+  # metalmouth has said "play button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Audio playing".
+  # The audio starts playing.
+  # metalmouth says "Pause button has focus".
+
+====18.27.3) Pause audio====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+  # Down arrow pressed until current OSEM is the defined "audio".
+  # Enter pressed.
+  # Audio control area box has opened.
+  # metalmouth has said "audio control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio playing".
+  # The audio has started to play.
+  # metalmouth has said "Pause button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Audio paused.  Play button has focus.".
+
+====18.27.3) Focus rewind button====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+  # Down arrow pressed until current OSEM is the defined "audio".
+  # Enter pressed.
+  # Audio control area box has opened.
+  # metalmouth has said "audio control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio playing".
+  # The audio has started to play.
+  # metalmouth has said "Pause button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio paused.  Play button has focus.".
+
+Action(s):
+  # Press down arrow until rewind button has focus.
+
+Expected outcome(s):
+  # metalmouth says "Rewind button has focus".
+
+====18.27.4) Rewind audio====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+  # Down arrow pressed until current OSEM is the defined "audio".
+  # Enter pressed.
+  # Audio control area box has opened.
+  # metalmouth has said "audio control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio playing".
+  # The audio has started to play.
+  # metalmouth has said "Pause button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio paused.  Play button has focus.".
+  # Down arrow pressed until rewind button has focus.
+  # metalmouth has said "Rewind button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Audio rewound. Play button has focus.".
+
+====18.27.5) Automatically rewind when audio reaches end====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
+  # Down arrow pressed until current OSEM is the defined "audio".
+  # Enter pressed.
+  # Audio control area box has opened.
+  # metalmouth has said "audio control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Audio playing".
+  # The audio starts playing.
+  # metalmouth has said "Pause button has focus".
+  # The audio ends.
+
+Action(s):
+  # None
+
+Expected outcome(s):
+  # metalmouth says "audio ended. Rewinding.".
+  # metalmouth says "Play button has focus".
+  # Audio automatically rewinds when audio reaches end.
+			
+===18.28) Video===
+
+====18.28.1) Activate video control area box ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is defined "video".
+  # Press enter.
+
+Expected outcome(s):
+  # video control area box opens.
+  # metalmouth says "video control area entered".
+  # metalmouth says "play button has focus".
+
+====18.28.2) Play video====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+  # Down arrow pressed until current OSEM is the defined "video".
+  # Enter pressed.
+  # Video control area box has opened.
+  # metalmouth has said "video control area entered".
+  # metalmouth has said "play button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Video playing".
+  # The video starts playing.
+  # metalmouth says "Pause button has focus".
+
+====18.28.3) Pause video====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+  # Down arrow pressed until current OSEM is the defined "video".
+  # Enter pressed.
+  # Video control area box has opened.
+  # metalmouth has said "video control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video playing".
+  # The video has started to play.
+  # metalmouth has said "Pause button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Video paused.  Play button has focus.".
+
+====18.28.3) Focus rewind button====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+  # Down arrow pressed until current OSEM is the defined "video".
+  # Enter pressed.
+  # Video control area box has opened.
+  # metalmouth has said "video control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video playing".
+  # The video has started to play.
+  # metalmouth has said "Pause button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video paused.  Play button has focus.".
+
+Action(s):
+  # Press down arrow until rewind button has focus.
+
+Expected outcome(s):
+  # metalmouth says "Rewind button has focus".
+
+====18.28.4) Rewind video====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+  # Down arrow pressed until current OSEM is the defined "video".
+  # Enter pressed.
+  # Video control area box has opened.
+  # metalmouth has said "video control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video playing".
+  # The video has started to play.
+  # metalmouth has said "Pause button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video paused.  Play button has focus.".
+  # Down arrow pressed until rewind button has focus.
+  # metalmouth has said "Rewind button has focus".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # metalmouth says "Video rewound. Play button has focus.".
+
+====18.28.5) Automatically rewind when video reaches end====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
+  # Down arrow pressed until current OSEM is the defined "video".
+  # Enter pressed.
+  # Video control area box has opened.
+  # metalmouth has said "video control area entered".
+  # metalmouth has said "play button has focus".
+  # Enter pressed.
+  # metalmouth has said "Video playing".
+  # The video starts playing.
+  # metalmouth has said "Pause button has focus".
+  # The video ends.
+
+Action(s):
+  # None
+
+Expected outcome(s):
+  # metalmouth says "video ended. Rewinding.".
+  # metalmouth says "Play button has focus".
+  # Video automatically rewinds when video reaches end.
+
+----
