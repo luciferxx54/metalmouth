@@ -1671,3 +1671,103 @@ Expected outcome(s):
   # metalmouth says "range entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant range box.
+
+===18.20) Button===
+
+====18.20.1) Click ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="button" value="label text"/>}}}
+  # Down arrow has been pressed until current OSEM is the defined "input button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # Any actions attached to the click event of the button are fired.
+
+===18.21) Input Button===
+
+====18.21.1) Click ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="button" value="label text"/>}}}
+  # Down arrow has been pressed until current OSEM is the defined "input button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # Any actions attached to the click of the button are fired.
+
+===18.22) Image Button===
+
+====18.22.1) Click ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="image" src="test.png" value="label text"/>}}}
+  # Down arrow has been pressed until current OSEM is the defined "input button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # Any actions attached to the click of the button are fired.
+
+===18.23) Submit Button===
+
+====18.23.1) Click ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="submit" value="label text"/>}}}
+  # Down arrow has been pressed until current OSEM is the defined "input button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # Any actions attached to the click of the button are fired.
+		
+===18.24) Reset Button===
+
+====18.24.1) Click ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="reset" value="label text"/>}}}
+  # Down arrow has been pressed until current OSEM is the defined "input button".
+
+Action(s):
+  # Press enter.
+
+Expected outcome(s):
+  # Any actions attached to the click of the button are fired.
