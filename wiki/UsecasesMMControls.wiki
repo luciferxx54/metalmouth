@@ -113,6 +113,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+  # metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.2.2) Omnibox method - Turning Off====
 
@@ -145,6 +146,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth extension should start with the words "metalmouth extension on".
   # metalmouth extension button icon should change from having a closed mouth to an open mouth.
+  # metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ====A2.2.4) Metalmouth button method - Turning Off====
 
@@ -196,18 +198,35 @@ Expected outcome(s):
   # Focus changes to an open tab.
   # metalmouth should say "Closing tab (tab number) moving focus to tab (tab number) showing (url)".
 
-===A3.3) Cycle through open tabs===
+===A3.3) Cycle to another open tab which has had metalmouth scripts injected===
 
 Precondition(s): 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # two tabs exist which have metalmouth scripts injected.
+  # One of these tabs is the current tab (selected).
  
 Action(s):
-  # Cycle from the current tab (selected) to another open tab using Chrome shortcuts (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
+  # Cycle from the current tab (selected) to the second tab using Chrome shortcuts (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
 
 Expected outcome(s):
   # Focus changes to another open tab.
   # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+
+===A3.4) Cycle to another open tab which has not had metalmouth scripts injected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # Two tabs exist, only one of which has metalmouth scripts injected.
+  # The tab which has metalmouth scripts injected is the current tab (selected). 
+Action(s):
+  # Cycle from the current tab (selected) to second tab using Chrome shortcuts (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
+
+Expected outcome(s):
+  # Focus changes to another open tab.
+  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+  # metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ----
 ==A4) metalmouth menu bar==
