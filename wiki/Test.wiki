@@ -1,0 +1,119 @@
+
+==18) Interaction with OSEM items==
+
+===18.1) Skip Link===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<a href='#targetName' title='appropriate title'>text only contents</a>}}}
+{{{<a name='targetName'>text only contents</a>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "skip link".
+  # Press enter.
+
+Expected outcome(s):
+  # Focus is moved to the position of the defined skip target.
+  # The skip link is processed in the relevant manner by metalmouth. 
+
+===18.2) Link===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<a href='http://www.test.com/' title='appropriate title'>text only contents</a>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "link".
+  # Press enter.
+
+Expected outcome(s):
+  # Location of the current tab changes to the url defined in the link.
+  # metalmouth starts to process this new page.
+
+===18.3) New Tab Link===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<a href='http://www.test.com/' title='appropriate title' target="_blank">text only contents</a>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab link".
+  # Press enter.
+
+Expected outcome(s):
+  # A new tab is opened.
+  # The location of this new tab changes to the url defined in the link.
+  # metalmouth starts to process this new tab page.
+
+===18.4) Quote Link===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<blockquote cite='http://www.test.com/'>text only contents</blockquote>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "quote".
+  # Press enter.
+
+Expected outcome(s):
+  # Location of the current tab changes to the url defined in the link.
+  # metalmouth starts to process this new page.
+
+===18.5) Map Area===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map><area href='http://www.test.com/'>text only contents</area></map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map area".
+  # Press enter.
+
+Expected outcome(s):
+  # Location of the current tab changes to the url defined in the link.
+  # metalmouth starts to process this new page.
+
+===18.6) New Tab Map Area===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map><area href='http://www.test.com/' title='appropriate title' target="_blank">text only contents</area></map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab map area".
+  # Press enter.
+
+Expected outcome(s):
+  # A new tab is opened.
+  # The location of this new tab changes to the url defined in the link.
+  # metalmouth starts to process this new tab page.
