@@ -1,4 +1,4 @@
-=Use Cases - Metalmouth Off-Screen Element Model - Item Interaction=
+=Use Cases - Off-Screen Element Model - Item Interaction=
 
 For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension, all of the following basic use cases must be able to be completed without issue (on Windows and Mac) before a new version of the metalmouth extension can be considered to be acceptable for public release.   This document is incomplete and will be added to shortly, and updated over time.
 
