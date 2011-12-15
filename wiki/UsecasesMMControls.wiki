@@ -230,6 +230,21 @@ Expected outcome(s):
   # metalmouth should say "Moving focus to tab showing (url)".
   # metalmouth scripts should be injected automatically, and all items should start to be read out.
 
+===A3.5) Cycle to another open tab which is a new tab page===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # Two tabs exist, only one of which has metalmouth scripts injected.  The other is a new tab page.
+  # The tab which has metalmouth scripts injected is the current tab (selected). 
+Action(s):
+  # Cycle from the current tab (selected) to second tab using Chrome shortcuts (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
+
+Expected outcome(s):
+  # Focus changes to another open tab.
+  # metalmouth should say "Moving focus to tab showing (url)".  Should be Google Accessible Search.
+  # metalmouth scripts should be injected automatically, and all items should start to be read out.
+
 ----
 ==A4) metalmouth menu bar==
 
