@@ -405,7 +405,7 @@ Expected outcome(s):
   # metalmouth "Top menu" is invisible.
   # "Change location menu" is visible.
   # metalmouth should say "Change location menu entered".
-  # metalmouth should say "Back button has focus".
+  # metalmouth should say "Previous url button has focus".
 
 ===A4.9) Open metalmouth options===
 
