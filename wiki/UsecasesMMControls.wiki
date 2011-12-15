@@ -184,7 +184,7 @@ Action(s):
 Expected outcome(s):
   # New tab is create.
   # Focus changes to new tab.
-  # metalmouth should say "Opening new tab (tab number) showing (url)".
+  # metalmouth should say "Opening new tab". Re-directs to Google Accessible Search if no home page has been selected in Chrome or no newTabPage has been selected in metalmouth options.
   
 ===A3.2) Close current tab===
 
@@ -198,7 +198,7 @@ Action(s):
 Expected outcome(s):
   # Current tab is closed.
   # Focus changes to an open tab.
-  # metalmouth should say "Closing tab (tab number) moving focus to tab (tab number) showing (url)".
+  # metalmouth should say "Closing tab moving focus to tab showing (url)".
 
 ===A3.3) Cycle to another open tab which has had metalmouth scripts injected===
 
@@ -213,7 +213,7 @@ Action(s):
 
 Expected outcome(s):
   # Focus changes to another open tab.
-  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+  # metalmouth should say "Moving focus to tab showing (url)".
 
 ===A3.4) Cycle to another open tab which has not had metalmouth scripts injected===
 
@@ -227,13 +227,52 @@ Action(s):
 
 Expected outcome(s):
   # Focus changes to another open tab.
-  # metalmouth should say "Moving focus to tab (tab number) showing (url)".
+  # metalmouth should say "Moving focus to tab showing (url)".
   # metalmouth scripts should be injected automatically, and all items should start to be read out.
 
 ----
 ==A4) metalmouth menu bar==
 
-===A4.1) Open metalmouth menu bar===
+===A4.1) Opening metalmouth menu bar on page load===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has read out page title, but not started to read all.
+
+Action(s):
+  # Press tab.
+
+Expected outcome(s):
+  # metalmouth has stopped reading all items.
+  # metalmouth "Top menu" is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+
+===A4.2) Closing metalmouth menu bar on page load===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has read out page title, but not started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+
+Action(s):
+  # Press esc.
+
+Expected outcome(s):
+  # metalmouth "Top menu" is invisible.
+  # metalmouth should say "Top menu closed".
+  # metalmouth should say "Navigation mode entered".
+  # normal navigation should be possible.
+
+===A4.3) Open metalmouth menu bar===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -250,7 +289,7 @@ Expected outcome(s):
   # metalmouth should say "Top menu entered".
   # metalmouth should say "Change location button" has focus.
 
-===A4.2) Close metalmouth menu bar using esc===
+===A4.4) Close metalmouth menu bar using esc===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -270,8 +309,9 @@ Expected outcome(s):
   # metalmouth "Top menu" is invisible.
   # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
+  # normal navigation should be possible.
 
-===A4.3) Close metalmouth menu bar using close button===
+===A4.5) Close metalmouth menu bar using close button===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -285,15 +325,52 @@ Precondition(s):
   # metalmouth should say "Change location button" has focus.
 
 Action(s):
-  # Press tab until "close menu" button is focused.
+  # Press down arrow until "close menu" button is focused.
   # Press enter.
 
 Expected outcome(s):
   # metalmouth "Top menu" is invisible.
   # metalmouth should say "Top menu closed".
   # metalmouth should say "Navigation mode entered".
+  # normal navigation should be possible.
 
-===A4.4) Open change location menu===
+===A4.6) Using keys other than up, down, esc or enter have no effect===
+
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+
+Action(s):
+  # Press tab.
+
+Expected outcome(s):
+  # nothing should happen.
+
+===A4.7) Using up and down===
+
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Tab has been pressed.
+  # metalmouth has stopped reading all items.
+  # metalmouth top menu is visible.
+  # metalmouth should say "Top menu entered".
+  # metalmouth should say "Change location button" has focus.
+
+Action(s):
+  # Use the up and down keys to cycle through all options a number of times.  
+
+Expected outcome(s):
+  # The up and down keys move focus in an expected way - no buttons are being skipped over.
+
+===A4.8) Open change location menu===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -315,7 +392,7 @@ Expected outcome(s):
   # metalmouth should say "Change location menu entered".
   # metalmouth should say "Back button has focus".
 
-===A4.5) Open metalmouth options===
+===A4.9) Open metalmouth options===
 
   # metalmouth extension is installed.
   # metalmouth extension is on - metalmouth icon button shows an open mouth.
