@@ -3269,7 +3269,11 @@ Action(s):
 
 Expected outcome(s):
 
-  # ???
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
 
 ====B1.38.2) Text only contents ====
 
@@ -3430,6 +3434,143 @@ Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
 ===B1.40) Multi select (drop-down menu with multiple selectable options)===
+
+====B1.40.1) Label / multiple selected values ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+  # Both options have been selected in this select menu.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Multi select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable Multi select drop-down".
+  # metalmouth should say "Current selected values option 1 text, option 2 text".
+
+====B1.40.2) No label / multiple selected values ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+  # Both options have been selected in this select menu.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Multi select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable Multi select drop-down".
+  # metalmouth should say "Current selected values option 1 text, option 2 text".
+
+====B1.39.3) No label / single selected value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+  # First option has been selected in this select menu.
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Multi select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable Multi select drop-down".
+  # metalmouth should say "Current value: option 1 text".
+
+====B1.39.4) No label / no selected value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Multi select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "Unlabelled".
+  # metalmouth should say "Interactable Multi select drop-down".
+  # metalmouth should say "No selected values".
+
+====B1.39.5) Label / no selected value / required ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple" required="required"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "Interactable Multi select drop-down".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable Multi select drop-down".
+  # metalmouth should say "Required".
+
+====B1.39.6) Label / No contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"></select>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====B1.39.7) No label / No contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="inputId" multiple="multiple"></select>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
 
 ===B1.41) Bulleted list===
 
