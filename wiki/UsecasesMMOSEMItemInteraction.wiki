@@ -1689,7 +1689,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<input id="inputId" type="button" value="label text"/>}}}
+{{{<button>Button text</button>}}}
   # Down arrow has been pressed until current OSEM is the defined "input button".
 
 Action(s):
@@ -1973,7 +1973,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<select id="manuSelect"><option>Ford</option><option>Opel</option><optgroup><option>Volvo</option><option>Saab</option></optgroup></select>}}}
+{{{<select id="manuSelect"><option>option 1</option><option>option 2</option><optgroup><option>option 3</option><option>option 4</option></optgroup></select>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "single select".
@@ -1985,12 +1985,68 @@ Expected outcome(s):
   # metalmouth says "current option x".
   # metalmouth says "next option button has focus".
 
-===C1.27) Multi Select===
-???
-		
-===C1.27) Audio===	
+====C1.26.2) Move to next option====
 
-====C1.27.1) Activate audio control area box ====
+====C1.26.3) Focus previous option button====
+
+====C1.26.4) Move to previous option====
+
+====C1.26.5) Focus select button====
+
+====C1.26.6) Select option====
+
+===C1.27) Multi Select===
+
+====C1.27.1) Activate multi select ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="manuSelect"><option>option 1</option><option>option 2</option><optgroup><option>option 3</option><option>option 4</option></optgroup></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "multi select".
+  # Press enter.
+
+Expected outcome(s):
+  # multi select entry area box opens.
+  # metalmouth says "multi select entry area entered".
+  # metalmouth says "current option x".
+  # metalmouth says "next option button has focus".
+		
+====C1.27.2) Move to next option====
+???
+====C1.27.3) Focus previous option button====
+???
+====C1.27.4) Move to previous option====
+???
+====C1.27.5) Focus check button====
+???
+====C1.27.6) Check option====
+???
+====C1.27.7) Focus Uncheck button====
+???
+====C1.27.8) Uncheck option====
+???
+====C1.27.9) Check two options====
+???
+====C1.27.10) Focus enter button====
+???
+====C1.27.11) Enter====
+???
+====C1.27.12) Check no options====
+???
+====C1.27.13) Check one option====
+???
+====C1.27.14) Check all options====
+???
+===C1.28) Audio===	
+
+====C1.28.1) Activate audio control area box ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2010,7 +2066,7 @@ Expected outcome(s):
   # metalmouth says "audio control area entered".
   # metalmouth says "play button has focus".
 
-====C1.27.2) Play audio====
+====C1.28.2) Play audio====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2034,7 +2090,7 @@ Expected outcome(s):
   # The audio starts playing.
   # metalmouth says "Pause button has focus".
 
-====C1.27.3) Pause audio====
+====C1.28.3) Pause audio====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2060,7 +2116,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Audio paused.  Play button has focus.".
 
-====C1.27.3) Focus rewind button====
+====C1.28.3) Focus rewind button====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2088,7 +2144,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Rewind button has focus".
 
-====C1.27.4) Rewind audio====
+====C1.28.4) Rewind audio====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2118,7 +2174,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Audio rewound. Play button has focus.".
 
-====C1.27.5) Automatically rewind when audio reaches end====
+====C1.28.5) Automatically rewind when audio reaches end====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2147,9 +2203,9 @@ Expected outcome(s):
   # metalmouth says "Play button has focus".
   # Audio automatically rewinds when audio reaches end.
 			
-===C1.28) Video===
+===C1.29) Video===
 
-====C1.28.1) Activate video control area box ====
+====C1.29.1) Activate video control area box ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2169,7 +2225,7 @@ Expected outcome(s):
   # metalmouth says "video control area entered".
   # metalmouth says "play button has focus".
 
-====C1.28.2) Play video====
+====C1.29.2) Play video====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2193,7 +2249,7 @@ Expected outcome(s):
   # The video starts playing.
   # metalmouth says "Pause button has focus".
 
-====C1.28.3) Pause video====
+====C1.29.3) Pause video====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2219,7 +2275,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Video paused.  Play button has focus.".
 
-====C1.28.3) Focus rewind button====
+====C1.29.3) Focus rewind button====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2247,7 +2303,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Rewind button has focus".
 
-====C1.28.4) Rewind video====
+====C1.29.4) Rewind video====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2277,7 +2333,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Video rewound. Play button has focus.".
 
-====C1.28.5) Automatically rewind when video reaches end====
+====C1.29.5) Automatically rewind when video reaches end====
 
 Precondition(s): 
   # metalmouth extension is installed.
