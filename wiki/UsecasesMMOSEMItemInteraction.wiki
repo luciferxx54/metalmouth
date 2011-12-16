@@ -1963,7 +1963,27 @@ Expected outcome(s):
   # The first of the two "check boxes" should be checked, there should be no impact on the second.
 
 ===C1.26) Single Select===	
-???
+
+====C1.26.1) Activate single select ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<select id="manuSelect"><option>Ford</option><option>Opel</option><optgroup><option>Volvo</option><option>Saab</option></optgroup></select>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "single select".
+  # Press enter.
+
+Expected outcome(s):
+  # single select entry area box opens.
+  # metalmouth says "single select entry area entered".
+  # metalmouth says "current option x".
+  # metalmouth says "next option button has focus".
 
 ===C1.27) Multi Select===
 ???
