@@ -3253,7 +3253,63 @@ Expected outcome(s):
 
 ===B1.38) Button===
 
-???
+====B1.38.1) No contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<button type="button"></button>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "button".
+
+Expected outcome(s):
+
+  # ???
+
+====B1.38.2) Text only contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<button type="button">_text only content_</button>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "button".
+
+Expected outcome(s):
+
+  # metalmouth should say "_text only content_".
+  # metalmouth should say "Interactable button".
+
+<button type="button" title="hello">Click me!<img src="image.png" alt="hello" /> world</button>
+
+====B1.38.3) Some html contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<button type="button" title="hello">_some html content_</button>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "button".
+
+Expected outcome(s):
+
+  # metalmouth should say the inner text value generated from "some html content", if the inner text value is "" metlamouth will say "Unlabelled".
+  # metalmouth should say "Interactable button".
 
 ===B1.39) Single select (drop-down menu with one selectable option)===
 
