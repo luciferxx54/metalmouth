@@ -1580,7 +1580,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<form name='appropriateName'>}}}_some html contents_{{{</form>}}}
+{{{<form>}}}_some html contents_{{{</form>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "form".
