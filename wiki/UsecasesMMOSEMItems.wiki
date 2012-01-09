@@ -125,7 +125,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list' title='appropriate'></menu>}}}
+{{{<menu type='list' title='appropriate title'></menu>}}}
 
 Action(s):
   # Press down arrow until last OSEM has been read.
@@ -150,7 +150,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list' title='appropriate'>_text only contents_</menu>}}}
+{{{<menu type='list' title='appropriate title'>_text only contents_</menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
