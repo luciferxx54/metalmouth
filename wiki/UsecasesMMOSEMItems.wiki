@@ -1648,7 +1648,7 @@ Expected outcome(s):
   # metalmouth should say "Untitled".
   # metalmouth should say "input group".
 
-====B1.19.5) No legend element and no contents ====
+====B1.19.4) No legend element and no contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
