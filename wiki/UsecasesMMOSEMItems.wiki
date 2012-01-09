@@ -169,7 +169,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list' title='appropriate title'>}}}_contents - 3 items_{{{</menu>}}}
+{{{<menu type='list' title='appropriate title'><li role="menuitem">Hello World 1</li><li role="menuitem">Hello World 2</li><li role="menuitem">Hello World 3</li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
@@ -188,7 +188,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list'>}}}_contents - 3 items_{{{</menu>}}}
+{{{<menu type='list'><li role="menuitem">Hello World 1</li><li role="menuitem">Hello World 2</li><li role="menuitem">Hello World 3</li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
@@ -207,7 +207,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list' title=''>}}}_contents - 3 items_{{{</menu>}}}
+{{{<menu type='list' title=''><li role="menuitem">Hello World 1</li><li role="menuitem">Hello World 2</li><li role="menuitem">Hello World 3</li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
@@ -226,7 +226,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu type='list' title='appropriate title'>}}}_contents - 1 item_{{{</menu>}}}
+{{{<menu type='list' title='appropriate title'><li role="menuitem">Hello World 1</li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "menu".
@@ -3293,8 +3293,6 @@ Expected outcome(s):
 
   # metalmouth should say "_text only content_".
   # metalmouth should say "Interactable button".
-
-<button type="button" title="hello">Click me!<img src="image.png" alt="hello" /> world</button>
 
 ====B1.38.3) Some html contents ====
 
