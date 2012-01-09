@@ -454,7 +454,7 @@ Expected outcome(s):
 
 ===B1.7) Skip target===
 
-====14.7.1) No contents====
+====B1.7.1) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
