@@ -4098,7 +4098,26 @@ Expected outcome(s):
   # metalmouth should say "Data table".
   # metalmouth should say "tableSummary".
 
-====B1.47.2) No summary / Some contents ====
+====B1.47.2) Null summary / Some contents ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<table summary="tableSummary">}}}_some contents_{{{</table>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "table".
+
+Expected outcome(s):
+
+  # metalmouth should say "Data table".
+  # metalmouth should say "No summary".
+
+====B1.47.3) No summary / Some contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4117,7 +4136,7 @@ Expected outcome(s):
   # metalmouth should say "Data table".
   # metalmouth should say "No summary".
 
-====B1.47.3) No contents====
+====B1.47.4) No contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
