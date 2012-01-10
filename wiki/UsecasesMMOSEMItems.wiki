@@ -3326,7 +3326,26 @@ Expected outcome(s):
   # metalmouth should say "altForImage".
   # metalmouth should say "Interactable image button".
 
-====B1.37.4) No label / no alt====
+====B1.37.4)Label / null alt====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" src="test.png" type="image" alt="" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "image button".
+
+Expected outcome(s):
+
+  # metalmouth should say "label text".
+  # metalmouth should say "Interactable image button".
+
+====B1.37.5) No label / no alt====
 
 Precondition(s): 
   # metalmouth extension is installed.
