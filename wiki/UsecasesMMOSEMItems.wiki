@@ -3576,7 +3576,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+{{{<select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
   # Both options have been selected in this select menu.
 
 Action(s):
@@ -3597,7 +3597,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+{{{<select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
   # First option has been selected in this select menu.
 
 Action(s):
@@ -3618,7 +3618,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
+{{{<select id="inputId" multiple="multiple"><option id="1">_option 1 text_</option><option id="2">_option 2 text_</option></select>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "Multi select drop-down".
