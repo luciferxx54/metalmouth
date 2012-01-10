@@ -4752,7 +4752,7 @@ Expected outcome(s):
 
 ===B3.1) Static text===
 
-====B3.1.1) Inside P element - some html contents====
+====B3.1.1) SPAN - Text only contents====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4769,6 +4769,42 @@ Action(s):
 
 Expected outcome(s):
   # metalmouth should say "there".
+
+====B3.1.2) SPAN - Some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<p>Hello <span><a href="text.com">there</a></span> World</p>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "paragraph".
+  # Press down arrow twice.
+
+Expected outcome(s):
+  # metalmouth should say "link", etc...
+
+====B3.1.3) SPAN - No contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<p>Hello <span></span> World</p>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "paragraph".
+  # Press down arrow twice.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this element.
 
 ===B3.2) Sentence===
 
