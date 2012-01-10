@@ -4546,7 +4546,26 @@ Expected outcome(s):
   # metalmouth should say "Alternative text".
   # metalmouth should say "altValue".
 
-====B1.53.2) No alt ====
+====B1.53.2) Null alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<img src="test.png" alt="" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "semantic image".
+
+Expected outcome(s):
+
+  # metalmouth should say "Semantic image".
+  # metalmouth should say "No alternative text".
+
+====B1.53.3) No alt ====
 
 Precondition(s): 
   # metalmouth extension is installed.
