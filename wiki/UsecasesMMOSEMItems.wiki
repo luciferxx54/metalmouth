@@ -4827,7 +4827,7 @@ Expected outcome(s):
 
 ===B3.2) Sentence===
 
-====B3.2.2) Child of Body element====
+====B3.2.1) Child of Body element====
 
 Precondition(s): 
   # metalmouth extension is installed.
