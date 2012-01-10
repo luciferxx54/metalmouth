@@ -3980,7 +3980,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Map area".
   # metalmouth should say "altValue".
 
-====B1.45.2) No alt ====
+====B1.45.2) Null alt ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3990,6 +3990,25 @@ Precondition(s):
   # Space bar has been pressed.
   # The following code should be present in the DOM:
 {{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area".
+  # metalmouth should say "Untitled".
+
+====B1.45.3) No alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "map area".
@@ -4020,7 +4039,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Map area opens in a new tab".
   # metalmouth should say "altValue".
 
-====B1.46.2) No alt ====
+====B1.46.2) Null alt ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4030,6 +4049,25 @@ Precondition(s):
   # Space bar has been pressed.
   # The following code should be present in the DOM:
 {{{<area shape="rect" coords="0,0,100,100" href="test.html" alt="" target="_blank"/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "new tab map area".
+
+Expected outcome(s):
+
+  # metalmouth should say "Interactable Map area opens in a new tab".
+  # metalmouth should say "Untitled".
+
+====B1.46.3) No alt ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<area shape="rect" coords="0,0,100,100" href="test.html" target="_blank"/>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "new tab map area".
