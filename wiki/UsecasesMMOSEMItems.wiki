@@ -3711,7 +3711,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ul>_text only contents_</ul>}}}
+{{{<ul>text only contents</ul>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "bulleted list".
@@ -3729,7 +3729,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ul>}}}_contents - 3 items_{{{</ul>}}}
+{{{<ul><li>item1</li><li>item2</li><li>item3</li></ul>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "bulleted list".
@@ -3747,7 +3747,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ul>}}}_contents - 1 item_{{{</ul>}}}
+{{{<ul><li>item1</li></ul>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "bulleted list".
@@ -3784,7 +3784,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ol>_text only contents_</ol>}}}
+{{{<ol>text only contents</ol>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "ordered list".
@@ -3802,7 +3802,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ol>}}}_contents - 3 items_{{{</ol>}}}
+{{{<ol><li>item1</li><li>item2</li><li>item3</li></ol>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "ordered list".
@@ -3820,7 +3820,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<ol>}}}_contents - 1 item_{{{</ol>}}}
+{{{<ol><li>item1</li></ol>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "ordered list".
