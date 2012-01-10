@@ -4836,7 +4836,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<body>Hello World</body>}}}
+{{{<body><span>Hello World</span></body>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "sentence".
@@ -4846,7 +4846,9 @@ Expected outcome(s):
   # metalmouth should say "sentence".
   # metalmouth should say "Hello world".
 
-====B3.2.2) Child of BODY element - text in SPAN====
+===B3.3) Text===
+
+====B3.3.1) Child of Body element====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4855,17 +4857,15 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<body><span>Hello world</span></body>}}}
+{{{<body>Hello World</body>}}}
 
 Action(s):
-  # Press down arrow until current OSEM is the defined "sentence".
-  # Press down arrow twice.
+  # Press down arrow once.
 
 Expected outcome(s):
-  # metalmouth should say "sentence".
   # metalmouth should say "Hello world".
 
-====B3.2.3) Child of DIV element====
+====B3.3.2) DIV - some text content====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -4874,15 +4874,14 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<div>Hello world</div>}}}
+{{{<div>Hello <p>World</p></div>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "section".
-  # Press down arrow twice.
+  # Press down arrow once.
 
 Expected outcome(s):
-  # metalmouth should say "section".
-  # metalmouth should say "Hello world".
+  # metalmouth should say "Hello".
 
 ----
 ==B4) Unsupported elements==
