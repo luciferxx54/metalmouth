@@ -3901,8 +3901,8 @@ Action(s):
 
 Expected outcome(s):
 
-  # metalmouth should say "map".
   # metalmouth should say "title text".
+  # metalmouth should say "map".
 
 ====B1.44.2) Null title ====
 
@@ -3920,6 +3920,7 @@ Action(s):
 
 Expected outcome(s):
 
+  # metalmouth should say "untitled".
   # metalmouth should say "map".
 
 ====B1.44.3) No title ====
@@ -3938,6 +3939,7 @@ Action(s):
 
 Expected outcome(s):
 
+  # metalmouth should say "untitled".
   # metalmouth should say "map".
 
 ====B1.44.4) No content ====
