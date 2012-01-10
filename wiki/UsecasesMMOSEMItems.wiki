@@ -4750,7 +4750,7 @@ Expected outcome(s):
 ----
 ==B3) Special OSEM items (on focus) - Node based, rather than element based==
 
-===B3.1) Static text===
+===B3.1) Inline content===
 
 ====B3.1.1) SPAN - Text only contents====
 
