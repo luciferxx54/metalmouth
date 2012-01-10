@@ -4843,7 +4843,8 @@ Action(s):
   # Press down arrow once.
 
 Expected outcome(s):
-  # metalmouth should say "hello world".
+  # metalmouth should say "sentence".
+  # metalmouth should say "Hello world".
 
 ====B3.2.2) Child of BODY element - text in SPAN====
 
@@ -4854,14 +4855,15 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<body>Hello <span>there</span> World</body>}}}
+{{{<body><span>Hello world</span></body>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "sentence".
   # Press down arrow twice.
 
 Expected outcome(s):
-  # metalmouth should say "there".
+  # metalmouth should say "sentence".
+  # metalmouth should say "Hello world".
 
 ====B3.2.3) Child of DIV element====
 
@@ -4872,14 +4874,15 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<div>Hello <span>there</span> World</div>}}}
+{{{<div>Hello world</div>}}}
 
 Action(s):
-  # Press down arrow until current OSEM is the defined "sentence".
+  # Press down arrow until current OSEM is the defined "section".
   # Press down arrow twice.
 
 Expected outcome(s):
-  # metalmouth should say "there".
+  # metalmouth should say "section".
+  # metalmouth should say "Hello world".
 
 ----
 ==B4) Unsupported elements==
