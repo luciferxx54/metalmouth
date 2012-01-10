@@ -3904,7 +3904,7 @@ Expected outcome(s):
   # metalmouth should say "map".
   # metalmouth should say "title text".
 
-====B1.44.2) No title ====
+====B1.44.2) Null title ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3913,7 +3913,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<map title="title text">}}}_some html content_ {{{</map>}}}
+{{{<map title="">}}}_some html content_ {{{</map>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "map".
@@ -3922,7 +3922,7 @@ Expected outcome(s):
 
   # metalmouth should say "map".
 
-====B1.44.3) list item - no content ====
+====B1.44.3) No title ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3931,7 +3931,25 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<map title="title text"></map>}}}
+{{{<map>}}}_some html content_ {{{</map>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "map".
+
+Expected outcome(s):
+
+  # metalmouth should say "map".
+
+====B1.44.4) No content ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<map></map>}}}
 
 Action(s):
   # Press down arrow until last OSEM has been read.
