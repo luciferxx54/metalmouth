@@ -3111,7 +3111,7 @@ Expected outcome(s):
   # metalmouth should say "label text".
   # metalmouth should say "Interactable input button".
 
-====B1.34.2) No value ====
+====B1.34.2) Null value ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3121,6 +3121,25 @@ Precondition(s):
   # Space bar has been pressed.
   # The following code should be present in the DOM:
 {{{<input id="inputId" type="button" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "input button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable input button".
+
+====B1.34.3) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="button" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "input button".
@@ -3151,7 +3170,7 @@ Expected outcome(s):
   # metalmouth should say "label text".
   # metalmouth should say "Interactable submit button".
 
-====B1.35.2) No value ====
+====B1.35.2) Null value ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3161,6 +3180,25 @@ Precondition(s):
   # Space bar has been pressed.
   # The following code should be present in the DOM:
 {{{<input id="inputId" type="submit" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "submit button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable submit button".
+
+====B1.35.3) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="submit" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "submit button".
@@ -3191,7 +3229,7 @@ Expected outcome(s):
   # metalmouth should say "label text".
   # metalmouth should say "Interactable reset button".
 
-====B1.36.2) No value ====
+====B1.36.2) Null value ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3201,6 +3239,25 @@ Precondition(s):
   # Space bar has been pressed.
   # The following code should be present in the DOM:
 {{{<input id="inputId" type="reset" value=""/>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "reset button".
+
+Expected outcome(s):
+
+  # metalmouth should say "unlabelled".
+  # metalmouth should say "Interactable reset button".
+
+====B1.36.3) No value ====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<input id="inputId" type="reset" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "reset button".
