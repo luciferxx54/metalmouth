@@ -4597,7 +4597,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+{{{<menu type="list"><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the first list item in the "menu".
@@ -4615,7 +4615,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+{{{<menu type="list"><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second list item in the "menu".
@@ -4632,7 +4632,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<menu><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
+{{{<menu type="list"><li role="menuitem">Hello World 1</li><li role="menuitem"><p>Hello World 2</p></li><li role="menuitem"></li></menu>}}}
 
 Action(s):
   # Press down arrow until last OSEM has been read.
