@@ -4254,9 +4254,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th>
-<th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td>
-<td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td headers="column2, row1"><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second "data cell" in this table.
@@ -4274,8 +4272,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th>
-</tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
+{{{<table summary="this is a real datatable about planes"><tr><th role="presentation"></th><th id="column1">Mono plane</th><th id="column2">Bi plane</th><th id="column3">Tri plane</th></tr><tr><th id="row1">Number of Wings</th><td headers="column1, row1">1</td><td><span>2</span></td><td headers="column3, row1"></td></tr></table>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the second "data cell" in this table.
