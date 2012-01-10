@@ -3588,7 +3588,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Multi select drop-down".
   # metalmouth should say "Current selected values option 1 text, option 2 text".
 
-====B1.39.3) No label / single selected value ====
+====B1.40.3) No label / single selected value ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3609,7 +3609,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Multi select drop-down".
   # metalmouth should say "Current value: option 1 text".
 
-====B1.39.4) No label / no selected value ====
+====B1.40.4) No label / no selected value ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3629,7 +3629,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Multi select drop-down".
   # metalmouth should say "No selected values".
 
-====B1.39.5) Label / no selected value / required ====
+====B1.40.5) Label / no selected value / required ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3649,7 +3649,7 @@ Expected outcome(s):
   # metalmouth should say "Interactable Multi select drop-down".
   # metalmouth should say "Required".
 
-====B1.39.6) Label / No contents ====
+====B1.40.6) Label / No contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -3666,7 +3666,7 @@ Action(s):
 Expected outcome(s):
    # No OSEM item should have been formed for this empty element.
 
-====B1.39.7) No label / No contents ====
+====B1.40.7) No label / No contents ====
 
 Precondition(s): 
   # metalmouth extension is installed.
