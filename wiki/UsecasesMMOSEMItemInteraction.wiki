@@ -2193,35 +2193,6 @@ Action(s):
 
 Expected outcome(s):
   # metalmouth says "Audio rewound. Play button has focus.".
-
-====C1.28.6) Automatically rewind when audio reaches end====
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # New tab has been opened.
-  # metalmouth has started to read all.
-  # Space bar has been pressed.
-  # The following code should be present in the DOM:
-{{{<audio id="audioClip" src="http://www.test.com/html5/Audio.ogg" controls="controls"></audio>}}}
-  # Down arrow pressed until current OSEM is the defined "audio".
-  # Enter pressed.
-  # Audio control area box has opened.
-  # metalmouth has said "audio control area entered".
-  # metalmouth has said "play button has focus".
-  # Enter pressed.
-  # metalmouth has said "Audio playing".
-  # The audio starts playing.
-  # metalmouth has said "Pause button has focus".
-  # The audio ends.
-
-Action(s):
-  # None
-
-Expected outcome(s):
-  # metalmouth says "audio ended. Rewinding.".
-  # metalmouth says "Play button has focus".
-  # Audio automatically rewinds when audio reaches end.
 			
 ===C1.29) Video===
 
@@ -2352,34 +2323,5 @@ Action(s):
 
 Expected outcome(s):
   # metalmouth says "Video rewound. Play button has focus.".
-
-====C1.29.6) Automatically rewind when video reaches end====
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # New tab has been opened.
-  # metalmouth has started to read all.
-  # Space bar has been pressed.
-  # The following code should be present in the DOM:
-{{{<video id="videoClip" src="http://www.test.com/html5/Video.ogg"></video>}}}
-  # Down arrow pressed until current OSEM is the defined "video".
-  # Enter pressed.
-  # Video control area box has opened.
-  # metalmouth has said "video control area entered".
-  # metalmouth has said "play button has focus".
-  # Enter pressed.
-  # metalmouth has said "Video playing".
-  # The video starts playing.
-  # metalmouth has said "Pause button has focus".
-  # The video ends.
-
-Action(s):
-  # None
-
-Expected outcome(s):
-  # metalmouth says "video ended. Rewinding.".
-  # metalmouth says "Play button has focus".
-  # Video automatically rewinds when video reaches end.
 
 ----
