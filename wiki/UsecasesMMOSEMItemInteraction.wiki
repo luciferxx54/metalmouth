@@ -488,7 +488,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="tel" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "telephone box".
@@ -508,7 +508,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="tel" />}}}
   # Down arrow has been pressed until current OSEM is the defined "telephone box".
   # Enter has been pressed.
   # The telephone entry area box has opened.
@@ -531,7 +531,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="tel" />}}}
   # Down arrow has been pressed until current OSEM is the defined "telephone box".
   # Enter has been pressed.
   # The telephone entry area box has opened.
@@ -555,7 +555,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="tel" />}}}
   # Down arrow has been pressed until current OSEM is the defined "telephone box".
   # Enter has been pressed.
   # The telephone entry area box has opened.
@@ -578,7 +578,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="telephone" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="tel" />}}}
   # Down arrow has been pressed until current OSEM is the defined "telephone box".
   # Enter has been pressed.
   # The telephone entry area box has opened.
