@@ -2026,7 +2026,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<select id="manuSelect"><option>option 1</option><option>option 2</option><optgroup><option>option 3</option><option>option 4</option></optgroup></select>}}}
+{{{<select id="manuSelect" multiple="multiple"><option>option 1</option><option>option 2</option><optgroup><option>option 3</option><option>option 4</option></optgroup></select>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "multi select".
