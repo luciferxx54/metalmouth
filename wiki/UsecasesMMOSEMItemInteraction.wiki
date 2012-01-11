@@ -2136,7 +2136,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Audio paused.  Play button has focus.".
 
-====C1.28.3) Focus rewind button====
+====C1.28.4) Focus rewind button====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2164,7 +2164,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Rewind button has focus".
 
-====C1.28.4) Rewind audio====
+====C1.28.5) Rewind audio====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2194,7 +2194,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Audio rewound. Play button has focus.".
 
-====C1.28.5) Automatically rewind when audio reaches end====
+====C1.28.6) Automatically rewind when audio reaches end====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2295,7 +2295,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Video paused.  Play button has focus.".
 
-====C1.29.3) Focus rewind button====
+====C1.29.4) Focus rewind button====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2323,7 +2323,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Rewind button has focus".
 
-====C1.29.4) Rewind video====
+====C1.29.5) Rewind video====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -2353,7 +2353,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "Video rewound. Play button has focus.".
 
-====C1.29.5) Automatically rewind when video reaches end====
+====C1.29.6) Automatically rewind when video reaches end====
 
 Precondition(s): 
   # metalmouth extension is installed.
