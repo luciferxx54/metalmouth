@@ -1653,7 +1653,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth says "enter button has focus".
 
-===C1.19.6) Press enter button===
+====C1.19.6) Press enter button====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1678,7 +1678,7 @@ Expected outcome(s):
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant range box.
 
-====C1.19.6) Activate range entry area box - Default settings====
+====C1.19.7) Activate range entry area box - Default settings====
 
 Precondition(s): 
   # metalmouth extension is installed.
