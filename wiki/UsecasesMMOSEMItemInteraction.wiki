@@ -263,7 +263,7 @@ Expected outcome(s):
   # metalmouth says "search entry area entered".
   # metalmouth says "search entry area has focus".
 
-===C1.8.2) Add characters to search area entry box===
+===C1.8.2) Add characters to search entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -381,7 +381,7 @@ Expected outcome(s):
   # metalmouth says "password entry area entered".
   # metalmouth says "password entry area has focus".
 
-===C1.9.2) Add characters to password area entry box===
+===C1.9.2) Add characters to password entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -499,7 +499,7 @@ Expected outcome(s):
   # metalmouth says "telephone entry area entered".
   # metalmouth says "telephone entry area has focus".
 
-===C1.10.2) Add characters to text area entry box===
+===C1.10.2) Add characters to telephone entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -522,7 +522,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.10.3) Remove characters from text entry area box===
+===C1.10.3) Remove characters from telephone entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -617,7 +617,7 @@ Expected outcome(s):
   # metalmouth says "url entry area entered".
   # metalmouth says "url entry area has focus".
 
-===C1.11.2) Add characters to text area entry box===
+===C1.11.2) Add characters to url entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -640,7 +640,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.11.3) Remove characters from text entry area box===
+===C1.11.3) Remove characters from url entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -735,7 +735,7 @@ Expected outcome(s):
   # metalmouth says "email entry area entered".
   # metalmouth says "email entry area has focus".
 
-===C1.12.2) Add characters to text area entry box===
+===C1.12.2) Add characters to email entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -758,7 +758,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.12.3) Remove characters from text entry area box===
+===C1.12.3) Remove characters from email entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -853,7 +853,7 @@ Expected outcome(s):
   # metalmouth says "datetime entry area entered".
   # metalmouth says "datetime entry area has focus".
 
-===C1.13.2) Add characters to text area entry box===
+===C1.13.2) Add characters to datetime entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -876,7 +876,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.13.3) Remove characters from text entry area box===
+===C1.13.3) Remove characters from datetime entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -971,7 +971,7 @@ Expected outcome(s):
   # metalmouth says "date entry area entered".
   # metalmouth says "date entry area has focus".
 
-===C1.14.2) Add characters to text area entry box===
+===C1.14.2) Add characters to date entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -994,7 +994,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.14.3) Remove characters from text entry area box===
+===C1.14.3) Remove characters from date entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1089,7 +1089,7 @@ Expected outcome(s):
   # metalmouth says "month entry area entered".
   # metalmouth says "month entry area has focus".
 
-===C1.15.2) Add characters to text area entry box===
+===C1.15.2) Add characters to month entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1112,7 +1112,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.15.3) Remove characters from text entry area box===
+===C1.15.3) Remove characters from month entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1207,7 +1207,7 @@ Expected outcome(s):
   # metalmouth says "week entry area entered".
   # metalmouth says "week entry area has focus".
 
-===C1.16.2) Add characters to text area entry box===
+===C1.16.2) Add characters to week entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1230,7 +1230,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.16.3) Remove characters from text entry area box===
+===C1.16.3) Remove characters from week entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1325,7 +1325,7 @@ Expected outcome(s):
   # metalmouth says "time entry area entered".
   # metalmouth says "time entry area has focus".
 
-===C1.17.2) Add characters to text area entry box===
+===C1.17.2) Add characters to time entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1348,7 +1348,7 @@ Expected outcome(s):
   # metalmouth says "b".
   # "b" is shown in the text entry area box.
 
-===C1.17.3) Remove characters from text entry area box===
+===C1.17.3) Remove characters from time entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1443,7 +1443,7 @@ Expected outcome(s):
   # metalmouth says "number entry area entered".
   # metalmouth says "number entry area has focus".
 
-===C1.18.2) Add characters to number area entry box===
+===C1.18.2) Add characters to number entry area box===
 
 Precondition(s): 
   # metalmouth extension is installed.
