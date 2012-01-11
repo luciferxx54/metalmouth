@@ -1551,7 +1551,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10"  step="1" required="required" />}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "range box".
@@ -1571,7 +1571,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" step="1" required="required" />}}}
   # Down arrow has been pressed until current OSEM is the defined "range box".
   # Enter has been pressed.
   # The range entry area box has opened.
@@ -1594,7 +1594,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" step="1" required="required" />}}}
   # Down arrow has been pressed until current OSEM is the defined "range box".
   # Enter has been pressed.
   # The range entry area box has opened.
@@ -1616,7 +1616,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" step="1" required="required" />}}}
   # Down arrow has been pressed until current OSEM is the defined "range box".
   # Enter has been pressed.
   # The range entry area box has opened.
@@ -1640,7 +1640,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" required="required" />}}}
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" min="1" max="10" step="1" required="required" />}}}
   # Down arrow has been pressed until current OSEM is the defined "range box".
   # Enter has been pressed.
   # The range entry area box has opened.
@@ -1677,6 +1677,26 @@ Expected outcome(s):
   # metalmouth says "range entry area closed".
   # metalmouth says "Navigation mode entered".
   # The typed value should now be the value shown in the relevant range box.
+
+====C1.19.6) Activate range entry area box - Default settings====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<label for="inputId">}}}_label text_{{{</label><input id="inputId" type="range" required="required" />}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "range box".
+  # Press enter.
+
+Expected outcome(s):
+  # range entry area box opens.
+  # metalmouth says "range entry area entered".
+  # metalmouth says "increase value button has focus".
 
 ===C1.20) Button===
 
