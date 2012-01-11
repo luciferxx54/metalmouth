@@ -93,7 +93,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<map><area href='http://www.test.com/' alt="text only contents" /></map>}}}
+{{{<map><area href="http://www.test.com/" alt="text only contents" /></map>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "map area".
@@ -112,7 +112,7 @@ Precondition(s):
   # metalmouth has started to read all.
   # Space bar has been pressed.
   # The following code should be present in the DOM:
-{{{<map><area href='http://www.test.com/' title='appropriate title' target="_blank">text only contents</area></map>}}}
+{{{<map><area href="http://www.bbc.com/" alt="text only contents" target="_blank" /></map>}}}
 
 Action(s):
   # Press down arrow until current OSEM is the defined "new tab map area".
