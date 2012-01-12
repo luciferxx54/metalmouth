@@ -1,1 +1,122 @@
 This will be used for voice input
+
+==D1) Voice Input==
+
+===D1.1) Unselected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been unselected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Right click the mouse.
+
+Expected outcome(s):
+  # Nothing should happen.
+
+===D1.2) Selected===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+ 
+Action(s):
+  # Right click the mouse.
+
+Expected outcome(s):
+  # metalmouth should say "Voice input available".
+
+===D1.3) Triggering voice command input===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+ 
+Action(s):
+  # Left click the mouse.  
+
+Expected outcome(s):
+  # metalmouth should say "speak now".
+
+===D1.4) Inputting voice command - unknown command===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Say "Hello"
+
+Expected outcome(s):
+  # metalmouth should say "command not recognised.  Try again".
+
+===D1.5) Inputting voice command - known commands===
+
+====D1.5.1) Next====
+???
+====D1.5.2) Previous====
+???
+====D1.5.3) Do====
+???
+====D1.5.4) Continue====
+???
+====D1.5.5) Jump====
+???
+====D1.5.6) Options====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Say "Options"
+
+Expected outcome(s):
+  # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
+
+====D1.5.7) Location====
+???
+
+===D1.6) No speech heard===
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # The "voice input" option has been selected.
+  # The options page has been saved and closed, using the save & close button.
+  # User wearing headphones.
+  # Right click the mouse.
+  # metalmouth should say "Voice input available".
+  # Left click the mouse.
+  # metalmouth should say "speak now".
+ 
+Action(s):
+   # Be silent.
+
+Expected outcome(s):
+  # After a few seconds metalmouth should say "No speech heard.  Try again".
+
+----
