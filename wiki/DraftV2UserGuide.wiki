@@ -8,7 +8,6 @@ This short guide is intended to assist first time users of the Project metalmout
 1.1) Omnibox method (only two key strokes)
 1.2) metalmouth button method
 2) Extension starts
-
 3) Tab-level interaction 
 3.1) Creating new tab
 3.2) Closing current tab
