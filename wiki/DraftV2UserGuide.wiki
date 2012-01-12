@@ -54,7 +54,7 @@ As mentioned an new option is available to permanently keep the metalmouth exten
 
 ==Extension on==
 
-As soon as the metalmouth extension is turned on the metalmouth icon changes from having a closed mouth (fig 1) to having an open mouth (fig 2). 
+As soon as the metalmouth extension is turned on the metalmouth icon, visible in the Chrome Browser tool bar, changes from having a closed mouth (fig 1) to having an open mouth (fig 2). 
 
 Fig 1
 
@@ -66,6 +66,10 @@ Fig 2
 
 The metalmouth extension allows for multi-tab voice browsing.  You are free to use Chrome's own shortcuts for opening new tabs and closing existing tabs.  Changing the url of a tab will be covered later.  In case you don't yet know Chrome's shortcuts, please find below a mini-guide.
 
+  # Focusing the omnibar (Windows / Linux: Ctrl+L or Mac: ⌘-L). 
+  # Create a new tab (Windows / Linux: Ctrl+T or Mac: ⌘-T).
+  # Close the current (selected) tab (Windows / Linux: Ctrl+W or Mac: ⌘-W).
+  # Cycle from the current (selected) tab to another tab (Windows / Linux: Ctrl+Tab or Mac: Ctrl-Tab).
 
 ----
 
