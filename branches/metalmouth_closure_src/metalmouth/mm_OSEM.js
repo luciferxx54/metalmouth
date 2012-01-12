@@ -19,241 +19,318 @@
 
 goog.provide('mm_OSEM');
 
-console.log("loaded offscreenElementModel");
+goog.require('mm_OSEM_Helper');
 
-// OSM
+console.log("loaded offscreenElementModel");
 	
-mm_OSEM.filter = function(currentNode)
-{
-	var relevantModel = null;
-	
-	switch(currentNode.tagName)
+mm_OSEM.waiariaroleFilterFunctions = {}
+
+mm_OSEM.waiariaroleFilterFunctions['main'] = function(currentNode) {
+	return ["Main_Content_Area", MainContentAreaModel_ContentToRead];
+}
+
+mm_OSEM.waiariaroleFilterFunctions['menuitem'] = function(currentNode) {
+	return ["Menu_Item", MenuItemModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions = {}
+
+mm_OSEM.tagNameFilterFunctions['A'] = function(currentNode) {
+	var hrefValue = currentNode.getAttribute("href");
+	if (!hrefValue)
 	{
-		case "A": 
-			var hrefValue = currentNode.getAttribute("href");
-			if (hrefValue == null)
-			{
-				relevantModel = SkipTargetModel_ContentToRead; 
-			}
-			else
-			{
-				if (hrefValue[0] == "#")
-				{
-					relevantModel = SkipLinkModel_ContentToRead;
-				}
-				else
-				{
-					relevantModel = LinkModel_ContentToRead;
-				}
-			}
-			break; 
-		case "INPUT":
-			var typeValue = currentNode.getAttribute("type");
-			if (typeValue != null)
-			{
-				typeValue = typeValue.toLowerCase();
-				if ((typeValue == "text")||(typeValue == "search")||(typeValue == "password")) // 
-				{
-					relevantModel = TextBoxModel_ContentToRead;
-				}
-				if (typeValue == "image")
-				{
-					relevantModel = ImageButtonModel_ContentToRead; 
-				}
-				if ((typeValue == "button")||(typeValue == "submit")||(typeValue == "reset"))
-				{
-					relevantModel = ButtonModel_ContentToRead; 
-				}
-				if ((typeValue == "checkbox")||(typeValue == "radio"))
-				{
-					relevantModel = CheckButtonModel_ContentToRead;
-				}
-				if ((typeValue == "telephone")||(typeValue == "url")||(typeValue == "e-mail")||(typeValue == "number")||(typeValue == "datetime")||(typeValue == "date")||(typeValue == "month")||(typeValue == "week")||(typeValue == "time"))
-				{
-					relevantModel = FormatSpecificEntryBoxModel_ContentToRead;
-				}
-				if (typeValue == "range")
-				{
-					relevantModel = RangeInputModel_ContentToRead;
-				}
-			}
-			break;
-		case "BUTTON":
-			relevantModel = ButtonModel_ContentToRead;
-			break;
-		case "TEXTAREA":
-			relevantModel = TextBoxModel_ContentToRead;
-			break;
-		case "SELECT":
-			if (currentNode.getAttribute("multiple") == null) // need to collect relevant models for rest - doing this cuts out stages
-			{
-				relevantModel = SingleSelectModel_ContentToRead;
-			}
-			break;
-		case "FORM":
-			relevantModel = FormModel_ContentToRead;
-			break;
-		case "P":
-			relevantModel = ParagraphModel_ContentToRead;
-			break; 
-		case "H1":
-			relevantModel = Level1HeaderModel_ContentToRead;
-			break;
-		case "H2":
-			relevantModel = Level2HeaderModel_ContentToRead;
-			break;
-		case "H3":
-			relevantModel = Level3HeaderModel_ContentToRead;
-			break;
-		case "H4":
-			relevantModel = Level4HeaderModel_ContentToRead;
-			break;
-		case "H5":
-			relevantModel = Level5HeaderModel_ContentToRead;
-			break;
-		case "H6":
-			relevantModel = Level6HeaderModel_ContentToRead;
-			break;
-		case "ABBR":
-			relevantModel = AbbrModel_ContentToRead;
-			break;
-		case "SPAN":
-			if ((currentNode.parentElement.tagName == "BODY")||(currentNode.parentElement.tagName == "DIV")||(currentNode.parentElement.tagName == "UNSUPPORTED")) // parentElement introduced in DOMText at top of page, with UNSUPPORTED it is introduced in the model
-			{
-				relevantModel = SentenceModel_ContentToRead;
-			}
-			else
-			{
-				relevantModel = StaticTextModel_ContentToRead;
-			}
-			break;
-		case "IMG":
-			if (currentNode.getAttribute("role") != "presentation")
-			{
-				relevantModel = SemanticImageModel_ContentToRead;
-			}
-			break; 
-		case "HEADER":
-			relevantModel = PageHeaderAreaModel_ContentToRead;
-			break;
-		case "NAV":
-			relevantModel = SiteNavigationAreaModel_ContentToRead;
-			break;
-		case "MENU":
-			var menuType = currentNode.getAttribute("type"); 
-			if (menuType != null)
-			{
-				if (menuType.toLowerCase() == "list")
-				{
-					relevantModel = MenuModel_ContentToRead;
-				}
-			}
-			break;
-		case "ARTICLE":
-			relevantModel = SectionModel_ContentToRead; // should be the same for DIV
-			break;
-		case "SECTION":
-			if (currentNode.getAttribute("role") == "main")
-			{
-				relevantModel = MainContentAreaModel_ContentToRead;
-			}
-			else
-			{
-				relevantModel = SectionModel_ContentToRead;
-			}
-			break;
-		case "FOOTER":
-			relevantModel = PageFooterAreaModel_ContentToRead;
-			break;
-		case "ADDRESS":
-			relevantModel = PageContactDetailsModel_ContentToRead; 
-			break;
-		case "DIV":
-			if (currentNode.getAttribute("role") != "presentation")
-			{
-				relevantModel = SectionModel_ContentToRead;
-			}
-			break;
-		case "CANVAS":
-			relevantModel = CanvasModel_ContentToRead; // Any text inside the between <canvas> and </canvas> will be displayed in browsers that do not support the canvas element. As Chrome supports canvas we need to be able to change out the canvas element for its contents - the easiest way is to say it is a layout division
-			break;
-		case "FIELDSET":
-			relevantModel = InputGroupModel_ContentToRead;
-			break;
-		case "UL":
-			relevantModel = BulletedListModel_ContentToRead;
-			break;
-		case "OL":
-			relevantModel = NumberedListModel_ContentToRead;
-			break;
-		case "LI":
-			if (currentNode.getAttribute("role") == "menuitem")
-			{
-				relevantModel = MenuItemModel_ContentToRead;
-			}
-			else
-			{
-				relevantModel = ListItemModel_ContentToRead;
-			}
-			break;
-		case "MAP":
-			relevantModel = MapModel_ContentToRead;
-			break;
-		case "AREA":
-			relevantModel = MapAreaModel_ContentToRead;
-			break;
-		case "TABLE":
-			if (currentNode.getAttribute("role") != "presentation")
-			{
-				relevantModel = DataTableModel_ContentToRead; 
-			}
-			break;
-		case "TH":
-			if (currentNode.getAttribute("role") != "presentation")
-			{
-				relevantModel = HeaderCellModel_ContentToRead; 
-			}
-			break;
-		case "TD":
-			if (currentNode.getAttribute("role") != "presentation")
-			{
-				relevantModel = DataCellModel_ContentToRead; 
-			}
-			break;
-		case "BLOCKQUOTE":
-			if (currentNode.getAttribute("cite") == null)
-			{
-				relevantModel = QuoteModel_ContentToRead;
-			}
-			else
-			{
-				relevantModel = QuoteLinkModel_ContentToRead;
-			}
-			break;
-		case "INS":
-			relevantModel = InsertionModel_ContentToRead;
-			break;
-		case "DEL":
-			relevantModel = DeletionModel_ContentToRead;
-			break;
-		case "CODE":
-			relevantModel = CodeModel_ContentToRead;
-			break;
-		case "AUDIO":
-			relevantModel = AudioModel_ContentToRead;
-			break;
-		case "VIDEO":
-			relevantModel = VideoModel_ContentToRead;
-			break;
+		return ["Skip_Target", SkipTargetModel_ContentToRead]; 
 	}
-	
-	if (relevantModel != null)
+	else
 	{
-		var modelItem = new relevantModel(currentNode);
-		var osmItemModel = new OSMItemModel(modelItem.name, modelItem.contentComponents());
+		if (hrefValue[0] == "#")
+		{
+			return ["Skip_Link", SkipLinkModel_ContentToRead];
+		}
+		else
+		{
+			// check to see if target attribute is set to _blank or new
+			
+			var targetValue = currentNode.getAttribute("target");
+			if (targetValue)
+			{
+				targetValue = targetValue.toLowerCase();
+				if ((targetValue == "_blank") || (targetValue == "new"))
+				{
+					return ["New_Tab_Link", NewTabLinkModel_ContentToRead];
+				}
+			}
+			return ["Link", LinkModel_ContentToRead];
+		}
+	}
+}
+
+mm_OSEM.tagNameFilterFunctions['INPUT'] = function(currentNode) {
+	
+	var inputTypeModels = {
+		text:["Text_Box", TextBoxModel_ContentToRead],
+		search:["Search_Box", TextBoxModel_ContentToRead],
+		password:["Password_Box", TextBoxModel_ContentToRead],
+		image:["Image_Button", ImageButtonModel_ContentToRead],
+		button:["Input_Button", InputButtonModel_ContentToRead],
+		submit:["Submit_Button", SubmitButtonModel_ContentToRead],
+		reset:["Reset_Button", ResetButtonModel_ContentToRead],
+		checkbox:["Check_Button", CheckButtonModel_ContentToRead],
+		radio:["Check_Button", CheckButtonModel_ContentToRead],
+		tel:["Telephone_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		url:["Url_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		email:["Email_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		number:["Number_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		datetime:["Date_Time_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		date:["Date_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		month:["Month_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		week:["Week_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		time:["Time_Box", FormatSpecificEntryBoxModel_ContentToRead],
+		range:["Range_Input", RangeInputModel_ContentToRead]
+	};
+	
+	var typeValue = currentNode.getAttribute("type");
+	
+	if (typeValue != null)
+	{
+		typeValue = typeValue.toLowerCase();
+		return inputTypeModels[typeValue];
+	}
+	return null;
+}
+
+mm_OSEM.tagNameFilterFunctions['BUTTON'] = function(currentNode) {
+	return ["Button", ButtonModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['TEXTAREA'] = function(currentNode) {
+	return ["Textarea_Box", TextareaBoxModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['SELECT'] = function(currentNode) {
+	if (currentNode.getAttribute("multiple") == null) // need to collect relevant models for rest - doing this cuts out stages
+	{
+		return ["Single_Select", SingleSelectModel_ContentToRead];
+	}
+	else
+	{
+		return ["Multi_Select", MultiSelectModel_ContentToRead];
+	}
+}
+
+mm_OSEM.tagNameFilterFunctions['FORM'] = function(currentNode) {
+	return ["Form", FormModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['P'] = function(currentNode) {
+	return ["Paragraph", ParagraphModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H1'] = function(currentNode) {
+	return ["Level_1_Header", Level1HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H2'] = function(currentNode) {
+	return ["Level_2_Header", Level2HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H3'] = function(currentNode) {
+	return ["Level_3_Header", Level3HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H4'] = function(currentNode) {
+	return ["Level_4_Header", Level4HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H5'] = function(currentNode) {
+	return ["Level_5_Header", Level5HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['H6'] = function(currentNode) {
+	return ["Level_6_Header", Level6HeaderModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['B'] = function(currentNode) {
+	return ["Bold_Text", BModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['U'] = function(currentNode) {
+	return ["Underlined_Text", UModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['I'] = function(currentNode) {
+	return ["Italic_Text", IModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['ABBR'] = function(currentNode) {
+	return ["Abbreviation", AbbrModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['EM'] = function(currentNode) {
+	return ["Bold_Text", EmModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['SPAN'] = function(currentNode) {
+	var parent = currentNode.parentElement;
+	var parentTagname = parent.tagName;
+	if ((parentTagname == "BODY")||(mm_OSEM.tagNameFilterFunctions.hasOwnProperty(parentTagname) == false)) // last condition checks if parentElement is unsupported - removed ||(parentTagname == "DIV")
+	{
+		return ["Sentence", SentenceModel_ContentToRead];
+	}
+	else
+	{
+		return ["Inline_Content", InlineContentModel_ContentToRead];
+	}
+}
+
+mm_OSEM.tagNameFilterFunctions['IMG'] = function(currentNode) {
+	return ["Semantic_Image", SemanticImageModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['HEADER'] = function(currentNode) {
+	return ["Page_Header_Area", PageHeaderAreaModel_ContentToRead];
+}
+	
+mm_OSEM.tagNameFilterFunctions['NAV'] = function(currentNode) {
+	return ["Site_Navigation_Area", SiteNavigationAreaModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['MENU'] = function(currentNode) {
+	var menuType = currentNode.getAttribute("type"); 
+	if (menuType != null)
+	{
+		if (menuType.toLowerCase() == "list")
+		{
+			return ["Menu", MenuModel_ContentToRead];
+		}
+	}
+	return null;
+}
+
+mm_OSEM.tagNameFilterFunctions['ARTICLE'] = function(currentNode) {
+	return ["Article", ArticleModel_ContentToRead]; // should be the same for DIV
+}
+
+mm_OSEM.tagNameFilterFunctions['SECTION'] = function(currentNode) {
+	return ["Section", SectionModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['FOOTER'] = function(currentNode) {
+	return ["Page_Footer_Area", PageFooterAreaModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['ADDRESS'] = function(currentNode) {
+	return ["Page_Contact_Details", PageContactDetailsModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['DIV'] = function(currentNode) {
+	return ["Section", SectionModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['CANVAS'] = function(currentNode) {
+	return ["Canvas", CanvasModel_ContentToRead]; // Any text inside the between <canvas> and </canvas> will be displayed in browsers that do not support the canvas element. As Chrome supports canvas we need to be able to change out the canvas element for its contents - the easiest way is to say it is a layout division
+}
+
+mm_OSEM.tagNameFilterFunctions['FIELDSET'] = function(currentNode) {
+	return ["Input_Group", InputGroupModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['UL'] = function(currentNode) {
+	return ["Bulleted_List", BulletedListModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['OL'] = function(currentNode) {
+	return ["Numbered_List", NumberedListModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['LI'] = function(currentNode) {
+	return ["List_Item", ListItemModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['MAP'] = function(currentNode) {
+	return ["Map", MapModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['AREA'] = function(currentNode) {
+	var targetValue = currentNode.getAttribute("target");
+	if (targetValue)
+	{
+		targetValue = targetValue.toLowerCase();
+		if ((targetValue == "_blank") || (targetValue == "new"))
+		{
+			return ["New_Tab_Map_Area", NewTabMapAreaModel_ContentToRead];
+		}
+	}
+	return ["Map_Area", MapAreaModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['TABLE'] = function(currentNode) {
+	return ["Data_Table", DataTableModel_ContentToRead]; 
+}
+
+mm_OSEM.tagNameFilterFunctions['TH'] = function(currentNode) {
+	return ["Header_Cell", HeaderCellModel_ContentToRead]; 
+}
+
+mm_OSEM.tagNameFilterFunctions['TD'] = function(currentNode) {
+	return ["Data_Cell", DataCellModel_ContentToRead]; 
+}
+
+mm_OSEM.tagNameFilterFunctions['BLOCKQUOTE'] = function(currentNode) {
+	if (currentNode.getAttribute("cite") == null)
+	{
+		return ["Quote", QuoteModel_ContentToRead];
+	}
+	else
+	{
+		return ["Quote_Link", QuoteLinkModel_ContentToRead];
+	}
+}
+
+mm_OSEM.tagNameFilterFunctions['INS'] = function(currentNode) {
+	return ["Insertion", InsertionModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['DEL'] = function(currentNode) {
+	return ["Deletion", DeletionModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['CODE'] = function(currentNode) {
+	return ["Code", CodeModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['AUDIO'] = function(currentNode) {
+	return ["Audio", AudioModel_ContentToRead];
+}
+
+mm_OSEM.tagNameFilterFunctions['VIDEO'] = function(currentNode) {
+	return ["Video", VideoModel_ContentToRead];
+}
+
+mm_OSEM.filter = function(currentNode)
+{		
+	var relevantModelFunction = null;
+	var roleAttribute = currentNode.getAttribute('role');
+	if (roleAttribute)
+	{
+		roleAttribute = roleAttribute.toLowerCase();
+		if (roleAttribute == "presentation")
+		{
+			return null;
+		}
+		relevantModelFunction = mm_OSEM.waiariaroleFilterFunctions.hasOwnProperty(roleAttribute) ? mm_OSEM.waiariaroleFilterFunctions[roleAttribute](currentNode) : null;
+	}
+	if (!relevantModelFunction)
+	{
+		var tagName = currentNode.tagName;
+		relevantModelFunction = mm_OSEM.tagNameFilterFunctions.hasOwnProperty(tagName) ? mm_OSEM.tagNameFilterFunctions[tagName](currentNode) : null;
+	}
+	if (relevantModelFunction)
+	{		
+		var osmItemModel = new OSMItemModel(relevantModelFunction[0], relevantModelFunction[1](currentNode));
 		return osmItemModel;
 	}
-	return relevantModel;
+	return null;
 }
 
 function OSMItemModel(osmType, osmContentComponents)
@@ -262,501 +339,173 @@ function OSMItemModel(osmType, osmContentComponents)
 	this.osmContentComponents = osmContentComponents;
 }
 
-function ElementModel_ContentToRead(baseElement) // element from live page DOM 
+// wai-aria role filter functions
+
+function MainContentAreaModel_ContentToRead(originalElement)
 {
-	this.tagName = function()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Main content area";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		return baseElement.tagName;
+		contentComponentsArray[1] = textNodeContents;
 	}
 	
-	this.value = function()
-	{
-		var value = baseElement.value;
-		var result = null;
-		
-		if ((value != null)&&(value != ""))
-		{
-			result = value;
-		}
-		
-		return result;
-	}
-	
-	this.getAttribute = function(attributeName)
-	{
-		var attributeValue = baseElement.getAttribute(attributeName);
-		var result = null;
-		
-		if ((attributeValue != null)&&(attributeValue != ""))
-		{
-			result = attributeValue;
-		}
-		
-		return result;
-	}
-	
-	this.children = function()
-	{
-		return baseElement.children;
-	}
-	
-	this.selectedTextValue = function()
-	{
-		return baseElement[baseElement.selectedIndex].innerText;
-	}
+	return contentComponentsArray;
 }
 
-// SkipLinkModel-----------------------
+// tagName filter functions
 
-function SkipLinkModel_ContentToRead(originalElement)
+function SkipLinkModel_ContentToRead(originalElement) 
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Skip Link";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title");
 	
-	this.name = "Skip_Link";
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray; 
+		contentComponentsArray[2] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Skip Link";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function titleValue()
-	{
-		// title forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title");
-		
-		if (title == null)
-		{
-			title = ""; 
-		}
-		
-		return title;
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "") // originalElement.childNodes[0].data != "\n"
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray; 
 }
-
-// SkipTargetModels------------------------
 
 function SkipTargetModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Skip Target";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title");
 	
-	this.name = "Skip_Target";
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[2] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Skip Link Target";
-	}
-	
-	function titleValue()
-	{
-		// title forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title");
-		
-		if (title == null)
-		{
-			title = ""; 
-		}
-		
-		return title;
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// LinkModels------------------------ 
 
 function LinkModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Link";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();		
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Link";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title");		
 
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}			
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[2] = textNodeContents;
+	}
 
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Link";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function titleValue()
-	{
-		// title forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title");
-		
-		if ((title == null)||(title == ""))
-		{
-			title = ""; 
-		}
-		
-		return title;
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
+
+function NewTabLinkModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Link opens in a new tab";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title");		
 	
-// QuoteLinkModels------------------------
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[2] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
 
 function QuoteLinkModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Quote link";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title");
 	
-	this.name = "Quote_Link";
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[2] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Quote link";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function titleValue()
-	{
-		// title forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title");
-		
-		if ((title == null)||(title == ""))
-		{
-			title = ""; 
-		}
-		
-		return title;
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// MapModels------------------------
 
 function MapModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Map";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Map";
-	}
-	
-	function titleValue()
-	{
-		// title forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title");
-		
-		if ((title == null)||(title == ""))
-		{
-			title = ""; 
-		}
-		
-		return title;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.attributeValue(originalElement, "title", "Untitled");
+	contentComponentsArray[1] = "Map";
+	return contentComponentsArray;
 }
 
-// MapAreaModels------------------------
+function NewTabMapAreaModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Map area opens in a new tab";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "alt", "Untitled");
+	return contentComponentsArray;
+}
 
 function MapAreaModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Map_Area";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = altValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Map area";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function altValue()
-	{
-		// title forms part of the text to read out
-		
-		var alt = baseElement.getAttribute("alt");
-		
-		if ((alt == null)||(alt == ""))
-		{
-			alt = "Untitled"; 
-		}
-		
-		return alt;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Map area";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "alt", "Untitled");
+	return contentComponentsArray;
 }
-
-// DataTableModels------------------------
 
 function DataTableModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Data_Table";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = summaryValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Data table";
-	}
-	
-	function summaryValue()
-	{
-		// title forms part of the text to read out
-		
-		var summary = baseElement.getAttribute("summary");
-		
-		if ((summary == null)||(summary == ""))
-		{
-			summary = ""; 
-		}
-		
-		return summary;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Data table";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "summary", "No summary");
+	return contentComponentsArray;
 }
-
-// HeaderCellModels------------------------
 
 function HeaderCellModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Header cell";
 	
-	this.name = "Header_Cell"; 
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[1] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Header cell";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// DataCellModels------------------------
 
 function DataCellModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Data_Cell";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = headerCellTitlesValue();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Data cell";
-	}
-	
-	function headerCellTitlesValue()
+	var headerCellTitlesValue = function()
 	{
 		var headerText = ""; 
-		var headersAttributeValue = baseElement.getAttribute("headers");
+		var headersAttributeValue = originalElement.getAttribute("headers");
 		if (headersAttributeValue != null)
 		{
 			var headersAttributeValueArray = headersAttributeValue.split(',');
-			for (var k in headersAttributeValueArray)
+			for (var i = 0, len = headersAttributeValueArray.length; i < len; i++)
 			{
-				var trimmedValue = headersAttributeValueArray[k].trim();
+				var trimmedValue = headersAttributeValueArray[i].trim();
 				if (trimmedValue != "")
 				{
 					var relatedHeaderElement = document.getElementById(trimmedValue);
-					if (relatedHeaderElement != null)
+					if (relatedHeaderElement)
 					{
-						if (headerText == "")
+						var relatedHeaderElementText = relatedHeaderElement.innerText;
+						if (relatedHeaderElementText != "")
 						{
-							headerText = relatedHeaderElement.innerText;
-						}
-						else
-						{
-							headerText = headerText + " and " + relatedHeaderElement.innerText;
+							if (headerText == "")
+							{
+								headerText = relatedHeaderElementText;
+							}
+							else
+							{
+								headerText = headerText + " and " + relatedHeaderElementText;
+							}
 						}
 					}
 				}
@@ -769,1456 +518,560 @@ function DataCellModel_ContentToRead(originalElement)
 		}
 		else
 		{
-			headerText = "relates to " + headerText + "cell value";
+			headerText = "relates to " + headerText;
 		}
 		
 		return headerText;
 	}
 	
-	function containsTextNodeOnly()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Data cell";
+	contentComponentsArray[1] = headerCellTitlesValue();
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		contentComponentsArray[2] = "cell value" + textNodeContents;
 	}
+	
+	return contentComponentsArray;
 }
-
-// AudioModels------------------------
 
 function AudioModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Audio";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Audio";
-	}
-	
-	function titleValue()
-	{
-		// label forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title"); 
-		
-		if (title == null)
-		{
-			title = "Untitled";
-		}
-		else
-		{
-			title = "Entitled: " + title; 
-		}
-		
-		return title;
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Audio";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title", "Untitled", "Entitled");
+	return contentComponentsArray;
 }
-
-// VideoModels------------------------
 
 function VideoModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Video";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Video";
-	}
-	
-	function titleValue()
-	{
-		// label forms part of the text to read out
-		
-		var title = baseElement.getAttribute("title"); 
-		
-		if (title == null)
-		{
-			title = "Untitled";
-		}
-		else
-		{
-			title = "Entitled: " + title; 
-		}
-		
-		return title;
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Video";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title", "Untitled", "Entitled");
+	return contentComponentsArray;
 }
 
-// TextBoxModels------------------------
+function TextareaBoxModel_ContentToRead(originalElement)
+{
+	var stateValue = function()
+	{
+		var value = originalElement.value;
+		var state = ((value != null)&&(value != "")) ? value : "None"; 
+		return "Current value " + state;
+	}
+	
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable text area box";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
+}
 
 function TextBoxModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	var type;
-	
-	if (baseElement.tagName() == "TEXTAREA")
+	var stateValue = function()
 	{
-		type = "text"; 
-	}
-	else
-	{
-		type = baseElement.getAttribute("type").toLowerCase(); 
+		var value = originalElement.value;
+		var state = ((value != null)&&(value != "")) ? value : "None"; 
+		return "Current value " + state;
 	}
 	
-	var nameBasedOnType = "";
-	
-	switch(type)
-	{
-		case "text":
-			nameBasedOnType = "Text_Box";
-			break;
-		case "search":
-			nameBasedOnType = "Search_Box";
-			break;
-		case "password":
-			nameBasedOnType = "Password_Box";
-			break;
-	}
-	
-	this.name = nameBasedOnType;
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = stateValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return type + " box";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
-	
-	function stateValue()
-	{
-		// state forms part of the text to read out
-		
-		var state = baseElement.value(); 
-		
-		if (state == null)
-		{
-			state = "None";
-		}
-		
-		return "Current value: " + state;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable " + originalElement.getAttribute("type") + " box";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
 }
-
-// FormatSpecificEntryBoxModels------------------------
 
 function FormatSpecificEntryBoxModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	var type = baseElement.getAttribute("type").toLowerCase(); 
-	var nameBasedOnType = ""; 
-	
-	switch(type)
+	var stateValue = function()
 	{
-		case "telephone":
-			nameBasedOnType = "Telephone_Box"; 
-			break;
-		case "url":
-			nameBasedOnType = "Url_Box"; 
-			break;
-		case "e-mail":
-			nameBasedOnType = "Email_Box"; 
-			break;
-		case "number":
-			nameBasedOnType = "Number_Box"; 
-			break;
-		case "datetime":
-			nameBasedOnType = "Date_Time_Box"; 
-			break;
-		case "date":
-			nameBasedOnType = "Date_Box"; 
-			break;
-		case "month":
-			nameBasedOnType = "Month_Box"; 
-			break;
-		case "week":
-			nameBasedOnType = "Week_Box"; 
-			break;
-		case "time":
-			nameBasedOnType = "Time_Box"; 
-			break;
+		var value = originalElement.value;
+		var state = ((value != null)&&(value != "")) ? value : "None"; 
+		return "Current value " + state;
 	}
 	
-	this.name = nameBasedOnType; 
-	
-	this.contentComponents = function()
+	var correctedType = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = specifiedFormat();
-		contentComponentsArray[contentComponentsArray.length] = stateValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{		
+		var type = originalElement.getAttribute("type");
+		if (type == "tel")
+		{
+			type = "telephone";
+		}
 		return type;
 	}
 	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
-	
-	function specifiedFormat()
-	{
-		var title = baseElement.getAttribute("title"); 
-		
-		if (title == null)
-		{
-			title = "No format specified";
-		}
-		
-		return title;
-	}
-	
-	function stateValue()
-	{
-		// state forms part of the text to read out
-		
-		var state = baseElement.value(); 
-		
-		if (state == null)
-		{
-			state = "None";
-		}
-		
-		return "Current value: " + state;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable " + correctedType() + " box";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = mm_OSEM_Helper.attributeValue(originalElement, "title", "No format specified");
+	contentComponentsArray[4] = stateValue();
+	return contentComponentsArray;
 }
-
-// RangeInputModels------------------------
 
 function RangeInputModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Range_Input";
-	
-	this.contentComponents = function()
+	var stateValue = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = stateValue();
-		return contentComponentsArray;
+		var value = originalElement.value;
+		var state = ((value != null)&&(value != "")) ? value : "None"; 
+		return "Current value " + state; // careful changing text as it is used in drawRangeInput above
 	}
 	
-	function whatAmI()
-	{
-		return "Range input";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
-	
-	function stateValue()
-	{
-		// state forms part of the text to read out
-		
-		var state = baseElement.value(); 
-		
-		if (state == null)
-		{
-			state = "None";
-		}
-		
-		return "Current value: " + state; // careful changing text as it is used in drawRangeInput above
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable Range input";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
 }
-
-// ImageButtonModels------------------------
 
 function ImageButtonModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var label = mm_OSEM_Helper.labelValue(originalElement);
+	var alt = mm_OSEM_Helper.attributeValue(originalElement, "alt");
 	
-	this.name = "Image_Button";
+	label = label + " " + alt;
 	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		return contentComponentsArray;
+	if (label == "") {
+		label = "unlabelled";
 	}
 	
-	function whatAmI()
-	{
-		return "Image button";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		// title forms part of the text to read out
-		
-		var alt = baseElement.getAttribute("alt");
-		
-		if ((alt == null)||(alt == ""))
-		{
-			alt = "Unlabelled"; 
-		}
-		
-		return alt;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = label;
+	contentComponentsArray[1] = "Interactable Image button";
+	return contentComponentsArray;
 }
 
-// ButtonModels------------------------
+function InputButtonModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.attributeValue(originalElement, "value", "Unlabelled");
+	contentComponentsArray[1] = "Interactable Input Button";
+	return contentComponentsArray;
+}
+
+function SubmitButtonModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Submit Button";
+	return contentComponentsArray;
+}
+
+function ResetButtonModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Interactable Reset Button";
+	return contentComponentsArray;
+}
 
 function ButtonModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Button";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Button";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		var label = baseElement.getAttribute("value");
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
+	var contentComponentsArray = [];
+	var innerText = originalElement.innerText;
+	contentComponentsArray[0] = innerText == "" ? "Unlabelled" : innerText;
+	contentComponentsArray[1] = "Interactable Button";
+	return contentComponentsArray;
 }
-
-// CheckButtonModels------------------------
 
 function CheckButtonModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Check_Button";
-	
-	this.contentComponents = function()
+	var stateValue = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = stateValue();
-		return contentComponentsArray;
+		var state = originalElement.checked == true ? "checked" : "unchecked"; 
+		return "Current value " + state;
 	}
 	
-	function whatAmI()
-	{
-		return "Check Box";
-	}
-	
-	function labelValue()
-	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function stateValue()
-	{
-		// state forms part of the text to read out
-		
-		var state = baseElement.getAttribute("checked"); 
-		
-		if (state == null)
-		{
-			state = "Unchecked";
-		}
-		
-		return "Current value: " + state;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable Check Button";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
 }
-
-// SingleSelectModels------------------------
 
 function SingleSelectModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Single_Select";
-	
-	this.contentComponents = function()
+	var stateValue = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = interactable();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = labelValue();
-		contentComponentsArray[contentComponentsArray.length] = stateValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Single select drop-down";
-	}
-	
-	function interactable()
-	{
-		return "Interactable";
-	}
-	
-	function labelValue()
-	{
-		var label = "";
-		
-		var id = baseElement.getAttribute("id");
-		var labelElements = document.getElementsByTagName("label");
-		for (var i in labelElements)
-		{
-			if (labelElements[i].tagName != null)
-			{
-				var forAttribute = labelElements[i].getAttribute("for");
-				if (forAttribute != null)
-				{
-					if (forAttribute == id)
-					{
-						label = labelElements[i].innerText;
-						break;
-					}
-				}
-			}
-		}
-		
-		if (label == "")
-		{
-			label = "Unlabelled";
-		}
-		
-		return label;
-	}
-	
-	function stateValue()
-	{
-		// state forms part of the text to read out
-		
-		var state = baseElement.selectedTextValue();
+		var state = originalElement[originalElement.selectedIndex].innerText;
 		
 		if (state == null)
 		{
-			state = "None";
+			state = "No selected value";
 		}
 		
-		return "Current value: " + state;
+		return "Current value " + state;
 	}
+	
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable Single select drop-down";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
 }
 
-// PageHeaderAreaModels------------------------
-
-function PageHeaderAreaModel_ContentToRead(originalElement)
+function MultiSelectModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Page_Header_Area"; 
-	
-	this.contentComponents = function()
+	var stateValue = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
+		var state = [];
+		var options = originalElement.querySelectorAll('option');
 		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+		for (var i = 0, len = options.length; i < len; i++)
 		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Page header area";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
+			var option = options[i];
+			if (option.selected == true)
 			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
+				state[state.length] = option.innerText;
 			}
 		}
-		return false;
-	}
-}
-
-// SiteNavigationAreaModels------------------------
-
-function SiteNavigationAreaModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Site_Navigation_Area";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
 		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
+		var stateLen = state.length;
+		if (stateLen == 1)
 		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
+			return "Current selected value " + state[0];
 		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Site navigation area";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
+		else if (stateLen > 0)
 		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// MenuModels------------------------
-
-function MenuModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Menu"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = titleValue();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Menu";
-	}
-	
-	function titleValue()
-	{
-		var title = baseElement.getAttribute("title"); 
-		
-		if (title == null)
-		{
-			title = "None";
-		}
-		
-		return title;
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// MainContentAreaModel------------------------
-
-function MainContentAreaModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Main_Content_Area";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Main content area";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// PageFooterAreaModel------------------------
-
-function PageFooterAreaModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Page_Footer_Area";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Page footer area";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// PageContactDetailsModel------------------------
-
-function PageContactDetailsModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Page_Contact_Details"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Page contact details";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// LayoutDivisionModel------------------------
-
-function CanvasModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Canvas"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Canvas";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// SectionModel------------------------
-
-function SectionModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Section";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		// contentComponentsArray[contentComponentsArray.length] = title();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Section";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// SentenceModel------------------------
-
-function SentenceModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Sentence"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Sentence";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 1
-
-function Level1HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 1 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 1 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 2
-
-function Level2HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 2 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 2 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 3
-
-function Level3HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 3 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 3 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 4
-
-function Level4HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 4 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 4 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 5
-
-function Level5HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 5 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 5 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Header 6
-
-function Level6HeaderModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Level 6 Header"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Level 6 Header";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-}
-
-// Abbr 
-
-function AbbrModel_ContentToRead(originalElement)
-{
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Abbreviation"; 
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		
-		if (containsExpandAbbr() == true)
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.getAttribute("title");
+			return "Current selected values " + state.toString();
 		}
 		else
 		{
-			if (containsTextNodeOnly() == true)
-			{
-				contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-			}
+			return "No selected values";
 		}
-		return contentComponentsArray;
 	}
 	
-	function containsExpandAbbr()
-	{
-		if (originalElement.getAttribute("title") != null)
-		{
-			return true;
-		}
-		return false;
-	}
-			
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.labelValue(originalElement);
+	contentComponentsArray[1] = "Interactable Multi select drop-down";
+	contentComponentsArray[2] = mm_OSEM_Helper.attributeValue(originalElement, "required");
+	contentComponentsArray[3] = stateValue();
+	return contentComponentsArray;
 }
 
-// ParagraphModel------------------------
+function PageHeaderAreaModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Page header area";
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	return contentComponentsArray;
+}
+
+function SiteNavigationAreaModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Site navigation area";
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	return contentComponentsArray;
+}
+
+function MenuModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.attributeValue(originalElement, "title", "Untitled");
+	contentComponentsArray[1] = "Menu";
+	contentComponentsArray[2] = mm_OSEM_Helper.numberOfChildren(originalElement);
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[3] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function PageFooterAreaModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Page footer area";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function PageContactDetailsModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Page contact details";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function CanvasModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Canvas";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "title", "Untitled", "Entitled");
+	return contentComponentsArray;
+}
+
+function ArticleModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Article";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function SectionModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Section";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function SentenceModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Sentence";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level1HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 1 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level2HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 2 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level3HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 3 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level4HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 4 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level5HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 5 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function Level6HeaderModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Level 6 Header";
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[1] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function AbbrModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	
+	var title = originalElement.getAttribute("title");
+	if (title != null)
+	{
+		contentComponentsArray[0] = title;
+	}
+	else
+	{
+		var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+		if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+		{
+			contentComponentsArray[1] = textNodeContents;
+		}
+	}
+	return contentComponentsArray;
+}
+
+function BModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[0] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function UModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[0] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function IModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[0] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function EmModel_ContentToRead(originalElement)
+{
+	var contentComponentsArray = [];
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[0] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
 
 function ParagraphModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Paragraph";
 	
-	this.name = "Paragraph"; 
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[1] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Paragraph";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// QuoteModel------------------------
 
 function QuoteModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Quote";
 	
-	this.name = "Quote";
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[1] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Quote";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// InsertionModel------------------------
 
 function InsertionModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Insertion";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = insertedWhen();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Insertion";
-	}
-	
-	function insertedWhen()
+	var insertedWhen = function()
 	{
 		// YYYY-MM-DDThh:mm:ss 2011-05-17T13:25:01
 		
 		// datetime attribute 
 		
-		var datetime = baseElement.getAttribute("datetime"); 
+		var datetime = originalElement.getAttribute("datetime"); 
 		
 		if (datetime == null)
 		{
-			datetime = "";
+			return "";
 		}
 		else
 		{
@@ -2229,66 +1082,37 @@ function InsertionModel_ContentToRead(originalElement)
 				datetime = datetime.replace("T", " at ");
 			}
 			
-			datetime = " on the " + datetime; 
+			return "The following was inserted into the page on the " + datetime; 
 		}			
-		
-		return "The following was inserted into the page" + datetime;
 	}
 	
-	function containsTextNodeOnly()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Insertion";
+	contentComponentsArray[1] = insertedWhen();
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		contentComponentsArray[2] = textNodeContents;
 	}
-}
+	
+	return contentComponentsArray;
 
-// DeletionModel------------------------
+}
 
 function DeletionModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Deletion";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = deletedWhen();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Deletion";
-	}
-	
-	function deletedWhen()
+	var deletedWhen = function()
 	{
 		// YYYY-MM-DDThh:mm:ss 2011-05-17T13:25:01
 		
 		// datetime attribute
 		
-		var datetime = baseElement.getAttribute("datetime"); 
+		var datetime = originalElement.getAttribute("datetime"); 
 		
 		if (datetime == null)
 		{
-			datetime = "";
+			return "";
 		}
 		else
 		{
@@ -2298,163 +1122,58 @@ function DeletionModel_ContentToRead(originalElement)
 			{
 				datetime = datetime.replace("T", " at ");
 			}
+			return "The following was deleted from the page on the " + datetime;  
 		}
-		
-		return "The following was deleted from the page" + datetime;
 	}
 	
-	function containsTextNodeOnly()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Deletion";
+	contentComponentsArray[1] = deletedWhen();
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		contentComponentsArray[2] = textNodeContents;
 	}
+	
+	return contentComponentsArray;
 }
-
-// CodeModel------------------------
 
 function CodeModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Code";
 	
-	this.name = "Code";
-	
-	this.contentComponents = function()
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
+		contentComponentsArray[1] = textNodeContents;
 	}
 	
-	function whatAmI()
-	{
-		return "Code";
-	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// BulletedListModel------------------------
 
 function BulletedListModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Bulleted_List";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = numberOfChildren();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Bulleted list";
-	}
-	
-	function numberOfChildren()
-	{
-		var number = baseElement.children().length;
-		var text = "items";
-		
-		if (number == 1)
-		{
-			text = "item"
-		}
-		
-		return number + " " + text + " listed";
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Bulleted list";
+	contentComponentsArray[1] = mm_OSEM_Helper.numberOfChildren(originalElement);
+	return contentComponentsArray;
 }
-
-// NumberedListModel------------------------
 
 function NumberedListModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Numbered_List";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = numberOfChildren();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Numbered list";
-	}
-	
-	function numberOfChildren()
-	{
-		var number = baseElement.children().length;
-		var text = "items";
-		
-		if (number == 1)
-		{
-			text = "item"
-		}
-		
-		return number + " " + text + " listed";
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Numbered list";
+	contentComponentsArray[1] = mm_OSEM_Helper.numberOfChildren(originalElement);
+	return contentComponentsArray;
 }
-
-// ListItemModel------------------------
 
 function ListItemModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "List_Item";
-	
-	this.contentComponents = function()
+	var whatAmI = function()
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		var positionInList = baseElement.getAttribute("positionInList"); 
+		var positionInList = mm_OSEM_Helper.findPositionInList(originalElement); 
 		
 		var text = ""; 
 		
@@ -2466,228 +1185,106 @@ function ListItemModel_ContentToRead(originalElement)
 		return "List item" + text;
 	}
 	
-	function containsTextNodeOnly()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = whatAmI();
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		contentComponentsArray[1] = textNodeContents;
 	}
+	
+	return contentComponentsArray;
 }
-
-// MenuItemModel------------------------
 
 function MenuItemModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Menu_Item";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
+	var whatAmI = function()
 	{		
-		return "Menu item";
+		var positionInList = mm_OSEM_Helper.findPositionInList(originalElement);
+		
+		var text = ""; 
+		
+		if (positionInList != null)
+		{
+			text = " " + positionInList;
+		}
+		
+		return "Menu item" + text;
 	}
 	
-	function containsTextNodeOnly()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = whatAmI();
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		contentComponentsArray[1] = textNodeContents;
 	}
+	
+	return contentComponentsArray;
 }
-
-// FormModel------------------------
 
 function FormModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Form";
-	
-	this.contentComponents = function()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = mm_OSEM_Helper.attributeValue(originalElement, "name", "Untitled");
+	contentComponentsArray[1] = "Form";
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = nameValue();
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		return contentComponentsArray;
+		contentComponentsArray[2] = textNodeContents;
 	}
-	
-	function whatAmI()
-	{
-		return "Form";
-	}
-	
-	function nameValue()
-	{
-		var name = baseElement.getAttribute("name"); 
-		
-		if (name == null)
-		{
-			name = "Untitled";
-		}
-		
-		return name;
-	}
+	return contentComponentsArray;
 }
-
-// InputGroupModel------------------------
 
 function InputGroupModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Input_Group";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = title();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Input group";
-	}
-	
-	function title(selectionTitle)
+	var title = function()
 	{		
-		var legend = null;
-		var children = baseElement.children(); // direct children
+		var legend = "Untitled";
 		
-		for (var i in children)
+		var legendElement = originalElement.querySelector('legend');
+		
+		if (legendElement)
 		{
-			if (children[i].tagName == "LEGEND")
+			var legendText = legendElement.innerText;
+			if (legendText != "")
 			{
-				legend = children[i].innerText;
-				break;
+				legend = legendText;
 			}
-		}
-		
-		if (legend == null)
-		{
-			legend = "Untitled";
-		}
-		else
-		{
-			legend = "headed " + legend;
 		}
 		return legend;
 	}
+	
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = title();
+	contentComponentsArray[1] = "Input group";
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
+	{
+		contentComponentsArray[2] = textNodeContents;
+	}
+	return contentComponentsArray;
 }
 
-// StaticTextModel------------------------
-
-function StaticTextModel_ContentToRead(originalElement)
+function InlineContentModel_ContentToRead(originalElement) // formed from span
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Static_Text"; 
-	
-	this.contentComponents = function()
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Inline content";
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) // need to add these to elements which can hold content, but which are not layout elements
 	{
-		var contentComponentsArray = [];
-		if (containsTextNodeOnly() == true) // need to add these to elements which can hold content, but which are not layout elements
-		{
-			contentComponentsArray[contentComponentsArray.length] = originalElement.childNodes[0].data;
-		}
-		return contentComponentsArray;
+		contentComponentsArray[1] = textNodeContents;
 	}
-	
-	function containsTextNodeOnly()
-	{
-		if (originalElement.childNodes.length == 1)
-		{
-			if (originalElement.childNodes[0].nodeName == "#text")
-			{
-				if (originalElement.childNodes[0].data.trim() != "")
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	return contentComponentsArray;
 }
-
-// SemanticImageModel------------------------
 
 function SemanticImageModel_ContentToRead(originalElement)
 {
-	var baseElement = new ElementModel_ContentToRead(originalElement);
-	
-	this.name = "Semantic_Image";
-	
-	this.contentComponents = function()
-	{
-		var contentComponentsArray = [];
-		contentComponentsArray[contentComponentsArray.length] = whatAmI();
-		contentComponentsArray[contentComponentsArray.length] = altValue();
-		contentComponentsArray[contentComponentsArray.length] = longdescValue();
-		return contentComponentsArray;
-	}
-	
-	function whatAmI()
-	{
-		return "Semantic Image";
-	}
-	
-	function altValue()
-	{
-		// alt forms part of the text to read out
-		
-		var alt = baseElement.getAttribute("alt"); 
-		
-		if (alt == null)
-		{
-			alt = "None";
-		}
-		
-		return "Alternative Text: " + alt;
-	}
-	
-	function longdescValue()
-	{
-		var longDesc = baseElement.getAttribute("longdesc");
-		
-		if (longDesc == null)
-		{
-			longDesc = ""; 
-		}
-		else
-		{
-			longDesc = "Long Description: " + longDesc;
-		}
-		return longDesc;
-	}
+	var contentComponentsArray = [];
+	contentComponentsArray[0] = "Semantic Image";
+	contentComponentsArray[1] = mm_OSEM_Helper.attributeValue(originalElement, "alt", "No alternative text", "Alternative Text");
+	return contentComponentsArray;
 }
 

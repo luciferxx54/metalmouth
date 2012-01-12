@@ -19,36 +19,11 @@
 
 goog.provide('mm_TTS');
 
+goog.require('mm_BackgroundComms');
+
 console.log("loaded tts");
 
-mm_TTS.getAudio = function(text, enqueue, callbackFunction)
+mm_TTS.getAudio = function(text, callbackFunction)
 {
-	// text - replace . for dot in .co.uk for example
-	
-	var patternToFindAndReplaceDotInUrl = /(\.)(?=[a-z])/gi;
-	text = text.replace(patternToFindAndReplaceDotInUrl, " dot ");		
-	
-	// text - replace . for point in 45.4 for example
-	var patternToFindAndReplaceDotInNumbers = /(\.)(?=[0-9])/gi;
-	text = text.replace(patternToFindAndReplaceDotInNumbers, " point ");
-	
-	var voice = new VoiceModel(text, enqueue.toString()); // svb.speakingRate
-	tts(voice, callbackFunction);
+	mm_BackgroundComms.call("voice", text, callbackFunction, false);
 }
- 
-function tts(voice, callbackFunction)
-{
-	chrome.extension.sendRequest({voice: JSON.stringify(voice)}, function(response) {
-		if (callbackFunction != null)
-		{
-			callbackFunction();
-		}
-	});
-}
-
-function VoiceModel(utterance, enqueue)
-{
-	this.utterance = utterance;
-	this.enqueue = enqueue;
-}
-	

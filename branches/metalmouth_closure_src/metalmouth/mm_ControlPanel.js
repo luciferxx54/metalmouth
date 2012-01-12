@@ -19,132 +19,141 @@
 
 goog.provide('mm_ControlPanel');
 
+goog.require('mm_BackgroundComms');
+
 console.log("loaded controlPanel");
+
+function calcDeveloperWindowPosition()
+{
+	var xPos = document.body.clientWidth - 200;
+	return xPos;
+}
 
 mm_ControlPanel.init = function()
 {
-	correctTopValuesForAbsolutePositionedElements();
+	mm_ControlPanel.pageCulture = getPageCulture();
 	
 	var highestZIndex = calcHighestZIndex();
+	var developerWindowPosition = calcDeveloperWindowPosition();
 	
-	// only provide ids for elements which are going to be called
-	
-	var headElement = document.getElementsByTagName("head")[0];
+	var headElement = document.querySelector("head");
 	
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.setAttribute("data-mm-uicomponent", "");
-	mmStyleArea.innerText = "body{background-position:0px 22px;}ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (parseInt(highestZIndex) + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_NavArea{position:fixed;top:0px;left:0px;width:2%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 2) + ";padding:0px;}#_mm_InteractArea{position:fixed;top:23px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (parseInt(highestZIndex) + 4) + ";padding:0px;}#_mm_Highlighter{position:absolute;z-index:" + (parseInt(highestZIndex) + 3) + ";}"; // #_mm_HighlighterLegend{background-color:#FFFFFF;color:#000000;position:absolute;top:-14px;border:1px solid #FF8C00;text-size:80px;} 
+	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}#_mm_VoiceInput{position:absolute;font-size:40px;width:40px;margin:0px;z-index:" + (highestZIndex + 4) + ";}"; // body{background-position:0px 22px;} #_mm_Highlighter{position:absolute;z-index:" + (highestZIndex + 3) + ";} #_mm_NavArea{position:fixed;top:0px;left:0px;width:2%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}    
 	
 	headElement.appendChild(mmStyleArea);
 	
-	var mmPushDown = document.createElement("div");
-	mmPushDown.setAttribute("data-mm-uicomponent", "");
-	mmPushDown.style.width = "100%"; 
-	mmPushDown.style.height = "22px";
-	document.body.insertBefore(mmPushDown, document.body.firstChild);
+	addBodyLevelKeyHandlers();
 	
 	var mmShieldImage = new Image();
+	mmShieldImage.id = "_mm_ShieldImage";
 	mmShieldImage.setAttribute("data-mm-uicomponent", "");
 	document.body.insertBefore(mmShieldImage, document.body.children[1]);
 	
-	var mmContainer = document.createElement("div"); // create the element with goog.dom. Then replace mmContainer with goog.dom.getElement plus the id of the element.
-	mmContainer.id = "_mm_Container"; // goog.dom.getElement('_mm_Container')
+	var mmContainer = document.createElement("div");
+	mmContainer.id = "_mm_Container";
 	mmContainer.className = "_mm_Container"; 
 	mmContainer.setAttribute("data-mm-uicomponent", "");
 	document.body.appendChild(mmContainer);
 	
-	var mmNavArea = document.createElement("div");
-	mmNavArea.id = "_mm_NavArea";
-	mmNavArea.setAttribute("data-mm-uicomponent", "");
-	mmContainer.appendChild(mmNavArea);
-	navAreaAddHandlers();
+	var mmDeveloperWindow = document.createElement("div");
+	mmDeveloperWindow.id = "_mm_DeveloperWindow"; 
+	mmDeveloperWindow.setAttribute("data-mm-uicomponent", "");
+	mmContainer.appendChild(mmDeveloperWindow);
 	
-	var mmInfoArea = document.createElement("div");
-	mmInfoArea.id = "_mm_InfoArea";
-	mmInfoArea.setAttribute("data-mm-uicomponent", "");
-	mmContainer.appendChild(mmInfoArea);
-	infoAreaAddHandlers();
+	var mmDeveloperWindowItemLabel = document.createElement("div");
+	mmDeveloperWindowItemLabel.setAttribute("data-mm-uicomponent", "");
+	mmDeveloperWindowItemLabel.innerText = "OSEM Item:-"; 
+	mmDeveloperWindow.appendChild(mmDeveloperWindowItemLabel);
 	
-	// Control panel buttons
+	var mmDeveloperWindowItem = document.createElement("div");
+	mmDeveloperWindowItem.id = "_mm_DeveloperWindowItem"; 
+	mmDeveloperWindowItem.setAttribute("data-mm-uicomponent", "");
+	mmDeveloperWindow.appendChild(mmDeveloperWindowItem);
 	
-	var mmNavigationModeFocus = document.createElement("input");
-	mmNavigationModeFocus.setAttribute("type", "image");
-	mmNavigationModeFocus.style.cssText = "float:left;"; 
-	mmNavigationModeFocus.id = "_mm_NavigationModeFocus";
-	mmNavigationModeFocus.setAttribute("data-mm-uicomponent", "");
-	mmNavigationModeFocus.setAttribute("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4//8/AwAI/AL+5gz/qwAAAABJRU5ErkJggg==");
-	mmNavigationModeFocus.setAttribute("accesskey", "c");
-	mmNavigationModeFocus.setAttribute("title", "Navigation mode");
-	goog.dom.getElement('_mm_NavArea').appendChild(mmNavigationModeFocus);
+	var mmDeveloperWindowRuler = document.createElement("hr");
+	mmDeveloperWindow.appendChild(mmDeveloperWindowRuler);
+	
+	var mmDeveloperWindowOpeningTagLabel = document.createElement("div");
+	mmDeveloperWindowOpeningTagLabel.setAttribute("data-mm-uicomponent", "");
+	mmDeveloperWindowOpeningTagLabel.innerText = "DOM Node:-";
+	mmDeveloperWindow.appendChild(mmDeveloperWindowOpeningTagLabel);
+	
+	var mmDeveloperWindowOpeningTag = document.createElement("div");
+	mmDeveloperWindowOpeningTag.id = "_mm_DeveloperWindowOpeningTag"; 
+	mmDeveloperWindowOpeningTag.setAttribute("data-mm-uicomponent", "");
+	mmDeveloperWindow.appendChild(mmDeveloperWindowOpeningTag);
 	
 	var mmVoiceInput = new VoiceInputControlModel();
-	goog.dom.getElement('_mm_InfoArea').appendChild(mmVoiceInput.asHtml());
-	
-	var mmChangeLocationButton = new ChangeLocationButtonModel(); // shortkey B
-	goog.dom.getElement('_mm_InfoArea').appendChild(mmChangeLocationButton.asHtml());
-	
-	var mmDivider = goog.dom.createDom('span', {
-		'innerText':'|',
-		'data-mm-uicomponent':'',
-		'style':'float:left;margin-left:5px;margin-right:5px;'
-	});
-	
-	goog.dom.appendChild(mmInfoArea, mmDivider);
-	
-	var mmOptionsButton = new OptionsButtonModel();
-	goog.dom.getElement('_mm_InfoArea').appendChild(mmOptionsButton.asHtml());
-	
-	goog.dom.appendChild(mmInfoArea, mmDivider);
-	
-	var mmCurrentItemDisplay = document.createElement("input");
-	mmCurrentItemDisplay.setAttribute("type", "text");
-	mmCurrentItemDisplay.setAttribute("readonly", "readonly")
-	mmCurrentItemDisplay.style.cssText = "float:left;width:400px;";
-	mmCurrentItemDisplay.id = "_mm_CurrentItemDisplayArea";
-	mmCurrentItemDisplay.setAttribute("data-mm-uicomponent", "");
-	mmCurrentItemDisplay.setAttribute("title", "Current item display area");
-	goog.dom.getElement('_mm_InfoArea').appendChild(mmCurrentItemDisplay)
-	
-	// Areas
-	
-	var mmHighlighter = document.createElement("div"); // div
-	mmHighlighter.id = "_mm_Highlighter";
-	mmHighlighter.setAttribute("data-mm-uicomponent", "");
-	mmHighlighter.style.cssText = "display:none;"; 
-	mmContainer.appendChild(mmHighlighter);
+	mmContainer.appendChild(mmVoiceInput.asHtml());
 	
 	var mmInteractArea = document.createElement("div");
 	mmInteractArea.id = "_mm_InteractArea";
 	mmInteractArea.setAttribute("data-mm-uicomponent", "");
 	mmInteractArea.style.cssText = "display:none;";
 	mmContainer.appendChild(mmInteractArea);
-	interactAreaAddHandlers();
+}
+
+mm_ControlPanel.voiceInputOn = null;
+
+mm_ControlPanel.resetNavigator = function()
+{
+	mm_Navigator.reset();
 }
 
 mm_ControlPanel.bringFocus = function()
 {
-	chrome.extension.sendRequest({retrieveData: 'turnOnVoiceInput'}, function(response) {
-		if (response.data != undefined)
+	function handleMouseDown(e)
+	{
+		var readyVoiceInput = function()
 		{
-			if (response.data.toString() == 'true')
-			{
-				mm_Navigator.reset();
-				var voiceInput = goog.dom.getElement('_mm_VoiceInput');
-				voiceInput.style.display = '';
-				voiceInput.focus();
-			}
-			else
-			{
-				mm_TTS.getAudio("Reading all items", true, function(){focusNoAudio('_mm_NavigationModeFocus');mm_Navigator.reset();mm_Navigator.startReadingNodes();});
-			}
+			var voiceInput = goog.dom.getElement('_mm_VoiceInput');		
+			voiceInput.style.cssText = "left:" + (e.pageX - 20 - document.body.scrollLeft) + "px;top:" + (e.pageY - 20 - document.body.scrollTop) + "px;position:fixed;";
+			mm_TTS.getAudio("voice input ready", null);
 		}
-	});
+		
+		if (!mm_ControlPanel.voiceInputOn)
+		{
+			var runOnce = function()
+			{
+				mm_ControlPanel.voiceInputOn = true;
+				if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2))
+				{
+					readyVoiceInput();
+				}
+			}
+			
+			mm_BackgroundComms.call("retrieveData", "turnOnVoiceInput", function(results){results.toString() == 'true' ? runOnce() : mm_ControlPanel.voiceInputOn = false}, true);
+		}
+		
+		if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2))
+		{
+			readyVoiceInput();
+		}
+	}
+	
+	var cbFunction_BringFocus = function()
+	{
+		var activeElement = document.activeElement;
+		if (activeElement)
+		{
+			activeElement.blur();
+		}
+
+		// voice input
+		document.body.addEventListener("mousedown", function(e){handleMouseDown(e);}, false); // handles the positioning of the microphone under the cursor
+		mm_TTS.getAudio("Reading all items", function(){mm_Navigator.startReadingNodes();});
+	}
+	
+	mm_TTS.getAudio(mm_ControlPanel.getPageTitle(), cbFunction_BringFocus);
 }
 
 mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
 {
 	var iap_Button = new IAP_ButtonModel();
-	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea');
+	mmInteractionArea.innerHTML = ""; 
 	
 	var mmTBTextEntry = new TBTextEntry();
 	mmTBTextEntry.add();
@@ -152,14 +161,14 @@ mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredData
 	var mmTBEnterButton = new TBEnterButton();
 	mmTBEnterButton.add();
 	
-	displayInteractionArea(enteredDataType, null);
+	displayInteractionArea(enteredDataType + " entry area", null, true);
 	
-	function cancelInput()
+	function changeFocus()
 	{
-		mm_TTS.getAudio(enteredDataType + " entry area closed. Navigation mode entered.", false, function(){focusNoAudio('_mm_NavigationModeFocus');});
-		mmInteractionArea.innerHTML = ""; 
-		mmInteractionArea.style.display = "none";
+		mmInteractionArea.children[0].focus();
 	}
+	
+	mm_TTS.getAudio(enteredDataType + " entry area entered", changeFocus);
 	
 	function enter()
 	{
@@ -187,7 +196,7 @@ mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredData
 		tBEnterButton.id = "_mm_TBEnterButton";
 		tBEnterButton.setAttribute("data-mm-uicomponent", "");
 		tBEnterButton.setAttribute("value", "Enter");
-		tBEnterButton.addEventListener("click", function(){enter();cancelInput();}, false);
+		tBEnterButton.addEventListener("click", function(){enter();goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
 		this.add = function()
 		{
@@ -200,6 +209,7 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 {
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = "";
 	
 	var mmCheckButton = new CheckButtonModel();
 	mmCheckButton.add();
@@ -207,14 +217,14 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 	var mmUncheckButton = new UncheckButtonModel();
 	mmUncheckButton.add();
 	
-	displayInteractionArea("check button", null);
+	displayInteractionArea("check entry area", null, false);
 	
-	function cancelInput()
+	var changeFocus = function()
 	{
-		mm_TTS.getAudio("check button entry area closed. Navigation mode entered.", false, function(){focusNoAudio('_mm_NavigationModeFocus');});
-		mmInteractionArea.innerHTML = ""; 
-		mmInteractionArea.style.display = "none";
+		mmInteractionArea.children[0].focus();
 	}
+	
+	mm_TTS.getAudio("check entry area entered", changeFocus); // mm_TTS callback
 	
 	function enter(e)
 	{
@@ -234,7 +244,7 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 		checkButton.id = "_mm_CheckButton";
 		checkButton.setAttribute("data-mm-uicomponent", "");
 		checkButton.setAttribute("value", "check");
-		checkButton.addEventListener("click", function(e){enter(e);cancelInput();}, false);
+		checkButton.addEventListener("click", function(e){enter(e);goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
 		this.add = function()
 		{
@@ -248,7 +258,7 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 		uncheckButton.id = "_mm_UncheckButton";
 		uncheckButton.setAttribute("data-mm-uicomponent", "");
 		uncheckButton.setAttribute("value", "uncheck");
-		uncheckButton.addEventListener("click", function(e){enter(e);cancelInput();}, false);
+		uncheckButton.addEventListener("click", function(e){enter(e);goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
 		this.add = function()
 		{
@@ -257,54 +267,319 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 	}
 }
 
-mm_ControlPanel.drawSelectMenuInteract = function(liveSelectInputElement)
+mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement)
 {
+	var selectedIndex = 0;
+	var options = liveSelectInputElement.querySelectorAll('option');
+	var currentOptionText = options[0].innerText;
+	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
 	mmInteractionArea.innerHTML = ""; 
 	
-	// get all options and add them as buttons
+	var mmNextOptionButton = new NextOptionButtonModel();
+	mmNextOptionButton.add();
 	
-	var options = liveSelectInputElement.getElementsByTagName("option");
+	var mmPreviousOptionButton = new PreviousOptionButtonModel();
+	mmPreviousOptionButton.add();
 	
-	var count = 0;
-	for (var i in options)
+	var mmSelectButton = new SelectButtonModel();
+	mmSelectButton.add();
+	
+	var mmOptionDisplay = new OptionDisplayModel();
+	mmOptionDisplay.add();
+	mmOptionDisplay.setValue(currentOptionText, false);
+	
+	displayInteractionArea("single select", null, false);
+	
+	var changeFocus = function()
 	{
-		if (options[i].tagName == "OPTION")
+		mmInteractionArea.children[0].focus();
+	}
+	
+	var sayCurrentItem = function()
+	{
+		mm_TTS.getAudio("current option " + currentOptionText, changeFocus);
+	}
+	
+	mm_TTS.getAudio("single select menu entered", sayCurrentItem);
+	
+	function NextOptionButtonModel()
+	{
+		var nextOptionButton = iap_Button.template();
+		nextOptionButton.id = "_mm_NextOptionButton";
+		nextOptionButton.setAttribute("data-mm-uicomponent", "");
+		nextOptionButton.setAttribute("value", "Next option")
+		nextOptionButton.addEventListener("click", moveToNextOption, false);
+		
+		this.add = function()
 		{
-			var mmOptionButton = document.createElement("input");
-			mmOptionButton.setAttribute("type", "button");
-			mmOptionButton.style.cssText = "float:left;background-color:#99CCFF;border:0px solid;";
-			mmOptionButton.addEventListener("focus", function(e){buttonHasFocus(e);}, false);
-			mmOptionButton.id = count;
-			mmOptionButton.setAttribute("data-mm-uicomponent", "");
-			mmOptionButton.setAttribute("value", options[i].innerText);
-			mmOptionButton.addEventListener("click", function(e){goog.dom.getElement('_mm_CloseMenuButton').click();optionSelected(e)}, false); // mirror this above in text input for enter
-			mmInteractionArea.appendChild(mmOptionButton);
-			count++;
+			mmInteractionArea.appendChild(nextOptionButton);
+		}
+		
+		function moveToNextOption()
+		{
+			if (options[selectedIndex + 1] != undefined) {
+				selectedIndex = selectedIndex + 1; 
+				mmOptionDisplay.setValue(options[selectedIndex].innerText, true);				
+			}
+			else {
+				mm_TTS.getAudio("no next option", null);
+			}
 		}
 	}
 	
-	displayInteractionArea("select", null);
-	
-	function buttonHasFocus(e)
+	function PreviousOptionButtonModel()
 	{
-		if (e.srcElement.getAttribute("value") != "")
+		var previousOptionButton = iap_Button.template();
+		previousOptionButton.id = "_mm_PreviousOptionButton";
+		previousOptionButton.setAttribute("data-mm-uicomponent", "");
+		previousOptionButton.setAttribute("value", "Previous options")
+		previousOptionButton.addEventListener("click", moveToPreviousOption, false);
+		
+		this.add = function()
 		{
-			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " option has focus", false, null);
+			mmInteractionArea.appendChild(previousOptionButton);
+		}
+		
+		function moveToPreviousOption()
+		{
+			if (options[selectedIndex - 1] != undefined) {
+				selectedIndex = selectedIndex - 1; 
+				mmOptionDisplay.setValue(options[selectedIndex].innerText, true);				
+			}
+			else {
+				mm_TTS.getAudio("no previous option", null);
+			}
 		}
 	}
 	
-	function optionSelected(e)
+	function SelectButtonModel()
 	{
-		liveSelectInputElement.selectedIndex = e.srcElement.id;
-		fireChangeEvt(liveSelectInputElement);
+		var selectButton = iap_Button.template();
+		selectButton.id = "_mm_SelectButton";
+		selectButton.setAttribute("data-mm-uicomponent", "");
+		selectButton.setAttribute("value", "Select");
+		selectButton.addEventListener("click", enterSelectedItem, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(selectButton);
+		}
+		
+		function enterSelectedItem()
+		{
+			goog.dom.getElement("_mm_CloseMenuButton").click();
+			liveSelectInputElement.selectedIndex = selectedIndex;
+		}
 	}
 	
-	function fireChangeEvt(onThisElement)
+	function OptionDisplayModel()
 	{
-		var changeEvt = document.createEvent("HTMLEvents");
-		changeEvt.initEvent("change", false, true); // bubbles - false, default action preventable
-		onThisElement.dispatchEvent(changeEvt);
+		var displayBox = new IAP_DisplayBoxModel();
+		var currentItemDisplayArea = displayBox.template();
+		currentItemDisplayArea.id = "_mm_OptionDisplay";
+		currentItemDisplayArea.setAttribute("data-mm-uicomponent", "");
+		currentItemDisplayArea.setAttribute("title", "Option display");
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(currentItemDisplayArea);
+		}
+		
+		this.setValue = function(currentOptionText, say)
+		{
+			currentItemDisplayArea.value = currentOptionText;
+			if (say == true)
+			{
+				mm_TTS.getAudio("option " + currentOptionText, null);
+			}
+		}
+	}
+}
+
+mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
+{
+	var selection = {};
+	var selectedIndex = 0;
+	var options = liveSelectInputElement.querySelectorAll('option');
+	var currentOptionText = options[0].innerText;
+	var iap_Button = new IAP_ButtonModel();
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = ""; 
+	
+	var mmNextOptionButton = new NextOptionButtonModel();
+	mmNextOptionButton.add();
+	
+	var mmPreviousOptionButton = new PreviousOptionButtonModel();
+	mmPreviousOptionButton.add();
+	
+	var mmCheckButton = new CheckButtonModel();
+	mmCheckButton.add();
+	
+	var mmUncheckButton = new UncheckButtonModel();
+	mmUncheckButton.add();
+	
+	var mmEnterButton = new EnterButtonModel();
+	mmEnterButton.add();
+	
+	for (var i = 0, len = options.length; i < len; i++)
+	{
+		options[i].selected == true ? selection[i] = "checked" : selection[i] = "unchecked";
+	}
+
+	var mmOptionDisplay = new OptionDisplayModel();
+	mmOptionDisplay.add();
+	mmOptionDisplay.setValue(0, currentOptionText, false);
+	
+	displayInteractionArea("multi select", null, false);
+	
+	var sayCurrentItem = function()
+	{
+		var changeFocus = function()
+		{
+			mmInteractionArea.children[0].focus();
+		}
+		
+		mm_TTS.getAudio("current option " + currentOptionText + " " + selection[0], changeFocus);
+	}
+	
+	mm_TTS.getAudio("multi select menu entered", sayCurrentItem);
+	
+	function NextOptionButtonModel()
+	{
+		var nextOptionButton = iap_Button.template();
+		nextOptionButton.id = "_mm_NextOptionButton";
+		nextOptionButton.setAttribute("data-mm-uicomponent", "");
+		nextOptionButton.setAttribute("value", "Next option")
+		nextOptionButton.addEventListener("click", moveToNextOption, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(nextOptionButton);
+		}
+		
+		function moveToNextOption()
+		{
+			if (options[selectedIndex + 1] != undefined) {
+				selectedIndex = selectedIndex + 1; 
+				mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);			
+			}
+			else {
+				mm_TTS.getAudio("no next option", null);
+			}
+		}
+	}
+	
+	function PreviousOptionButtonModel()
+	{
+		var previousOptionButton = iap_Button.template();
+		previousOptionButton.id = "_mm_PreviousOptionButton";
+		previousOptionButton.setAttribute("data-mm-uicomponent", "");
+		previousOptionButton.setAttribute("value", "Previous options")
+		previousOptionButton.addEventListener("click", moveToPreviousOption, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(previousOptionButton);
+		}
+		
+		function moveToPreviousOption()
+		{
+			if (options[selectedIndex - 1] != undefined) {
+				selectedIndex = selectedIndex - 1; 
+				mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);				
+			}
+			else {
+				mm_TTS.getAudio("no previous option", null);
+			}
+		}
+	}
+	
+	function CheckButtonModel()
+	{
+		var checkButton = iap_Button.template();
+		checkButton.id = "_mm_CheckButton";
+		checkButton.setAttribute("data-mm-uicomponent", "");
+		checkButton.setAttribute("value", "Check");
+		checkButton.addEventListener("click", checkOption, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(checkButton);
+		}
+		
+		function checkOption()
+		{
+			selection[selectedIndex] = "checked";
+			mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);
+		}
+	}
+	
+	function UncheckButtonModel()
+	{
+		var uncheckButton = iap_Button.template();
+		uncheckButton.id = "_mm_UnheckButton";
+		uncheckButton.setAttribute("data-mm-uicomponent", "");
+		uncheckButton.setAttribute("value", "Uncheck");
+		uncheckButton.addEventListener("click", uncheckOption, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(uncheckButton);
+		}
+		
+		function uncheckOption()
+		{
+			selection[selectedIndex] = "unchecked";
+			mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);
+		}
+	}
+	
+	function EnterButtonModel()
+	{
+		var enterButton = iap_Button.template();
+		enterButton.id = "_mm_EnterButton";
+		enterButton.setAttribute("data-mm-uicomponent", "");
+		enterButton.setAttribute("value", "Enter");
+		enterButton.addEventListener("click", enterSelectedItem, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(enterButton);
+		}
+		
+		function enterSelectedItem()
+		{
+			goog.dom.getElement("_mm_CloseMenuButton").click();
+			
+			for (var i = 0, len = options.length; i < len; i++)
+			{
+				selection[i] == "checked" ? options[i].selected = true : options[i].selected = false;
+			}
+		}
+	}
+	
+	function OptionDisplayModel()
+	{
+		var displayBox = new IAP_DisplayBoxModel();
+		var currentItemDisplayArea = displayBox.template();
+		currentItemDisplayArea.id = "_mm_OptionDisplay";
+		currentItemDisplayArea.setAttribute("data-mm-uicomponent", "");
+		currentItemDisplayArea.setAttribute("title", "Option display");
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(currentItemDisplayArea);
+		}
+		
+		this.setValue = function(selectedIndex, currentOptionText, say)
+		{ 
+			currentItemDisplayArea.value = currentOptionText + " " + selection[selectedIndex];
+			if (say == true)
+			{
+				mm_TTS.getAudio("option " + currentOptionText + " " + selection[selectedIndex], null);
+			}
+		}
 	}
 }
 
@@ -312,9 +587,17 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 {
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea');
-	var min = asFloatOrInt(liveTextInputElement.getAttribute("min"));
-	var max = asFloatOrInt(liveTextInputElement.getAttribute("max"));
-	var step = asFloatOrInt(liveTextInputElement.getAttribute("step"));
+	mmInteractionArea.innerHTML = ""; 
+	
+	// default 
+	var min = liveTextInputElement.getAttribute("min");
+	min = (!min) ? 0 : asFloatOrInt(min);
+	
+	var max = liveTextInputElement.getAttribute("max");
+	max = (!max) ? 100 : asFloatOrInt(max);
+	
+	var step = liveTextInputElement.getAttribute("step");
+	step = (!step) ? 1 : asFloatOrInt(step);
 	
 	var toHowManyDecimalPlaces = function(num)
 	{
@@ -338,14 +621,14 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 	var mmRangeEnterButton = new RangeEnterButton();
 	mmRangeEnterButton.add();
 	
-	displayInteractionArea("range input", null);
+	displayInteractionArea("range entry area", null, false);
 	
-	function cancelInput()
+	var changeFocus = function()
 	{
-		mm_TTS.getAudio("range input entry area closed. Navigation mode entered.", false, function(){focusNoAudio('_mm_NavigationModeFocus');});
-		mmInteractionArea.innerHTML = ""; 
-		mmInteractionArea.style.display = "none";
+		mmInteractionArea.children[0].focus();
 	}
+	
+	mm_TTS.getAudio("Range entry area entered", changeFocus); // mm_TTS callback
 	
 	function enter()
 	{
@@ -378,22 +661,22 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 				if ((asFloatOrInt(currentValue) + changedStep).toFixed(howManyDecimalPlaces) <= max)
 				{
 					currentValue = (asFloatOrInt(currentValue) + changedStep).toFixed(howManyDecimalPlaces);
-					mm_TTS.getAudio("value to enter increased to " + currentValue, false, null);
+					mm_TTS.getAudio("value to enter increased to " + currentValue, null);
 				}
 				else
 				{
-					mm_TTS.getAudio("maximum value " + currentValue + " reached", false, null);
+					mm_TTS.getAudio("maximum value " + currentValue + " reached", null);
 				}
 				break;
 			case "decrease":
 				if ((asFloatOrInt(currentValue) - changedStep).toFixed(howManyDecimalPlaces) >= min)
 				{
 					currentValue = (asFloatOrInt(currentValue) - changedStep).toFixed(howManyDecimalPlaces);
-					mm_TTS.getAudio("value to enter decreased to " + currentValue, false, null);
+					mm_TTS.getAudio("value to enter decreased to " + currentValue, null);
 				}
 				else
 				{
-					mm_TTS.getAudio("minimum value " + currentValue + " reached", false, null);
+					mm_TTS.getAudio("minimum value " + currentValue + " reached", null);
 				}
 				break;
 		}
@@ -433,7 +716,7 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 		rangeEnterButton.id = "_mm_rangeEnterButton";
 		rangeEnterButton.setAttribute("data-mm-uicomponent", "");
 		rangeEnterButton.setAttribute("value", "Enter");
-		rangeEnterButton.addEventListener("click", function(){enter();cancelInput();}, false);
+		rangeEnterButton.addEventListener("click", function(){enter();goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
 		this.add = function()
 		{
@@ -448,6 +731,7 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 	
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
+	mmInteractionArea.innerHTML = ""; 
 	
 	var mmPlayButton = new PlayButtonModel();
 	mmPlayButton.add();
@@ -458,7 +742,14 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 	var mmRewindButton = new RewindButtonModel();
 	mmRewindButton.add();
 	
-	displayInteractionArea(mediaType, null);
+	displayInteractionArea(mediaType, null, false);
+	
+	var changeFocus = function()
+	{
+		mmInteractionArea.children[0].focus();
+	}
+	
+	mm_TTS.getAudio(mediaType + " control area entered", changeFocus);  // mm_TTS callback move to drawM
 	
 	function controlMedia(actionName)
 	{
@@ -466,16 +757,16 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 		{
 			case "play":
 				liveMediaElement.play();
-				mm_TTS.getAudio(mediaType + " playing", false, function(){document.getElementById("_mm_PauseButton").focus();});
+				mm_TTS.getAudio(mediaType + " playing", function(){document.getElementById("_mm_PauseButton").focus();}); // mm_TTS callback
 				break;
 			case "pause":
 				liveMediaElement.pause();
-				mm_TTS.getAudio(mediaType + " paused", false, function(){document.getElementById("_mm_PlayButton").focus();});
+				mm_TTS.getAudio(mediaType + " paused", function(){document.getElementById("_mm_PlayButton").focus();}); // mm_TTS callback
 				break;
 			case "rewind":
 				liveMediaElement.currentTime = 0;
 				liveMediaElement.pause();
-				mm_TTS.getAudio(mediaType + " rewound", false, function(){document.getElementById("_mm_PlayButton").focus();});
+				mm_TTS.getAudio(mediaType + " rewound", function(){document.getElementById("_mm_PlayButton").focus();}); // mm_TTS callback
 				break;
 		}
 	}
@@ -523,9 +814,300 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 	}
 }
 
+mm_ControlPanel.drawMMMenuInteract = function()
+{
+	var iap_Button = new IAP_ButtonModel();
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = "";
+	
+	var mmChangeLocationButton = new ChangeLocationButtonModel(); // option to open in new tab or open in current
+	mmChangeLocationButton.add();
+	
+	var mmOptionsButton = new OptionsButtonModel();
+	mmOptionsButton.add();
+	
+	displayInteractionArea("Top", null, false);
+	
+	function changeFocus()
+	{
+		mmInteractionArea.children[0].focus();
+	}
+	
+	mm_TTS.getAudio("Top menu entered", changeFocus); // mm_TTS callback
+	
+	function ChangeLocationButtonModel() // sits in change location sub menu
+	{
+		// constructor
+		var changeLocationButton = iap_Button.template();
+		changeLocationButton.id = "_mm_ChangeLocationButton";
+		changeLocationButton.setAttribute("data-mm-uicomponent", "");
+		changeLocationButton.setAttribute("value", "Change location")
+		changeLocationButton.addEventListener("click", openChangeLocationMenu, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(changeLocationButton);
+		}
+		
+		function openChangeLocationMenu()
+		{
+			goog.dom.getElement('_mm_CloseMenuButton').click();
+			mm_ControlPanel.drawNavigationInteract();
+		}
+	}
+	
+	function OptionsButtonModel() // sits in change location sub menu
+	{
+		// constructor
+		var optionsButton = iap_Button.template();
+		optionsButton.id = "_mm_OptionsButton";
+		optionsButton.setAttribute("data-mm-uicomponent", "");
+		optionsButton.setAttribute("value", "Options")
+		optionsButton.addEventListener("click", openOptions, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(optionsButton);
+		}
+		
+		function openOptions()
+		{
+			goog.dom.getElement('_mm_CloseMenuButton').click();
+			mm_ControlPanel.openOptions();
+		}
+	}
+}
+ 
+mm_ControlPanel.drawNavigationInteract = function()
+{
+	var iap_Button = new IAP_ButtonModel();
+	
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = ""; 
+	
+	var mmPreviousUrlButton = new PreviousUrlButtonModel();
+	mmPreviousUrlButton.add();
+	
+	var mmChangeUrlButton = new ChangeUrlButtonModel();
+	mmChangeUrlButton.add();
+	
+	var mmOpenTabButton = new OpenTabButtonModel();
+	mmOpenTabButton.add();
+	
+	displayInteractionArea("Change location", null, false);
+	
+	function changeFocus()
+	{
+		mmInteractionArea.children[0].focus();
+	}
+	
+	mm_TTS.getAudio("Change location menu entered", changeFocus); // mm_TTS callback
+	
+	function PreviousUrlButtonModel() // sits in change location sub menu
+	{
+		// constructor
+		var backButton = iap_Button.template();
+		backButton.id = "_mm_PreviousUrlButton";
+		backButton.setAttribute("data-mm-uicomponent", "");
+		backButton.setAttribute("value", "Previous url")
+		backButton.addEventListener("click", previousUrl, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(backButton);
+		}
+		
+		function previousUrl()
+		{
+			goog.dom.getElement('_mm_CloseMenuButton').click();
+			history.back();
+		}
+	}
+	
+	function ChangeUrlButtonModel() // sits in change location sub menu
+	{
+		var changeUrlButton = iap_Button.template();
+		changeUrlButton.id = "_mm_ChangeUrlButton";
+		changeUrlButton.setAttribute("data-mm-uicomponent", "");
+		changeUrlButton.setAttribute("value", "Change url");
+		changeUrlButton.addEventListener("click", changeUrl, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(changeUrlButton);
+		}
+		
+		function changeUrl()
+		{
+			goog.dom.getElement('_mm_CloseMenuButton').click();
+			mm_ControlPanel.drawChangeUrlInteract();
+		}
+	}
+	
+	function OpenTabButtonModel() // sits in change location sub menu
+	{
+		var openTabButton = iap_Button.template();
+		openTabButton.id = "_mm_OpenTabButton";
+		openTabButton.setAttribute("data-mm-uicomponent", "");
+		openTabButton.setAttribute("value", "New tab");
+		openTabButton.addEventListener("click", openTab, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.appendChild(openTabButton);
+		}
+		
+		function openTab()
+		{
+			goog.dom.getElement('_mm_CloseMenuButton').click();
+			mm_ControlPanel.drawOpenTabInteract();
+		}
+	}
+}
+
+mm_ControlPanel.drawChangeUrlInteract = function()
+{
+	var iap_Button = new IAP_ButtonModel();
+	
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = ""; 
+	
+	var urlEnterButton = new UrlEnterButtonModel();
+	urlEnterButton.add();
+	
+	var urlTextEntry = new URLTextEntry();
+	urlTextEntry.add();
+	
+	displayInteractionArea("Change url", null, true);
+	
+	function changeFocus()
+	{
+		mmInteractionArea.children[0].focus();
+	}
+	
+	mm_TTS.getAudio("Change url menu entered", changeFocus); // mm_TTS callback	
+	
+	function URLTextEntry()
+	{
+		// constructor
+		var textBox = new CP_TextBoxModel();
+		var uRLTextEntry = textBox.template();
+		uRLTextEntry.id = "_mm_URLTextEntry";
+		uRLTextEntry.setAttribute("data-mm-uicomponent", "");
+		uRLTextEntry.setAttribute("title", "u r l");
+		
+		this.add = function()
+		{
+			mmInteractionArea.insertBefore(uRLTextEntry, mmInteractionArea.lastChild);
+		}
+		
+		this.focus = function()
+		{
+			uRLTextEntry.focus();
+		}
+	}
+	
+	function UrlEnterButtonModel() // generic sits in change location sub menu
+	{
+		// constructor
+		var urlEnterButton = iap_Button.template();
+		urlEnterButton.id = "_mm_UrlEnterButton";
+		urlEnterButton.setAttribute("data-mm-uicomponent", "");
+		urlEnterButton.setAttribute("value", "Go");
+		urlEnterButton.addEventListener("click", enterUrl, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.insertBefore(urlEnterButton, mmInteractionArea.lastChild);
+		}
+		
+		function enterUrl()
+		{
+			// changes the url of the tab page
+			
+			var userEnteredUrl = document.getElementById("_mm_URLTextEntry").value;
+			if (userEnteredUrl != "") // other checks are also needed
+			{
+				goog.dom.getElement('_mm_CloseMenuButton').click();
+				document.location.href = userEnteredUrl;
+			}
+		}
+	}
+}
+
+mm_ControlPanel.drawOpenTabInteract = function()
+{
+	var iap_Button = new IAP_ButtonModel();
+	
+	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
+	mmInteractionArea.innerHTML = ""; 
+	
+	var urlEnterButton = new UrlEnterButtonModel();
+	urlEnterButton.add();
+	
+	var urlTextEntry = new URLTextEntry();
+	urlTextEntry.add();
+	
+	displayInteractionArea("Open tab", null, true);
+	
+	function changeFocus()
+	{
+		mmInteractionArea.children[0].focus();
+	}
+	
+	mm_TTS.getAudio("Open tab menu entered", changeFocus); // mm_TTS callback	
+	
+	function URLTextEntry()
+	{
+		// constructor
+		var textBox = new CP_TextBoxModel();
+		var uRLTextEntry = textBox.template();
+		uRLTextEntry.id = "_mm_URLTextEntry";
+		uRLTextEntry.setAttribute("data-mm-uicomponent", "");
+		uRLTextEntry.setAttribute("title", "u r l");
+		
+		this.add = function()
+		{
+			mmInteractionArea.insertBefore(uRLTextEntry, mmInteractionArea.lastChild);
+		}
+		
+		this.focus = function()
+		{
+			uRLTextEntry.focus();
+		}
+	}
+	
+	function UrlEnterButtonModel() // generic sits in change location sub menu
+	{
+		// constructor
+		var urlEnterButton = iap_Button.template();
+		urlEnterButton.id = "_mm_UrlEnterButton";
+		urlEnterButton.setAttribute("data-mm-uicomponent", "");
+		urlEnterButton.setAttribute("value", "Go");
+		urlEnterButton.addEventListener("click", enterUrl, false);
+		
+		this.add = function()
+		{
+			mmInteractionArea.insertBefore(urlEnterButton, mmInteractionArea.lastChild);
+		}
+		
+		function enterUrl()
+		{
+			// changes the url of the tab page
+			
+			var userEnteredUrl = document.getElementById("_mm_URLTextEntry").value;
+			if (userEnteredUrl != "") // other checks are also needed
+			{
+				goog.dom.getElement('_mm_CloseMenuButton').click();
+				mm_BackgroundComms.call("openTab", userEnteredUrl, null, false);
+			}
+		}
+	}
+}
+
 mm_ControlPanel.getPageTitle = function()
 {
-	var titleElement = document.getElementsByTagName("title")[0];
+	var titleElement = document.querySelector("title");
 	
 	var pageTitle = "Current page has no title";
 	
@@ -539,71 +1121,106 @@ mm_ControlPanel.getPageTitle = function()
 	return pageTitle;
 }
 
-var pageCulture = null;
+mm_ControlPanel.pageCulture = null;
 
-mm_ControlPanel.getPageCulture = function()
+mm_ControlPanel.showCurrentItem = function(osmType, liveElement)
 {
-	if (pageCulture == null)
+	restoreHighlighter(); // removes outline from old live
+	liveElement.scrollIntoView();
+	var scrollPosY = window.scrollY;
+	window.scrollTo(0, scrollPosY - 40);
+	var currentStyle = liveElement.style.cssText;
+	liveElement.setAttribute("_mm_current", currentStyle);
+	liveElement.setAttribute("style", currentStyle + "outline:2px dashed #FF8C00;");
+	mm_ControlPanel.changeDevWindow(osmType, liveElement);
+}
+
+mm_ControlPanel.changeDevWindow = function(osmType, currentNode)
+{
+	var mmDeveloperWindowItem = document.getElementById("_mm_DeveloperWindowItem");
+	var mmDeveloperWindowOpeningTag = document.getElementById("_mm_DeveloperWindowOpeningTag");
+	
+	mmDeveloperWindowItem.setAttribute("style", "display:none;");
+	mmDeveloperWindowOpeningTag.setAttribute("style", "display:none;");
+	
+	mmDeveloperWindowItem.innerText = osmType;
+	
+	var domNodeInfo = "<span data-mm-uicomponent>tagName:" + currentNode.tagName + "</span><br/>"; 
+	
+	var attributes = currentNode.attributes;
+	
+	for (var i = 0, len = attributes.length; i < len; i++) {
+		var attribute = attributes[i];
+		var attributeName = attribute.name;
+		if ((attributeName != "_mm_current") && (attributeName != "style")) {
+			domNodeInfo = domNodeInfo + "<span data-mm-uicomponent>" + attributeName + ":" + attribute.value + "</span><br/>";
+		}
+	}
+	mmDeveloperWindowOpeningTag.innerHTML = domNodeInfo;
+	mmDeveloperWindowItem.setAttribute("style", "");
+	mmDeveloperWindowOpeningTag.setAttribute("style", "");
+}
+
+mm_ControlPanel.openOptions = function()
+{
+	mm_BackgroundComms.call("optionsOpen", null, null, false);
+}
+
+function restoreHighlighter()
+{
+	var oldLive = document.querySelector('[_mm_current]');
+	if (oldLive)
 	{
-		var culture = "en-US"; // default
-		var metaElements = document.getElementsByTagName("meta");
-		if (metaElements.length > 0)
+		var oldStyle = oldLive.getAttribute("_mm_current");
+		if (oldStyle != "")
 		{
-			for (var i in metaElements)
+			oldLive.style.cssText = oldStyle;
+		}
+		else
+		{
+			oldLive.removeAttribute("style");
+		}
+		oldLive.removeAttribute("_mm_current");
+	}
+}
+
+function getPageCulture()
+{
+	var culture = "en-US";
+	var metaElements = document.querySelectorAll('meta');
+	var len = metaElements.length;
+	if (len > 0)
+	{
+		for (var i = len; i--;)
+		{
+			var metaElement = metaElements[i];
+			if (metaElement.tagName == "META")
 			{
-				if (metaElements[i].tagName == "META")
+				if (metaElement.hasAttribute("http-equiv") && metaElement.hasAttribute("content"))
 				{
-					if (metaElements[i].hasAttribute("http-equiv") && metaElements[i].hasAttribute("content"))
-					{
-						pageCulture = metaElements[i].getAttribute("content");
-					}
+					culture = metaElement.getAttribute("content");
+					break;
 				}
 			}
 		}
 	}
-	return pageCulture;
+	return culture;
 }
 
-// added 
-
-function focusNoAudio(id)
-{
-	goog.dom.getElement(id).focus();
-}
-
-function focusWithAudio(id)
-{
-	focusNoAudio(id);
-	
-	// add audio
-	
-	var title = goog.dom.getElement(id).getAttribute("title");
-	
-	if (title != "")
-	{
-		mm_TTS.getAudio(title + " button has focus", false, null);
-	}
-}
-
-function isEnabled(id)		
-{
-	var result = false;
-	if (goog.dom.getElement(id).style.opacity == "1")
-	{
-		result = true;
-	}
-	return result;
-}
-
-function displayInteractionArea(name, buttonName)
+function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 {
 	// add a closebutton
 	
 	var mmCloseMenuButton = new CloseMenuButtonModel(name, buttonName);
 	
 	var mmInteractionArea = document.getElementById("_mm_InteractArea");
-	
 	mmInteractionArea.appendChild(mmCloseMenuButton.asHtml());
+	
+	// add event handlers
+	mmInteractionArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
+	mmInteractionArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
+	
+	mm_ControlPanel.bodyLevelKeyHandlersActive = false; // pause body level event handlers
 	
 	// display
 	
@@ -617,7 +1234,6 @@ function displayInteractionArea(name, buttonName)
 		closeMenuButton.id = "_mm_CloseMenuButton";
 		closeMenuButton.setAttribute("data-mm-uicomponent", "");
 		closeMenuButton.setAttribute("value", "Close menu");
-		closeMenuButton.style.opacity = "1"; 
 		closeMenuButton.addEventListener("click", function(){closeMenu()}, false);
 		
 		this.asHtml = function()
@@ -627,17 +1243,21 @@ function displayInteractionArea(name, buttonName)
 		
 		function closeMenu()  // this needs to be passed in to this function - it should reside in the 
 		{
-			if (menuButtonName == null)
+			if (menuName.indexOf("entry area") == -1)
 			{
-				mm_TTS.getAudio(menuName + " menu closed. Navigation mode entered.", false, function(){focusNoAudio('_mm_NavigationModeFocus');});
+				menuName = menuName + " menu";
 			}
-			else
-			{
-				mm_TTS.getAudio(menuName + " menu closed", false, function(){document.getElementById(menuButtonName).focus();});
-			}
+			
+			mm_TTS.getAudio(menuName + " closed. Navigation mode entered.", null);
 			var mmInteractionArea = document.getElementById("_mm_InteractArea");
+			
+			//remove event handlers
+			mmInteractionArea.removeEventListener("keydown", hotKeyDown, false);
+			mmInteractionArea.removeEventListener("keyup", hotKeyUp, false);
+			
 			mmInteractionArea.innerHTML = ""; 
 			mmInteractionArea.style.display = "none";
+			mm_ControlPanel.bodyLevelKeyHandlersActive = true; // restart body level event handlers
 		}
 		
 		this.focus = function()
@@ -650,332 +1270,193 @@ function displayInteractionArea(name, buttonName)
 			closeMenu();
 		}
 	}
+	
+	// event handlers
+	
+	var hotKeyTimer;
+	var keyBeingTimed;
+	var buttonId; 
+	var textIfButtonDisabled;
+	var alreadyBusy = false; 
+	var arrowSelected;
+	
+	function hotKeyDown_Handler(e)
+	{
+		if (allowOtherKeyInput == false)
+		{
+			window.event.returnValue = false;
+		}
+		if (alreadyBusy == false)
+		{
+			alreadyBusy = true;
+			
+			var selected = false; 
+			keyBeingTimed = e.keyIdentifier.toString();
+			switch(keyBeingTimed)
+			{
+				case "Up":
+					selected = true;
+					arrowSelected = "Up"; 
+					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+					break;
+				case "Down":
+					selected = true;
+					arrowSelected = "Down";
+					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+					break;
+				case "U+001B": // escape
+					selected = true;
+					arrowSelected = "ESC";
+					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+					break;
+				case "Enter":
+					selected = true;
+					window.event.returnValue = true;
+					break;
+				default: 
+					if (selected == false)
+					{
+						alreadyBusy = false;
+					}
+					break;
+			}
+		}
+	}
+	
+	function hotKeyUp_Handler(e)
+	{
+		clearTimeout(hotKeyTimer);
+		alreadyBusy = false;
+	}
+	
+	function specialCasesFunctionToRun()
+	{
+		if (arrowSelected == "Up")
+		{
+			var previousSibling = document.activeElement.previousElementSibling;
+			
+			if (previousSibling)
+			{
+				previousSibling.focus();
+			}
+		}
+		
+		if (arrowSelected == "Down")
+		{
+			var nextSibling = document.activeElement.nextElementSibling;
+			
+			if (nextSibling)
+			{
+				nextSibling.focus();
+			}
+		}
+		
+		if (arrowSelected == "ESC")
+		{
+			document.getElementById('_mm_CloseMenuButton').click();
+		}
+	}
 }
 
-// compact navAreaAddHandlers, infoAreaAddHandlers and interactAreaAddHandlers
+mm_ControlPanel.bodyLevelKeyHandlersActive = null;
 
-function navAreaAddHandlers()
+function addBodyLevelKeyHandlers()
 {
 	var hotKeyTimer;
 	var keyBeingTimed;
 	var buttonId; // this needs changing
 	var textIfButtonDisabled;
 	var alreadyBusy = false; 
-	var arrowSelected;
+	var selectedIndex;
 	
-	var navArea = goog.dom.getElement('_mm_NavArea');
-	navArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
-	navArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
+	mm_ControlPanel.bodyLevelKeyHandlersActive = true;
+	
+	var body = document.body;
+	body.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
+	body.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
 	
 	function hotKeyDown_Handler(e)
 	{
-		if (alreadyBusy == false)
+		if (mm_ControlPanel.bodyLevelKeyHandlersActive == true)
 		{
-			setAlreadyBusy(true);
+			window.event.returnValue = false;
 			
-			var selected = false; 
-			
-			switch(e.keyIdentifier.toString())
+			if (alreadyBusy == false)
 			{
-					// special cases for arrowing around page
-				case "Up": // ReadPrevButton
-					selected = true;
-					arrowSelected = "Up"; 
-					keyBeingTimed = e.keyIdentifier.toString();  
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue = false;
-					break;
-				case "Down": // ReadNextButton
-					selected = true;
-					arrowSelected = "Down";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue = false;
-					break;
-				case "Left": // back to start
-					selected = true;
-					arrowSelected = "Left";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue=false;
-					break;	
-				case "Right": // jump
-					selected = true;
-					arrowSelected = "Right";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue=false;
-					break;	
-				case "U+0020": // space bar to start and stop read on, enter should be used with button interaction
-					selected = true;
-					arrowSelected = "Space";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue=false;
-					break;
-				case "Enter":
-					selected = true;
-					arrowSelected = "Enter";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue=false;
-					break;
-					
-					// end special cases
-					
-				case "U+0042": // b - change location 
-					selected = true;
-					keyBeingTimed = e.keyIdentifier.toString();
-					buttonId = '_mm_ChangeLocationButton'; 
-					textIfButtonDisabled = "Change location button is currently disabled";
-					hotKeyTimer = window.setTimeout(functionToRun, 500);
-					break;
-				default: 
-					// if this is not one of the above we need to set alreadybusy to false... 
-					if (selected == false)
-					{
-						setAlreadyBusy(false);
-					}
-					break;
+				setAlreadyBusy(true);
+				
+				var selected = false;
+				
+				keyBeingTimed = e.keyIdentifier.toString();
+				
+				switch(keyBeingTimed)
+				{
+					case "Up": // ReadPrevButton
+						selected = true;
+						selectedIndex = 0;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;
+					case "Down": // ReadNextButton
+						selected = true;
+						selectedIndex = 1;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;
+					case "Left": // back to start
+						selected = true;
+						selectedIndex = 2;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;	
+					case "Right": // jump
+						selected = true;
+						selectedIndex = 3;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;	
+					case "U+0020": // space bar to start and stop read on, enter should be used with button interaction
+						selected = true;
+						selectedIndex = 4;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;
+					case "Enter":
+						selected = true;
+						selectedIndex = 5;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;
+					case "U+0009": // tab opens navigation menu
+						selected = true;
+						selectedIndex = 6;
+						hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
+						break;
+					default: 
+						// if this is not one of the above we need to set alreadybusy to false... 
+						if (selected == false)
+						{
+							setAlreadyBusy(false);
+						}
+						break;
+				}
 			}
 		}
 	}
 	
 	function hotKeyUp_Handler(e)
 	{
-		// cancels timer
-		if (e.keyIdentifier.toString() == keyBeingTimed)
-		{
-			clearTimeout(hotKeyTimer);
-			setAlreadyBusy(false);
-		}
+		clearTimeout(hotKeyTimer);
+		setAlreadyBusy(false);
 	}
-	
-	function functionToRun()
-	{
-		// running function
-		focusWithAudio(buttonId);
-		if (isEnabled(buttonId) == true)
-		{
-			focusWithAudio(buttonId);
-			setAlreadyBusy(false);
-		}
-		else
-		{
-			mm_TTS.getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
-		}
-	}
+
+	var commandFunctions = [
+		mm_Navigator.readPrevNode,
+		mm_Navigator.readNextNode,
+		mm_Navigator.backToStart,
+		mm_Navigator.jump,	
+		mm_Navigator.startOrStop,			
+		mm_Navigator.interact,
+		mm_ControlPanel.drawMMMenuInteract
+	];
 	
 	function specialCasesFunctionToRun() // this is for down and up arrowing
 	{
-		if (arrowSelected == "Enter")
-		{
-			mm_Navigator.interact();
-		}
-		else if(arrowSelected == "Up")
-		{
-			mm_Navigator.readPrevNode();
-		}
-		else if(arrowSelected == "Down")
-		{
-			mm_Navigator.readNextNode();
-		}
-		else if(arrowSelected == "Space")
-		{
-			if (readNodesStop == true)
-			{
-				mm_Navigator.startReadingNodes();
-			}
-			else
-			{
-				mm_Navigator.stopReadingNodes();
-			}
-		}
-		else if(arrowSelected == "Right")
-		{
-			mm_Navigator.jump();
-		}
-		else // if(arrowSelected == "Right")
-		{
-			mm_Navigator.backToStart();
-		}
-	}
-	
-	function setAlreadyBusy(value)
-	{
-		alreadybusy = value;
-	}
-}
-
-function infoAreaAddHandlers()
-{
-	var hotKeyTimer;
-	var keyBeingTimed;
-	var buttonId; 
-	var textIfButtonDisabled;
-	var alreadyBusy = false; 
-	
-	var infoArea = goog.dom.getElement('_mm_InfoArea');
-	infoArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
-	infoArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
-	
-	function hotKeyDown_Handler(e)
-	{
-		if (alreadyBusy == false)
-		{
-			setAlreadyBusy(true);
-			
-			var selected = false; 
-			
-			switch(e.keyIdentifier.toString())
-			{
-				case "U+001B": // escape
-					selected = true;
-					keyBeingTimed = e.keyIdentifier.toString();
-					buttonId = '_mm_NavigationModeFocus'; 
-					hotKeyTimer = window.setTimeout(functionToRun, 10);
-					break;
-				default: 
-					// if this is not one of the above we need to set alreadybusy to false... 
-					if (selected == false)
-					{
-						setAlreadyBusy(false);
-					}
-					break;
-			}
-		}
-	}
-	
-	function hotKeyUp_Handler(e)
-	{
-		// cancels timer
-		if (e.keyIdentifier.toString() == keyBeingTimed)
-		{
-			clearTimeout(hotKeyTimer);
-			setAlreadyBusy(false);
-		}
-	}
-	
-	function functionToRun()
-	{
-		// running function
-		focusWithAudio(buttonId);
-		setAlreadyBusy(false);
-	}
-	
-	function setAlreadyBusy(value)
-	{
-		alreadybusy = value;
-	}
-}
-
-function interactAreaAddHandlers()
-{
-	var hotKeyTimer;
-	var keyBeingTimed;
-	var buttonId; 
-	var textIfButtonDisabled;
-	var alreadyBusy = false; 
-	var arrowSelected;
-	
-	var interactArea = goog.dom.getElement('_mm_InteractArea');
-	interactArea.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
-	interactArea.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
-	
-	function hotKeyDown_Handler(e)
-	{
-		if (alreadyBusy == false)
-		{
-			setAlreadyBusy(true);
-			
-			var selected = false; 
-			
-			switch(e.keyIdentifier.toString())
-			{
-				case "Up":
-					selected = true;
-					arrowSelected = "Up"; 
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue = false;
-					break;
-				case "Down":
-					selected = true;
-					arrowSelected = "Down";
-					keyBeingTimed = e.keyIdentifier.toString();
-					hotKeyTimer = window.setTimeout(specialCasesFunctionToRun, 10);
-					window.event.returnValue = false;
-					break;
-				case "U+001B": // escape
-					selected = true;
-					keyBeingTimed = e.keyIdentifier.toString();
-					buttonId = '_mm_CloseMenuButton'; 
-					textIfButtonDisabled = "Close menu button is currently disabled";
-					hotKeyTimer = window.setTimeout(functionToRun, 500);
-					break;
-				default: 
-					// if this is not one of the above we need to set alreadybusy to false... 
-					if (selected == false)
-					{
-						setAlreadyBusy(false);
-					}
-					break;
-			}
-		}
-	}
-	
-	function hotKeyUp_Handler(e)
-	{
-		// cancels timer
-		if (e.keyIdentifier.toString() == keyBeingTimed)
-		{
-			clearTimeout(hotKeyTimer);
-			setAlreadyBusy(false);
-		}
-	}
-	
-	function specialCasesFunctionToRun()
-	{
-		var focusIndex = 0;
-		
-		for (var i in interactArea.children)
-		{
-			if (interactArea.children[i] == document.activeElement)
-			{
-				focusIndex = i;
-				break;
-			}
-		}
-		
-		if (arrowSelected == "Up")
-		{
-			if (focusIndex > 0)
-			{
-				interactArea.children[parseInt(focusIndex) - 1].focus();
-			}
-		}
-		
-		if (arrowSelected == "Down")
-		{
-			if (focusIndex < (interactArea.children.length - 1))
-			{
-				interactArea.children[parseInt(focusIndex) + 1].focus();
-			}
-		}
-	}
-	
-	function functionToRun()
-	{
-		focusWithAudio(buttonId);
-		if (isEnabled(buttonId) == true)
-		{
-			focusWithAudio(buttonId);
-			setAlreadyBusy(false);
-		}
-		else
-		{
-			mm_TTS.getAudio(textIfButtonDisabled, false, setAlreadyBusy(false));
-		}
+		commandFunctions[selectedIndex]();
 	}
 	
 	function setAlreadyBusy(value)
@@ -1000,9 +1481,10 @@ function CP_TextBoxModel()
 	{
 		if ((e.srcElement.tagName == "INPUT") && (e.srcElement.type == "text"))
 		{
-			if (e.srcElement.getAttribute("title") != "")
+			var title = e.srcElement.getAttribute("title");
+			if (title)
 			{
-				mm_TTS.getAudio(e.srcElement.getAttribute("title") + " entry area has focus", false, null);
+				mm_TTS.getAudio(title + " entry area has focus", null);
 			}
 			
 			// reset the box
@@ -1037,13 +1519,13 @@ function CP_TextBoxModel()
 				// character added
 				enteredCharacter = e.srcElement.value;
 				enteredCharacter = enteredCharacter[enteredCharacter.length - 1];
-				mm_TTS.getAudio(getTextForAddedCharacter(enteredCharacter), false, null);
+				mm_TTS.getAudio(getTextForAddedCharacter(enteredCharacter), null);
 			}
 			else
 			{
 				// character removed
 				removedCharacter = userInput[userInput.length - 1];
-				mm_TTS.getAudio(getTextForRemovedCharacter(removedCharacter), false, null);
+				mm_TTS.getAudio(getTextForRemovedCharacter(removedCharacter), null);
 			}
 		}
 	}
@@ -1057,9 +1539,9 @@ function CP_TextBoxModel()
 	{
 		var text = character; 
 		
-		var characterLookUp = [["!", "exclamation mark"], ['"', "double quote"], [" ", "space"], ["'", "single quote"], ["?", "question mark"], [":", "colon"], ["/", "forward slash"], [".", "dot"]]; // needs adding to
+		var characterLookUp = [["!", "exclamation mark"], ['"', "double quote"], [" ", "space"], ["'", "single quote"], ["?", "question mark"], [":", "colon"], ["/", "forward slash"], [".", "dot"], ["@", "at"]]; // needs adding to
 		
-		for (var i in characterLookUp)
+		for (var i = characterLookUp.length; i--;)
 		{
 			if (characterLookUp[i][0] == character)
 			{
@@ -1098,10 +1580,23 @@ function IAP_ButtonModel()
 	
 	function buttonHasFocus(e)
 	{
-		if (e.srcElement.getAttribute("value") != "")
+		var value = e.srcElement.getAttribute("value");
+		if (value)
 		{
-			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " button has focus", false, null);
+			mm_TTS.getAudio(value + " button has focus", null); // null needs to be replaced with the function to attach event - so on blur un attaches event 
 		}
+	}
+}
+
+function IAP_DisplayBoxModel()
+{
+	this.template = function()
+	{
+		var textBox = document.createElement("input");
+		textBox.setAttribute("type", "text");
+		textBox.setAttribute("readonly", "readonly")
+		textBox.style.cssText = "float:left;width:400px;";
+		return textBox; 
 	}
 }
 
@@ -1114,35 +1609,26 @@ function VoiceInputControlModel()
 										'title':'Voice input area'
 										});
 	
-	voiceInput.setAttribute('data-mm-uicomponent');
+	voiceInput.setAttribute('data-mm-uicomponent', '');
 	voiceInput.setAttribute('x-webkit-speech');
-	voiceInput.addEventListener("focus", function(e){voiceInput_Focus(e);}, false);
 	voiceInput.addEventListener("webkitspeechchange", function(e){voiceInput_Change(e);}, false);
+	voiceInput.addEventListener("click", voiceInput_Click, false);
 	
 	this.asHtml = function()
 	{
 		return voiceInput;
 	}
 	
-	function voiceInput_Focus(e)
+	function voiceInput_Change(e) // please use headphones - warning...
 	{
-		voiceInput.addEventListener("blur", voiceInputLostFocus = function(e){voiceInput_Blur(e);}, false);
-		
-		if (e.srcElement.getAttribute("title") != "")
-		{
-			mm_TTS.getAudio(e.srcElement.getAttribute("title") + " has focus.", true, null);
-		}
-	}
-	
-	function voiceInput_Change(e)
-	{
+		clearTimeout(voiceInputTimer);
 		var commandRecognised = false;
 		
 		var findWordFromSimilarWords = function() // this will locate similar words from those used to simplistically train the speech engine
 		{
-			var mmVoiceCommands = ['all', 'next', 'previous', 'do', 'stop', 'continue', 'jump', 'settings', 'location'];
+			var mmVoiceCommands = ['next', 'previous', 'do', 'continue', 'jump', 'options', 'location'];
 			
-			for (var i=0; i < 5; i++)
+			for (var i = 0, len = e.results.length; i < len; i++)
 			{
 				var utterance = e.results[i].utterance;
 				if (utterance != undefined)
@@ -1163,449 +1649,79 @@ function VoiceInputControlModel()
 		
 		var command = findWordFromSimilarWords(command);
 		
-		console.log(command);
 		// reset box
 		e.srcElement.value = "";
 		
-		switch(command)
+		switch(command) // stops anyway... stop and all removed
 		{
-			case 'all':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command all", true, null);
-				mm_Navigator.startReadingNodes();
-				break;
 			case 'next':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command next", true, null);
-				mm_Navigator.readNextNode();
+				mm_TTS.getAudio("recognised command next", mm_Navigator.readNextNode);  // mm_TTS callback
 				break;
 			case 'previous':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command previous", true, null);
-				mm_Navigator.readPrevNode();
+				mm_TTS.getAudio("recognised command previous", mm_Navigator.readPrevNode); // mm_TTS callback
 				break;
-			case 'do':
+			case 'do': // needs to be all actions which are available play, pause, rewind, etc...
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command do", true, null);
-				mm_Navigator.interact();
-				break;
-			case 'stop':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command stop", true, null);
-				mm_Navigator.stopReadingNodes();
+				mm_TTS.getAudio("recognised command do", mm_Navigator.interact); // mm_TTS callback
 				break;
 			case 'continue':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command continue", true, null);
-				mm_Navigator.startReadingNodes();
+				mm_TTS.getAudio("recognised command continue", mm_Navigator.startReadingNodes); // mm_TTS callback
 				break;
 			case 'jump':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command jump", true, null);
-				mm_Navigator.jump();
+				mm_TTS.getAudio("recognised command jump", mm_Navigator.jump); // mm_TTS callback
 				break;
-			case 'settings':
+			case 'options':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command settings", true, null);
-				goog.dom.getElement('_mm_OptionsButton').click();
+				mm_TTS.getAudio("recognised command options", mm_ControlPanel.openOptions); // mm_TTS callback
 				break;
 			case 'location':
 				commandRecognised = true;
-				mm_TTS.getAudio("recognised command location", true, null);
-				goog.dom.getElement('_mm_ChangeLocationButton').click();
+				mm_TTS.getAudio("recognised command location", mm_ControlPanel.drawNavigationInteract); // mm_TTS callback
+				break;
+			case 'no speech heard':
+				commandRecognised = true;
 				break;
 			default:
 				if (commandRecognised == false)
 				{
-					mm_TTS.getAudio("command not recognised", true, null);
+					mm_TTS.getAudio("command not recognised", null);
 				}
 				break;
 		}
 	}
 	
-	function voiceInput_Blur(e)
+	var voiceInputTimer = null;
+	
+	function voiceInput_Click()
 	{
-		voiceInput.removeEventListener("blur", voiceInputLostFocus, false);
-		mm_TTS.getAudio("speak now", false, null);
+		mm_TTS.getAudio("speak now", function(){voiceInputTimer = setTimeout(function(){voiceInput.focus();mm_TTS.getAudio("no speech heard, try again", null);}, 7000)});
 	}
 }
-
-function OptionsButtonModel()
-{
-	var optionsButton = document.createElement("input");
-	optionsButton.setAttribute("type", "button");
-	optionsButton.setAttribute("value", "Options");
-	optionsButton.style.cssText = "float:left;";
-	optionsButton.id = "_mm_OptionsButton";
-	optionsButton.setAttribute("data-mm-uicomponent", "");
-	optionsButton.addEventListener("click", openOptionsPage, false);
-	optionsButton.addEventListener("focus", function(e){buttonHasFocus(e);}, false);
-	optionsButton.style.opacity = "1";	
-	
-	this.asHtml = function()
-	{
-		return optionsButton;
-	}
-	
-	function buttonHasFocus(e)
-	{
-		if (e.srcElement.getAttribute("value") != "")
-		{
-			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " button has focus", false, null);
-		}
-	}
-	
-	function openOptionsPage()
-	{		 
-		chrome.extension.sendRequest({optionsPageOpen: 'true'});
-	}
-}
-
-function ChangeLocationButtonModel()
-{
-	// constructor
-
-	var changeLocationButton = document.createElement("input");
-	changeLocationButton.setAttribute("type", "button");
-	changeLocationButton.setAttribute("value", "Change location");
-	changeLocationButton.style.cssText = "float:left;";
-	changeLocationButton.id = "_mm_ChangeLocationButton";
-	changeLocationButton.setAttribute("data-mm-uicomponent", "");
-	changeLocationButton.addEventListener("click", openChangeLocationMenu, false);
-	changeLocationButton.addEventListener("focus", function(e){buttonHasFocus(e);}, false);
-
-	changeLocationButton.style.opacity = "1";
-	
-	this.asHtml = function()
-	{
-		return changeLocationButton;
-	}
-
-	function buttonHasFocus(e)
-	{
-		if (e.srcElement.getAttribute("value") != "")
-		{
-			mm_TTS.getAudio(e.srcElement.getAttribute("value") + " button has focus", false, null);
-		}
-	}
-	
-	function openChangeLocationMenu()
-	{		
-		mm_TTS.getAudio("Change location menu drop-down entered 3 options available", false, changeFocus);
-		
-		function changeFocus()
-		{
-			var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-			mmInteractionArea.children[0].focus();
-		}
-		
-		drawChangeLocationSubMenu();
-	}
-	
-	function drawChangeLocationSubMenu() // node ref needed so enter can set the values in the model and in the live site
-	{
-		var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
-		mmInteractionArea.innerHTML = "";
-		
-		var mmBackButton = new BackButtonModel();
-		mmInteractionArea.appendChild(mmBackButton.asHtml());
-		
-		var mmNewUrlButton = new NewUrlButtonModel();
-		mmInteractionArea.appendChild(mmNewUrlButton.asHtml());
-		
-		displayInteractionArea("Change location", "_mm_ChangeLocationButton");
-	}
-	
-	function BackButtonModel() // sits in change location sub menu
-	{
-		// constructor
-		var iap_Button = new IAP_ButtonModel();
-		var backButton = iap_Button.template();
-		backButton.id = "_mm_BackButton";
-		backButton.setAttribute("data-mm-uicomponent", "");
-		backButton.setAttribute("value", "Go back")
-		backButton.addEventListener("click", back, false);
-		
-		this.asHtml = function()
-		{
-			return backButton;
-		}
-		
-		function back()
-		{
-			history.go(-1);
-		}
-	}
-	
-	function NewUrlButtonModel() // sits in change location sub menu
-	{
-		var iap_Button = new IAP_ButtonModel();
-		var newUrlButton = iap_Button.template();
-		newUrlButton.id = "_mm_EnterUrlButton";
-		newUrlButton.setAttribute("data-mm-uicomponent", "");
-		newUrlButton.setAttribute("value", "Enter url");
-		newUrlButton.addEventListener("click", newUrl, false);
-		
-		this.asHtml = function()
-		{
-			return newUrlButton;
-		}
-		
-		function newUrl()
-		{
-			newUrlButton.style.display = "none"; // make button disappear 
-			
-			var urlTextEntry = new URLTextEntry();
-			urlTextEntry.add();
-			
-			var functionToRun = function()
-			{
-				// changes the url of the tab page
-				
-				var userEnteredUrl = document.getElementById("_mm_URLTextEntry").value;
-				if (userEnteredUrl != "") // other checks are also needed
-				{
-					document.location.href = document.getElementById("_mm_URLTextEntry").value;
-				}
-			}
-			
-			var urlEnterButton = new UrlEnterButtonModel(functionToRun);
-			urlEnterButton.add();
-			urlTextEntry.focus();
-		}
-		
-		function URLTextEntry()
-		{
-			// constructor
-			var textBox = new CP_TextBoxModel();
-			var uRLTextEntry = textBox.template();
-			uRLTextEntry.id = "_mm_URLTextEntry";
-			uRLTextEntry.setAttribute("data-mm-uicomponent", "");
-			uRLTextEntry.setAttribute("title", "u r l");
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-				mmInteractionArea.insertBefore(uRLTextEntry, mmInteractionArea.lastChild);
-			}
-			
-			this.focus = function()
-			{
-				uRLTextEntry.focus();
-			}
-		}
-		
-		function UrlEnterButtonModel(functionToRun) // generic sits in change location sub menu
-		{
-			// constructor
-			var iap_Button = new IAP_ButtonModel();
-			var urlEnterButton = iap_Button.template();
-			urlEnterButton.id = "_mm_UrlEnterButton";
-			urlEnterButton.setAttribute("data-mm-uicomponent", "");
-			urlEnterButton.setAttribute("value", "Go");
-			urlEnterButton.addEventListener("click", functionToRun, false);
-			
-			this.add = function()
-			{
-				var mmInteractionArea = document.getElementById("_mm_InteractArea");
-				mmInteractionArea.insertBefore(urlEnterButton, mmInteractionArea.lastChild);
-			}
-		}
-	}
-}
-
-// Utilities 
-// utilities.js
 
 function calcHighestZIndex()
 {
 	var highestZ = 0;
-	var elements = document.all;
-	for (var i in elements)
+	var elements = document.body.querySelectorAll('*'); // document.all;
+	var view = document.defaultView;
+	for (var i = elements.length; i--;)
 	{
-		if (elements[i].tagName != null)
+		var element = elements[i];
+		if (element.clientHeight > 0)
 		{
-			try
+			var computerStyle = view.getComputedStyle(element);
+			var zIndex = parseInt(computerStyle.getPropertyValue("z-index"));
+			if (zIndex != NaN)
 			{
-				var zIndex = document.defaultView.getComputedStyle(elements[i]).getPropertyValue("z-index");
-				if (zIndex != "")
+				if (zIndex > highestZ)
 				{
-					if (parseInt(zIndex) > highestZ)
-					{
-						highestZ = zIndex;
-					}
+					highestZ = zIndex;
 				}
-			}
-			catch(err)
-			{
-				console.log(err);
 			}
 		}
 	}
 	return highestZ;
-}
-
-function correctTopValuesForAbsolutePositionedElements()
-{
-	walkDOM(document.getElementsByTagName("BODY")[0]);
-	
-	function walkDOM(element)
-	{
-		do 
-		{
-			if (element.tagName != null)
-			{
-				if (document.defaultView.getComputedStyle(element).getPropertyValue("position") == "relative")
-				{
-					// do nothing
-				}
-				else if (document.defaultView.getComputedStyle(element).getPropertyValue("position") == "absolute")
-				{
-					var top = document.defaultView.getComputedStyle(element).getPropertyValue("top");
-					if (top != "")
-					{
-						if (top.toLowerCase() != "auto")
-						{
-							var cssUnits = ["px","%","in","cm","mm","em","ex","pt","pc"];
-							
-							var units = ""; 
-							
-							for (var a in cssUnits)
-							{
-								if (top.toLowerCase().indexOf(cssUnits[a]) != -1)
-								{
-									units = cssUnits[a];
-									break;
-								}
-							}
-							
-							if (units != "") // if it has units - css should have units otherwise the browser might have to guess.
-							{
-								var topToChars = top.split("");
-								var topAsNumber = "";
-								
-								var charactersOfInterest = ["-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-								
-								for (var x = 0; x < topToChars.length; x++)
-								{
-									if (charactersOfInterest.indexOf(topToChars[x]) != -1)
-									{
-										topAsNumber = topAsNumber + topToChars[x];
-									}
-								}
-								
-								topAsNumber = parseInt(topAsNumber);
-								
-								topAsNumber = topAsNumber + 22;
-								
-								var currentStyleAttribute = element.style.cssText;
-								
-								// to show what has been changed
-								
-								element.setAttribute("ccChanged", "true");
-								
-								if (currentStyleAttribute == "")
-								{
-									element.style.cssText = "top:" + topAsNumber.toString() + units + ";"; // needs to add 22 to top
-								}
-								else
-								{
-									element.style.cssText = element.style.cssText + ";top:" + topAsNumber.toString() + units + ";";
-									element.style.cssText = element.style.cssText.replace(/;;/g, ";");
-								}
-							}
-						}
-					}
-				}
-				// code end
-				else
-				{			
-					if (element.hasChildNodes())
-					{
-						walkDOM(element.firstChild);
-					}
-				}
-			}
-		} 
-		while (element = element.nextSibling)
-			}
-}
-
-// Highlighter
-function calcPosition(positionElement)
-{
-	var element_coordinates = [4];
-	var left = 0;
-	var top = 0;
-	var width = 0;
-	var height = 0;
-	
-	width = positionElement.scrollWidth;
-	height = positionElement.scrollHeight;
-	
-	var allXPadding = 0;
-	var allYPadding = 0;
-	var allXMargin = 0;
-	var allYMargin = 0;
-	
-	while (positionElement != null)
-	{
-		allXPadding = allXPadding + positionElement.clientLeft;
-		allXPadding = allYPadding + positionElement.clientTop;
-		allXMargin = allXMargin + positionElement.offsetLeft;
-		allYMargin = allYMargin + positionElement.offsetTop;
-		positionElement = positionElement.offsetParent;
-	}
-	
-	left = allXPadding + allXMargin; 
-	top = allYPadding + allYMargin; 
-	
-	element_coordinates[0] = left;
-	element_coordinates[1] = top;
-	element_coordinates[2] = width;
-	element_coordinates[3] = height;
-	return element_coordinates; 
-}
-
-function restoreHighlighter()
-{
-	var highlighter = document.getElementById("_mm_Highlighter");
-	highlighter.style.cssText = "display:none;";
-}
-
-function drawCurrentElementHighlighterAreaFromLive(osmType, liveElement)
-{	
-	var positions = calcPosition(liveElement);
-	
-	var x = positions[0];
-	var y = positions[1];
-	var width = positions[2];
-	var height = positions[3];
-	
-	if ((x <= 0)||(x >= document.body.scrollWidth)||(y <=0)||(y >= document.body.scrollHeight)||(width == 0)||(height == 0))
-	{
-		goog.dom.getElement('_mm_CurrentItemDisplayArea').value = osmType + " (offscreen)";
-	}
-	else
-	{
-		goog.dom.getElement('_mm_CurrentItemDisplayArea').value = osmType;
-		drawRectangleFromCoords(x, y, width, height, false);
-	}
-}
-
-function drawRectangleFromCoords(x, y, width, height, includeCircle)
-{
-	var highlighter = document.getElementById("_mm_Highlighter");
-	if (highlighter != null)
-	{
-		highlighter.style.cssText = "left:" + x + "px;top:" + y + "px;width:" + width + "px;height:" + height + "px;";
-		highlighter.scrollIntoView();
-		// amend scroll position due to metal mouth control panel 
-		var scrollPosY = window.scrollY;
-		window.scrollTo(0, scrollPosY - 40);
-		// paint following after scroll otherwise their paint might be disrupted
-		highlighter.style.border = "2px solid #FF8C00";
-		window.scrollTo(0, window.scrollY - 1); // forces the page to refresh - otherwise sometimes partial squares are left visable
-		
-	}
 }

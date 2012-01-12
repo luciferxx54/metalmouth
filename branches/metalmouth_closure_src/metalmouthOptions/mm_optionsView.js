@@ -22,6 +22,7 @@ goog.provide('mm_optionsView.update');
 
 goog.require('goog.dom');
 goog.require('goog.events');
+goog.require('mm_BackgroundComms');
 
 mm_optionsView.init = function() 
 {	
@@ -37,12 +38,59 @@ mm_optionsView.init = function()
 	
 	goog.dom.appendChild(optionsFieldset, optionsLegend);
 	
+	var option1 = goog.dom.createDom('div');
+									 
+	goog.dom.appendChild(optionsFieldset, option1);
+	
+	var newTabPageLabel = goog.dom.createDom('label', {
+													 'for':'_mmOptions_newTabPage',
+													 'innerText':'New tab url'
+													 });
+	
+	goog.dom.appendChild(option1, newTabPageLabel);
+	
+	var newTabPage = goog.dom.createDom('input', {
+												'id': '_mmOptions_newTabPage',
+												'type': 'text'
+												});
+	
+	goog.dom.appendChild(option1, newTabPage);
+	
+	var newTabPageNote = goog.dom.createDom('p', {
+										'id': '_mmOptions_newTabPageNote',
+										'innerText': "Default new tab url is Google's Accessible Search."
+										});
+	
+	goog.dom.appendChild(option1, newTabPageNote);
+	
+	var option2 = goog.dom.createDom('div');
+	
+	goog.dom.appendChild(optionsFieldset, option2);
+	
+	var metalmouthAlwaysOnLabel = goog.dom.createDom('label', {
+												  'for':'_mmOptions_turnOnMetalmouthAlwaysOn',
+												  'innerText':'Always-on'
+												  });
+	
+	goog.dom.appendChild(option2, metalmouthAlwaysOnLabel);
+	
+	var metalmouthAlwaysOn = goog.dom.createDom('input', {
+											 'id': '_mmOptions_turnOnMetalmouthAlwaysOn',
+											 'type': 'checkbox'
+											 });
+	
+	goog.dom.appendChild(option2, metalmouthAlwaysOn);
+	
+	var option3 = goog.dom.createDom('div');
+	
+	goog.dom.appendChild(optionsFieldset, option3);
+	
 	var speechRateLabel = goog.dom.createDom('label', {
 											 'for':'_mmOptions_speechRate',
-											 'innerText':'Speech rate:'
+											 'innerText':'Speech rate'
 	});
 	
-	goog.dom.appendChild(optionsFieldset, speechRateLabel);
+	goog.dom.appendChild(option3, speechRateLabel);
 	
 	var speechRate = goog.dom.createDom('input', {
 		'id': '_mmOptions_speechRate',
@@ -53,7 +101,14 @@ mm_optionsView.init = function()
 		'step': '0.2'
 	});
 	
-	goog.dom.appendChild(optionsFieldset, speechRate);
+	goog.dom.appendChild(option3, speechRate);
+	
+	if (navigator.platform == "MacIntel")
+	{
+		// hide speech rate, just until TTS issues resolved - http://code.google.com/p/chromium/issues/detail?id=99116
+		speechRateLabel.outerHTML = "";
+		speechRate.outerHTML = "<p>Speech rate option is currently disabled for MAC users due to <a href='http://code.google.com/p/chromium/issues/detail?id=99116'>Chromium issue</a></p>"; 
+	}
 	
 	// Experimental features
 	
@@ -69,22 +124,31 @@ mm_optionsView.init = function()
 	
 	goog.dom.appendChild(experimentalFeaturesFieldset, experimentalFeaturesLegend);
 	
+	var expOption1 = goog.dom.createDom('div');
+	
+	goog.dom.appendChild(experimentalFeaturesFieldset, expOption1);
+	
 	var turnOnVoiceInputLabel = goog.dom.createDom('label', {
-											 'for':'_mmOptions_voiceInput',
-											 'innerText':'Turn on voice input:'
+											 'for':'_mmOptions_turnOnVoiceInput',
+											 'innerText':'Voice commands'
 											 });
 	
-	goog.dom.appendChild(experimentalFeaturesFieldset, turnOnVoiceInputLabel);
+	goog.dom.appendChild(expOption1, turnOnVoiceInputLabel);
 	
 	var turnOnVoiceInput = goog.dom.createDom('input', {
 										'id': '_mmOptions_turnOnVoiceInput',
 										'type': 'checkbox'
 										});
 	
-	goog.dom.appendChild(experimentalFeaturesFieldset, turnOnVoiceInput);
+	goog.dom.appendChild(expOption1, turnOnVoiceInput);
 	
+	var useHeadphonesNote = goog.dom.createDom('p', {
+												  'id': '_mmOptions_useHeadphonesNote',
+												  'innerText':'Please remember to use headphones with voice commands for best results.'
+												  });
 	
-	// add in save button
+	goog.dom.appendChild(expOption1, useHeadphonesNote);
+	
 	var saveButton = goog.dom.createDom('input', {
 		'id': '_mmOptions_saveButton',
 		'type': 'button',
@@ -97,21 +161,35 @@ mm_optionsView.init = function()
 	goog.events.listen(saveButton, 
 		goog.events.EventType.CLICK,
 		function(){
-			   
+					   
 			var data = {
-				speechRate: document.getElementById('_mmOptions_speechRate').value,
+				newTabPage: document.getElementById('_mmOptions_newTabPage').value,
+				turnOnMetalmouthAlwaysOn: document.getElementById('_mmOptions_turnOnMetalmouthAlwaysOn').checked,
+				speechRate: navigator.platform == "MacIntel" ? "0.5" : document.getElementById('_mmOptions_speechRate').value,
 				turnOnVoiceInput: document.getElementById('_mmOptions_turnOnVoiceInput').checked
 			}
 
-			chrome.extension.sendRequest({optionsPageClose: JSON.stringify(data)});
+			mm_BackgroundComms.call("optionsClose", data, null, false);
 		});
 }
 
 mm_optionsView.update = function(data)
 {
+	if (data.newTabPage)
+	{
+		document.getElementById('_mmOptions_newTabPage').value = data.newTabPage;
+	}
+	if (data.turnOnMetalmouthAlwaysOn)
+	{
+		document.getElementById('_mmOptions_turnOnMetalmouthAlwaysOn').checked = data.turnOnMetalmouthAlwaysOn;
+	}
 	if (data.speechRate)
 	{
-		document.getElementById('_mmOptions_speechRate').value = data.speechRate;
+		var speechRate = document.getElementById('_mmOptions_speechRate');
+		if (speechRate)
+		{
+			speechRate.value = data.speechRate;
+		}
 	}
 	if (data.turnOnVoiceInput)
 	{

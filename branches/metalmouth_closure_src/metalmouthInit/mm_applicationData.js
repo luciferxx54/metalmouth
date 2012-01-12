@@ -33,9 +33,9 @@ mm_applicationData.connect = function()
 	}
 }
 
-mm_applicationData.update = function(jsonEncodedData)
+mm_applicationData.update = function(optionsData)
 {
-	localStorage.setItem("MetalmouthApplicationData", jsonEncodedData);
+	localStorage.setItem("MetalmouthApplicationData", JSON.stringify(optionsData));
 	applicationData = new ApplicationDataModel(JSON.parse(localStorage.getItem("MetalmouthApplicationData")));
 }
 
@@ -53,19 +53,30 @@ function ApplicationDataModel(data)
 {
 	var applicationDataModel; 
 	
-	if (data == undefined)
-	{
-		applicationDataModel = {
-		speechRate: '0.9',
-		turnOnVoiceInput: false
-		}
+	if (data == undefined){
+		data = {};
 	}
-	else
-	{
-		applicationDataModel = {
-		speechRate: data.speechRate,
-		turnOnVoiceInput: data.turnOnVoiceInput
-		}
+	
+	// this preserves localStorage data from previous versions
+	if (!data.newTabPage){
+		data.newTabPage = '';
 	}
+	if (!data.turnOnMetalmouthAlwaysOn){
+		data.turnOnMetalmouthAlwaysOn = false;
+	}
+	if (!data.speechRate){
+		data.speechRate = '0.9';
+	}
+	if (!data.turnOnVoiceInput){
+		data.turnOnVoiceInput = false;
+	}
+	
+	var applicationDataModel = {
+	newTabPage: data.newTabPage,
+	turnOnMetalmouthAlwaysOn: data.turnOnMetalmouthAlwaysOn,
+	speechRate: data.speechRate,
+	turnOnVoiceInput: data.turnOnVoiceInput
+	}
+	
 	return applicationDataModel;
 }
