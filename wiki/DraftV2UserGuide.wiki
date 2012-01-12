@@ -79,11 +79,11 @@ The metalmouth extension allows for multi-tab voice browsing.  You are free to u
 
 ==Extension Control - Keyboard==
 
-The control panel is displayed at the top of the page, just under Chrome browser's own controls (see image below).
+To open metalmouth's top menu simply press the tab key.  The top menu bar will then appear at the top of the current tab, just under Chrome browser's own controls (fig 4).
 
-[http://2.bp.blogspot.com/-D9bbiRqvMk0/TrkpSpt83II/AAAAAAAAACc/JcV_OX07f2M/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B14.04.42.png]
+[https://sites.google.com/site/projectmetalmouth/home/Screen%20shot%202012-01-12%20at%2016.59.41.png]
 
-The control panel contain two buttons (the change location button and the options button) and a display panel which serves only to show the item currently being read out.  
+The control panel contain three buttons (the change location button and the options button) and a display panel which serves only to show the item currently being read out.  
 
 ----
 
