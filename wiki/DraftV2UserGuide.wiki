@@ -83,7 +83,7 @@ To open metalmouth's top menu simply press the tab key.  The top menu bar will t
 
 [https://sites.google.com/site/projectmetalmouth/home/Screen%20shot%202012-01-12%20at%2016.59.41.png]
 
-The control panel contain three buttons (the change location button and the options button) and a display panel which serves only to show the item currently being read out.  
+The control panel contain three buttons - the Change location button, Options button and Close menu button.  
 
 ----
 
