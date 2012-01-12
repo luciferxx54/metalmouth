@@ -1151,131 +1151,12 @@ Expected outcome(s):
   # metalmouth should say "Starting metalmouth extension".
 
 ----
-==A12) Voice Input==
 
-===A12.1) Unselected===
+==A12) Page-level navigation via keyboard==
 
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been unselected.
-  # The options page has been saved and closed, using the save & close button.
- 
-Action(s):
-  # Right click the mouse.
+===A12.1) Down arrow===
 
-Expected outcome(s):
-  # Nothing should happen.
-
-===A12.2) Selected===
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been selected.
-  # The options page has been saved and closed, using the save & close button.
- 
-Action(s):
-  # Right click the mouse.
-
-Expected outcome(s):
-  # metalmouth should say "Voice input available".
-
-===A12.3) Triggering voice command input===
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been selected.
-  # The options page has been saved and closed, using the save & close button.
-  # User wearing headphones.
-  # Right click the mouse.
-  # metalmouth should say "Voice input available".
- 
-Action(s):
-  # Left click the mouse.  
-
-Expected outcome(s):
-  # metalmouth should say "speak now".
-
-===A12.4) Inputting voice command - unknown command===
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been selected.
-  # The options page has been saved and closed, using the save & close button.
-  # User wearing headphones.
-  # Right click the mouse.
-  # metalmouth should say "Voice input available".
-  # Left click the mouse.
-  # metalmouth should say "speak now".
- 
-Action(s):
-   # Say "Hello"
-
-Expected outcome(s):
-  # metalmouth should say "command not recognised.  Try again".
-
-===A12.5) Inputting voice command - known commands===
-
-====A12.5.1) Next====
-???
-====A12.5.2) Previous====
-???
-====A12.5.3) Do====
-???
-====A12.5.4) Continue====
-???
-====A12.5.5) Jump====
-???
-====A12.5.6) Options====
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been selected.
-  # The options page has been saved and closed, using the save & close button.
-  # User wearing headphones.
-  # Right click the mouse.
-  # metalmouth should say "Voice input available".
-  # Left click the mouse.
-  # metalmouth should say "speak now".
- 
-Action(s):
-   # Say "Options"
-
-Expected outcome(s):
-  # metalmouth should say "command options recognised" then redirect tab to the metalmouth options page.
-
-====A12.5.7) Location====
-???
-
-===A12.6) No speech heard===
-
-Precondition(s): 
-  # metalmouth extension is installed.
-  # metalmouth extension is on - metalmouth icon button shows an open mouth.
-  # The "voice input" option has been selected.
-  # The options page has been saved and closed, using the save & close button.
-  # User wearing headphones.
-  # Right click the mouse.
-  # metalmouth should say "Voice input available".
-  # Left click the mouse.
-  # metalmouth should say "speak now".
- 
-Action(s):
-   # Be silent.
-
-Expected outcome(s):
-  # After a few seconds metalmouth should say "No speech heard.  Try again".
-
-----
-==A13) Page-level navigation via keyboard==
-
-===A13.1) Down arrow===
-
-====A13.1.1) Down arrow at page top====
+====A12.1.1) Down arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1292,7 +1173,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the next OSEM item.
 
-====A13.1.2) Down arrow at mid page location====
+====A12.1.2) Down arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1308,7 +1189,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the next OSEM item.
 
-====A13.1.3) Down arrow at page bottom====
+====A12.1.3) Down arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1325,9 +1206,9 @@ Expected outcome(s):
   # metalmouth should say "page start".
   # The navigator should be reset.
 
-===A13.2) Up arrow===
+===A12.2) Up arrow===
 
-====A13.2.1) Up arrow at page top====
+====A12.2.1) Up arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1344,7 +1225,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====A13.2.2) Up arrow at mid page location====
+====A12.2.2) Up arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1360,7 +1241,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the previous OSEM item.
 
-===A13.2.3) Up arrow at page bottom===
+===A12.2.3) Up arrow at page bottom===
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1376,9 +1257,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read out the previous OSEM item.
 
-===A13.3) Left arrow===
+===A12.3) Left arrow===
 
-====A13.3.1) Left arrow at page top====
+====A12.3.1) Left arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1395,7 +1276,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====A13.3.2) Left arrow at mid page location====
+====A12.3.2) Left arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1411,7 +1292,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-====A13.3.3) Left arrow at page bottom====
+====A12.3.3) Left arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1427,9 +1308,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth should say "page start".
 
-===A13.4) Right arrow===
+===A12.4) Right arrow===
 
-====A13.4.1) Right arrow at page top====
+====A12.4.1) Right arrow at page top====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1446,7 +1327,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-====A13.4.2) Right arrow at mid page location====
+====A12.4.2) Right arrow at mid page location====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1462,7 +1343,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-====A13.4.3) Right arrow at page bottom====
+====A12.4.3) Right arrow at page bottom====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1478,9 +1359,9 @@ Action(s):
 Expected outcome(s):
   # metalmouth navigator should move to the next available OSEM header item and read its contents, looping past the end of the document and going again from the start if necessary.
 
-===A13.5) Space bar===
+===A12.5) Space bar===
 
-====A13.5.1) Stop reading====
+====A12.5.1) Stop reading====
 
 Precondition(s): 
   # metalmouth extension is installed.
@@ -1494,7 +1375,7 @@ Action(s):
 Expected outcome(s):
   # metalmouth should read the contents of the current OSEM item and come to a stop.
 
-====A13.5.2) Continue reading==== 
+====A12.5.2) Continue reading==== 
 
 Precondition(s): 
   # metalmouth extension is installed.
