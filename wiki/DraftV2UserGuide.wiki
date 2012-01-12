@@ -4,7 +4,7 @@ This short guide is intended to assist first time users of the Project metalmout
 
 ==Contents==
 
-1) Starting the extension
+1) Starting the extension.
 1.1) Omnibox method (only two key strokes)
 1.2) metalmouth button method
 2) Extension starts
