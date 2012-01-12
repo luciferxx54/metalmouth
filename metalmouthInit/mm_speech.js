@@ -21,20 +21,77 @@ goog.provide('mm_speech');
 
 goog.require('mm_applicationData');
 
-mm_speech.speak = function(utterance, enqueue, callback)
+var audioStack = null;
+var howToSayUtterance = null;
+
+function urlBasedSpeechAvailable()
 {
-	var handleCallback = function()
+	var req = new XMLHttpRequest();
+	req.open("GET", "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=", false);
+	req.send();
+	return (req.status==404) ? false : true;
+}
+
+mm_speech.speechFunction = null;
+
+mm_speech.speak = function(utterance, callback)
+{
+	if (!mm_speech.speechFunction)
 	{
-		try
+		if ((navigator.platform == "MacIntel") && (urlBasedSpeechAvailable() == true))
 		{
-			if (callback != null)
-			{
-				callback();
-			}
+			audioStack = new AudioStackModel();
+			mm_speech.speechFunction = speakExtTTS;
 		}
-		catch(err)
+		else
 		{
-			console.log(err);
+			mm_speech.speechFunction = speakIntTTS;
+		}
+	}
+	
+	// text - replace . for dot in .co.uk for example
+	var patternToFindAndReplaceDotInUrl = /(\.)(?=[a-z])/gi;
+	utterance = utterance.replace(patternToFindAndReplaceDotInUrl, " dot ");		
+	
+	// text - replace . for point in 45.4 for example
+	var patternToFindAndReplaceDotInNumbers = /(\.)(?=[0-9])/gi;
+	utterance = utterance.replace(patternToFindAndReplaceDotInNumbers, " point ");
+	
+	utterance = utterance.replace(/\!/g, ' exclamation mark ');
+	utterance = utterance.replace(/\?/g, ' question mark ');
+	utterance = utterance.replace(/\:/g, ' colon ');
+	utterance = utterance.replace(/\//g, ' forward slash ');
+	utterance = utterance.replace(/\@/g, ' at ');
+	
+	mm_speech.speechFunction(utterance, callback);
+}
+
+function speakIntTTS(utterance, callback)
+{
+	chrome.tts.stop();
+	
+	var howToSayUtterance = {
+		lang: 'en-US', 
+		rate: parseFloat(mm_applicationData.getSpecificData('speechRate')),
+		enqueue: false
+	};
+	
+	var functionToRun = function()
+	{
+		callback();
+	};
+	
+	if (callback != null)
+	{
+		howToSayUtterance['onEvent'] = function(event) {
+			if (event.type == 'interrupted') {
+				functionToRun = function()
+				{
+				};
+			}			
+			if (event.type == 'end') {
+				functionToRun();
+			}
 		}
 	}
 	
@@ -42,15 +99,72 @@ mm_speech.speak = function(utterance, enqueue, callback)
 	{
 		chrome.tts.speak(
 			utterance,
+			howToSayUtterance
+		);
+	}
+}
+
+function speakExtTTS(utterance, callback)
+{
+	audioStack.speakDirectly(utterance, callback);
+}
+
+function AudioStackModel()
+{
+	var audio = null;
+	
+	this.speakDirectly = function(utterance, callback)
+	{	
+		var handleOnTimeUpdate = function()
+		{
+			if (audio.currentTime == 9223372013568)
 			{
-				lang: 'en-US', 
-				rate: parseFloat(mm_applicationData.getSpecificData('speechRate')),
-				enqueue: enqueue,
-				onEvent: function(event) {
-					if (event.type == 'end') {
-						handleCallback();
-					}
+				audio.removeEventListener('timeupdate', handleOnTimeUpdate);
+				callback();
+			}
+		}
+		
+		var handleOnEnded = function()
+		{
+			audio.removeEventListener('ended', handleOnEnded);
+			callback();
+		}
+		
+		var handleOnDurationChange = function()
+		{
+			if (audio.duration == "Infinity")
+			{
+				audio.addEventListener('timeupdate', handleOnTimeUpdate);
+			}
+			else
+			{
+				audio.addEventListener('ended', handleOnEnded);
+			}
+		}
+		
+		if (utterance != null)
+		{
+			if (audio){
+				if (audio.ended == false)
+				{
+					audio.pause();
 				}
-			});
+			}
+			
+			var handlePlay = function()
+			{
+				audio.src = "";
+			}
+			
+			audio = new Audio();
+			audio.addEventListener("play", handlePlay, false);
+			
+			if (callback) {
+				audio.addEventListener('durationchange', handleOnDurationChange); // can add each time because it is a new Audio object each time
+			}
+
+			audio.src = "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=" + escape(utterance);
+			audio.play();
+		}
 	}
 }

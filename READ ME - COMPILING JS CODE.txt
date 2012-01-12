@@ -29,3 +29,9 @@ This is for metalmouthOptions.js
 1) closure-library/closure/bin/calcdeps.py -i metalmouthOptions/metalmouthOptions.js \ -p closure-library/ -o script > metalmouthOptions/metalmouthOptions-precompiled.js
 2) java -jar compiler.jar --js metalmouthOptions/metalmouthOptions-precompiled.js --js_output_file metalmouthOptions-compiled.js
 3) remove metalmouthOptions/metalmouthOptions-precompiled.js
+
+This is an apple script 
+
+NB: Change the directory in the first do script to the correct directory
+
+tell application "Terminal"	set currentTab to do script "cd metalmouth_SVN_Closure_Branch"	do script "closure-library/closure/bin/calcdeps.py -i metalmouth/metalmouth.js \\ -p closure-library/ -o script > metalmouth/metalmouth-precompiled.js" in currentTab	do script "java -jar compiler.jar --js metalmouth/metalmouth-precompiled.js --js_output_file metalmouth-compiled.js" in currentTab	do script "rm metalmouth/metalmouth-precompiled.js" in currentTab	do script "closure-library/closure/bin/calcdeps.py -i metalmouthInit/metalmouthInit.js \\ -p closure-library/ -o script > metalmouthInit/metalmouthInit-precompiled.js" in currentTab	do script "java -jar compiler.jar --js metalmouthInit/metalmouthInit-precompiled.js --js_output_file metalmouthInit-compiled.js" in currentTab	do script "rm metalmouthInit/metalmouthInit-precompiled.js" in currentTab	do script "closure-library/closure/bin/calcdeps.py -i metalmouthOptions/metalmouthOptions.js \\ -p closure-library/ -o script > metalmouthOptions/metalmouthOptions-precompiled.js" in currentTab	do script "java -jar compiler.jar --js metalmouthOptions/metalmouthOptions-precompiled.js --js_output_file metalmouthOptions-compiled.js" in currentTab	do script "rm metalmouthOptions/metalmouthOptions-precompiled.js" in currentTab	do script "echo compile complete - check for any errors" in currentTabend tell

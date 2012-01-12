@@ -21,8 +21,9 @@ goog.provide('metalmouthOptions.start');
 
 goog.require('mm_optionsView.init');
 goog.require('mm_optionsView.update');
+goog.require('mm_BackgroundComms');
 
-console.log("loaded metalmouth options");
+console.log("loaded metalmouth options auto");
 
 var startMetalmouthFunctions = 
 [
@@ -58,13 +59,12 @@ function initInterface()
 
 function updateInterface()
 {
-	chrome.extension.sendRequest({optionsPageGetData: 'true'}, function(response) {
-		if (response.options != undefined)
-		{
-			mm_optionsView.update(JSON.parse(response.options));
-		}
+	var cbFunction_updateInterface = function(results) {
+		mm_optionsView.update(results);
 		sequencer();
-	});
+	}
+	
+	mm_BackgroundComms.call("optionsGetData", null, cbFunction_updateInterface, true);
 }
 
 function initMetalmouth()
@@ -77,5 +77,4 @@ metalmouthOptions.start = function()
 	startSequencer(startMetalmouthFunctions);
 }
 
-// Ensures the symbol will be visible after compiler renaming.
 goog.exportSymbol('metalmouthOptions.start', metalmouthOptions.start);

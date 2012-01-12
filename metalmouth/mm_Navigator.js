@@ -27,6 +27,18 @@ mm_Navigator.reset = function()
 	initJump();
 }
 
+mm_Navigator.startOrStop = function()
+{
+	if (readNodesStop == true)
+	{
+		mm_Navigator.startReadingNodes();
+	}
+	else
+	{
+		mm_Navigator.stopReadingNodes();
+	}
+}
+
 mm_Navigator.startReadingNodes = function()
 {
 	readNodesStop = false;
@@ -65,7 +77,7 @@ mm_Navigator.backToStart = function() // navigator. click and it enables and foc
 {
 	initWalker();
 	restoreHighlighter();
-	mm_TTS.getAudio("Page start", false, null);
+	mm_TTS.getAudio("Page start", null);
 }
 
 mm_Navigator.jump = function() // navigator.
@@ -111,79 +123,176 @@ mm_Navigator.readNextNode = function() // navigator.
 	}
 }
 
+mm_Navigator.interactFunctions = {}
+
+mm_Navigator.interactFunctions['Link'] = function(currentNode) {
+	var linkInteraction = function(liveElementToInteractWith)
+	{
+		document.location.href = liveElementToInteractWith.getAttribute("href"); // this should look at the background code open the page using opener and see if it contains a meta refresh
+	} 
+	return linkInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['New_Tab_Map_Area'] = function(currentNode) {
+	var newTabMapAreaInteraction = function(liveElementToInteractWith)
+	{
+		mm_BackgroundComms.call("openTab", liveElementToInteractWith.getAttribute("href"), null, false);
+	} 
+	return newTabMapAreaInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['New_Tab_Link'] = function(currentNode) {
+	var newTabLinkInteraction = function(liveElementToInteractWith)
+	{
+		mm_BackgroundComms.call("openTab", liveElementToInteractWith.getAttribute("href"), null, false);
+	} 
+	return newTabLinkInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Quote_Link'] = function(currentNode) {
+	var linkInteraction = function(liveElementToInteractWith)
+	{
+		document.location.href = liveElementToInteractWith.getAttribute("cite"); // this should look at the background code open the page using opener and see if it contains a meta refresh
+	} 
+	return linkInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Map_Area'] = function(currentNode) {
+	var linkInteraction = function(liveElementToInteractWith)
+	{
+		document.location.href = liveElementToInteractWith.getAttribute("href"); // this should look at the background code open the page using opener and see if it contains a meta refresh
+	} 
+	return linkInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Skip_Link'] = function(currentNode) {
+	
+	var skipLinkInteraction = function(liveElementToInteractWith)
+	{
+		var targetHref = liveElementToInteractWith.getAttribute("href").replace("#", "");
+		moveTo(targetHref);
+	}
+	
+	return skipLinkInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Text_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "text");
+}
+
+mm_Navigator.interactFunctions['Search_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "search");
+}
+
+mm_Navigator.interactFunctions['Password_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "password");
+}
+
+mm_Navigator.interactFunctions['Telephone_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "telephone");
+}
+
+mm_Navigator.interactFunctions['Url_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "url");
+}
+
+mm_Navigator.interactFunctions['Email_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "e-mail");
+}
+
+mm_Navigator.interactFunctions['Number_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "number");
+}
+
+mm_Navigator.interactFunctions['Date_Time_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "date time");
+}
+
+mm_Navigator.interactFunctions['Date_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "date");
+}
+
+mm_Navigator.interactFunctions['Month_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "month");
+}
+
+mm_Navigator.interactFunctions['Week_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "week");
+}
+
+mm_Navigator.interactFunctions['Time_Box'] = function(currentNode) {
+	return mm_ControlPanel.drawTextBoxInteract(currentNode, "time");
+}
+
+mm_Navigator.interactFunctions['Range_Input'] = function(currentNode) {
+	return mm_ControlPanel.drawRangeInputInteract(currentNode);
+}
+
+mm_Navigator.interactFunctions['Button'] = function(currentNode) {
+	var buttonInteraction = function(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	return buttonInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Input_Button'] = function(currentNode) {
+	var buttonInteraction = function(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	return buttonInteraction(currentNode);
+}
+
+mm_Navigator.interactFunctions['Image_Button'] = function(currentNode) {
+	var buttonInteraction = function(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	return buttonInteraction(currentNode);
+}
+	
+mm_Navigator.interactFunctions['Submit_Button'] = function(currentNode) {
+	var buttonInteraction = function(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	return buttonInteraction(currentNode);
+}
+		
+mm_Navigator.interactFunctions['Reset_Button'] = function(currentNode) {
+	var buttonInteraction = function(liveElementToInteractWith)
+	{
+		liveElementToInteractWith.click();
+	}
+	return buttonInteraction(currentNode);
+}
+		
+mm_Navigator.interactFunctions['Check_Button'] = function(currentNode) {
+	return mm_ControlPanel.drawCheckButtonInteract(currentNode);
+}
+			
+mm_Navigator.interactFunctions['Single_Select'] = function(currentNode) {
+	return mm_ControlPanel.drawSingleSelectMenuInteract(currentNode);
+}
+
+mm_Navigator.interactFunctions['Multi_Select'] = function(currentNode) {
+	return mm_ControlPanel.drawMultiSelectMenuInteract(currentNode);
+}
+				
+mm_Navigator.interactFunctions['Audio'] = function(currentNode) {
+	return mm_ControlPanel.drawMediaInteract(currentNode, "audio");
+}
+					
+mm_Navigator.interactFunctions['Video'] = function(currentNode) {
+	return mm_ControlPanel.drawMediaInteract(currentNode, "video");
+}
+
 mm_Navigator.interact = function() // navigator.
 {
 	if (osmType != null)
 	{
-		switch(osmType)
-		{
-			case "Link":
-				linkInteraction(walker.currentNode);
-				break;
-			case "Quote_Link":
-				linkInteraction(walker.currentNode);
-				break;
-			case "Map_Area":
-				linkInteraction(walker.currentNode);
-				break;
-			case "Skip_Link":
-				skipLinkInteraction(walker.currentNode);
-				break;
-			case "Text_Box":
-				textBoxInteraction(walker.currentNode, "text");
-				break;
-			case "Search_Box":
-				textBoxInteraction(walker.currentNode, "search");
-				break;
-			case "Password_Box":
-				textBoxInteraction(walker.currentNode, "password");
-				break;
-			case "Telephone_Box":
-				textBoxInteraction(walker.currentNode, "telephone");
-				break;
-			case "Url_Box":
-				textBoxInteraction(walker.currentNode, "url");
-				break;
-			case "Email_Box":
-				textBoxInteraction(walker.currentNode, "e-mail");
-				break;
-			case "Number_Box":
-				textBoxInteraction(walker.currentNode, "number");
-				break;
-			case "Date_Time_Box":
-				textBoxInteraction(walker.currentNode, "date time");
-				break;
-			case "Date_Box":
-				textBoxInteraction(walker.currentNode, "date");
-				break;
-			case "Month_Box":
-				textBoxInteraction(walker.currentNode, "month");
-				break;
-			case "Week_Box":
-				textBoxInteraction(walker.currentNode, "week");
-				break;
-			case "Time_Box":
-				textBoxInteraction(walker.currentNode, "time");
-				break;
-			case "Range_Input":
-				rangeInputInteraction(walker.currentNode);
-				break;
-			case "Button":
-				buttonInteraction(walker.currentNode);
-				break;
-			case "Check_Button":
-				checkButtonInteraction(walker.currentNode);
-				break;
-			case "Single_Select":
-				singleSelectInteraction(walker.currentNode);
-				break;
-			case "Audio":
-				audioInteraction(walker.currentNode);
-				break;
-			case "Video":
-				videoInteraction(walker.currentNode);
-				break;
-		}
+		mm_Navigator.interactFunctions[osmType](walker.currentNode);
 	}
 }
 
@@ -194,7 +303,7 @@ function goBackToStart()
 {
 	initWalker();
 	restoreHighlighter();
-	mm_TTS.getAudio("Page start", false, null);
+	mm_TTS.getAudio("Page start", null);
 }
 
 function jump()
@@ -216,12 +325,12 @@ function jump()
 	}
 	else
 	{
-		mm_TTS.getAudio("page does not contain headers", false, null);
+		mm_TTS.getAudio("page does not contain headers", null);
 	} 
 }
 
 function osmItemChecker(node) 
-{			
+{	
 	function textNodeOnlyChild()
 	{
 		if(node.parentElement.childNodes.length == 1)
@@ -231,9 +340,9 @@ function osmItemChecker(node)
 		return false;
 	}
 	
-	function textNodeInSpecificElement()
+	function nodeInSpecificElement()
 	{
-		var specificElements = ["AUDIO", "VIDEO", "IFRAME"]; // any which contain text to display if they are unsupported - removed CANVAS and OBJECT as text alternatives can be placed in the body
+		var specificElements = ["AUDIO", "VIDEO", "CANVAS", "IFRAME", "BUTTON"]; // any which contain text to display if they are unsupported - removed CANVAS and OBJECT as text alternatives can be placed in the body - will also be useful for handling TRACK elements
 		
 		if(specificElements.indexOf(node.parentElement.tagName) != -1)
 		{
@@ -260,8 +369,7 @@ function osmItemChecker(node)
 	if(node.nodeName != "#text")
 	{
 		// detect and remove empty elements which are not designed to be empty
-		
-		if (empty() == false)
+		if ((empty() == false) && (nodeInSpecificElement() == false)) // last condition added 
 		{
 			// need to skip over our tags 
 			if (node.hasAttribute("data-mm-uicomponent") == false) // data-mm-uicomponent on each metalmouth component 
@@ -271,7 +379,7 @@ function osmItemChecker(node)
 				if (osmItemModel != null) 
 				{
 					osmType = osmItemModel.osmType;
-					drawCurrentElementHighlighterAreaFromLive(osmType, node);
+					mm_ControlPanel.showCurrentItem(osmType, node);
 					contentComponents = osmItemModel.osmContentComponents;
 					return NodeFilter.FILTER_ACCEPT;
 				}
@@ -280,12 +388,12 @@ function osmItemChecker(node)
 	}
 	else
 	{
-		if ((textNodeOnlyChild() == false)&&(textNodeInSpecificElement() == false))
+		if ((textNodeOnlyChild() == false)&&(nodeInSpecificElement() == false))
 		{
 			if (node.data.trim() != "") // node.data != "\n"
 			{
 				osmType = "Text";
-				drawCurrentElementHighlighterAreaFromLive(osmType, node.parentElement);
+				mm_ControlPanel.showCurrentItem(osmType, node.parentElement);
 				contentComponents[0] = node.data;
 				return NodeFilter.FILTER_ACCEPT;
 			}
@@ -306,15 +414,13 @@ function jumpChecker(node) // jump to headers - this is what people do
 		if (osmItemModel != null) 
 		{
 			osmType = osmItemModel.osmType;
-			drawCurrentElementHighlighterAreaFromLive(osmType, node);
+			mm_ControlPanel.showCurrentItem(osmType, node);
 			contentComponents = osmItemModel.osmContentComponents;
 			return NodeFilter.FILTER_ACCEPT;
 		}
 	}
 	return NodeFilter.FILTER_SKIP;
 }
-
-// this should be initiate - this should be a singleton object
 
 var walkerElementPlusText;
 var walkerJump;
@@ -338,14 +444,10 @@ var jumpAvailable = false;
 
 function initJump()
 {
-	var headers = ["H1", "H2", "H3", "H4", "H5", "H6"];
-	
-	for (var i in headers)
+	var headers = document.body.querySelectorAll("h1,h2,h3,h4,h5,h6");
+	if (headers.length > 0)
 	{
-		if (document.getElementsByTagName(headers[i]).length > 0)
-		{
-			jumpAvailable = true;
-		}
+		jumpAvailable = true;
 	}
 }
 
@@ -367,7 +469,7 @@ function moveTo(elementReference) // id or name, this is used for internal links
 				if (osmItemModel != null) 
 				{
 					osmType = osmItemModel.osmType;
-					drawCurrentElementHighlighterAreaFromLive(osmType, node);
+					mm_ControlPanel.showCurrentItem(osmType, node);
 					contentComponents = osmItemModel.osmContentComponents;
 					return NodeFilter.FILTER_ACCEPT;
 				}	
@@ -383,111 +485,11 @@ function moveTo(elementReference) // id or name, this is used for internal links
 }
 
 function readNodeContents(contentComponentsFromModel, callbackFunction)
-{
-	var textToRead = ""; 
-	for (var i in contentComponentsFromModel)
-	{
+{	
+	var textToRead = "";
+	for (var i = 0, len = contentComponentsFromModel.length; i < len; i++) {
 		textToRead = textToRead + " " + contentComponentsFromModel[i];
 	}
-	mm_TTS.getAudio(textToRead.trim(), false, callbackFunction);
-}
-
-function linkInteraction(liveElementToInteractWith)
-{
-	document.location.href = liveElementToInteractWith.getAttribute("href");
-}
-
-function skipLinkInteraction(liveElementToInteractWith)
-{
-	var targetHref = liveElementToInteractWith.getAttribute("href").replace("#", "");
-	moveTo(targetHref);
-}
-
-function textBoxInteraction(liveElementToInteractWith, enteredDataType)
-{
-	mm_ControlPanel.drawTextBoxInteract(liveElementToInteractWith, enteredDataType);
 	
-	mm_TTS.getAudio(enteredDataType + " entry area entered", false, onFocus);
-	
-	function onFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
-}
-
-function rangeInputInteraction(liveElementToInteractWith)
-{
-	mm_ControlPanel.drawRangeInputInteract(liveElementToInteractWith);
-	
-	mm_TTS.getAudio("Range input entry area entered", false, onFocus);
-	
-	function onFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
-}
-
-function buttonInteraction(liveElementToInteractWith)
-{
-	liveElementToInteractWith.click();
-}
-
-function checkButtonInteraction(liveElementToInteractWith)
-{
-	mm_ControlPanel.drawCheckButtonInteract(liveElementToInteractWith);
-	
-	mm_TTS.getAudio("check button entry area entered", false, onFocus);
-	
-	function onFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
-}
-
-function singleSelectInteraction(liveElementToInteractWith)
-{
-	mm_ControlPanel.drawSelectMenuInteract(liveElementToInteractWith);
-	
-	mm_TTS.getAudio("single select drop-down menu entered", false, numberOfItems);
-	
-	function numberOfItems()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mm_TTS.getAudio((mmInteractionArea.children.length - 1)  + " selectable options, first option", false, changeFocus); // -1 takes into account the divider and the close button
-	}
-	
-	function changeFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
-}
-
-function audioInteraction(liveElementToInteractWith)
-{
-	mm_ControlPanel.drawMediaInteract(liveElementToInteractWith, "audio");
-	
-	mm_TTS.getAudio("audio control area entered", false, onFocus);
-	
-	function onFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
-}
-
-function videoInteraction(liveElementToInteractWith)
-{
-	mm_ControlPanel.drawMediaInteract(liveElementToInteractWith, "video");
-	
-	mm_TTS.getAudio("video control area entered", false, onFocus);
-	
-	function onFocus()
-	{
-		var mmInteractionArea = document.getElementById("_mm_InteractArea"); 
-		mmInteractionArea.children[0].focus();
-	}
+	mm_TTS.getAudio(textToRead.trim(), callbackFunction); // mm_TTS callback changed textToRead.trim() to just textToRead
 }

@@ -18,11 +18,14 @@
 */
 
 goog.provide('metalmouth.start');
+goog.provide('metalmouth.injected');
 
 goog.require('mm_ControlPanel');
 goog.require('mm_Navigator');
 goog.require('mm_TTS');
 goog.require('mm_OSEM');
+goog.require('mm_OSEM_Helper');
+goog.require('mm_BackgroundComms');
 
 goog.require('goog.dom');
 
@@ -33,8 +36,9 @@ console.log("loaded Metal Mouth");
 var startSequencerFunctions = 
 [
  removeExistingAccesskeys,
- readPageTitle,
+ preventContextMenu,
  initControlPanel,
+ resetNavigator,
  bringFocus
 ];
 
@@ -49,27 +53,19 @@ function sequencer()
 	sequencerFunctions[sequencerCurrentItem]();
 }
 
-metalmouth.start = function()
+function removeExistingAccesskeys()
 {
-	sequencerNextItem = 0;
-	sequencerCurrentItem = 0;
-	sequencerFunctions = startSequencerFunctions;
+	var elements = document.querySelectorAll('*[accesskey]'); // any element with an accesskey attribute
+	for (var i = elements.length; i--;)
+	{
+		elements[i].removeAttribute("accesskey");
+	}
 	sequencer();
 }
 
-function removeExistingAccesskeys()
+function preventContextMenu()
 {
-	var elements = document.all;
-	for (var i in elements)
-	{
-		if (elements[i].tagName != null)
-		{
-			if (elements[i].getAttribute("accesskey") != null)
-			{
-				elements[i].removeAttribute("accesskey");
-			}
-		}
-	}
+	document.body.setAttribute("oncontextmenu", "return false;");
 	sequencer();
 }
 
@@ -79,14 +75,28 @@ function initControlPanel()
 	sequencer();
 }
 
-function readPageTitle()
+function resetNavigator()
 {
-	mm_TTS.getAudio(mm_ControlPanel.getPageTitle(), true, function(){sequencer();});
+	mm_ControlPanel.resetNavigator();
+	sequencer();
 }
 
 function bringFocus()
 {
 	mm_ControlPanel.bringFocus();
+}
+
+metalmouth.start = function()
+{
+	sequencerNextItem = 0;
+	sequencerCurrentItem = 0;
+	sequencerFunctions = startSequencerFunctions;
+	sequencer();
+}
+
+metalmouth.injected = function()
+{
+	return true;
 }
 
 // Ensures the symbol will be visible after compiler renaming.
