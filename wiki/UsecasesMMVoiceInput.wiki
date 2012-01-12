@@ -1,4 +1,8 @@
-This will be used for voice input
+=Use Cases - Metalmouth Voice Input=
+
+For quality assurance, starting from the soon to be release version 1.8.0 of the metalmouth extension.  Project metalmouth will try its best to ensure that all of the following use cases work, but a release candidate which satisfies use case series A, B and C can still be released. This document is incomplete and will be added to shortly, and updated over time.
+
+----
 
 ==D1) Voice Input==
 
