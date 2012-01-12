@@ -85,6 +85,34 @@ To open metalmouth's top menu simply press the tab key.  The top menu bar will t
 
 The control panel contain three buttons - the Change location button, Options button and Close menu button.  The Change location button has focus when the top menu bar is opened.
 
+Pressing enter when the Change location button is focused will cause a sub-menu to be shown.
+Pressing enter when the Options button is focused will open the metalmouth extension options page to open in a new tab.
+To close the top menu bar either arrow down to, and click, the close menu button or press ESC.
+
+----
+
+===Change location menu===
+
+This change location sub-menu holds three options a user can arrow through which allow the location of web page currently loaded in the browser to be changed or a url in a new tab to be opened.  
+
+*Sub menu option 1 - Back*
+
+By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+*Sub menu option 2 - New url*
+
+By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
+
+When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
+
+When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+
+*Sub menu option 3 - New tab*
+
+----
+
+===Options===
+
 ----
 
 ===In-Tab Navigation mode - simple is best===
@@ -124,95 +152,13 @@ A user is able to use the left arrow to be taken back to the start of the page.
 
 A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
 
-==== One tab ====
-
-A single tab when in navigation mode brings the Change location button into focus.
-
-==== Two tabs ====
-
-Two tabs when in navigation mode brings the Options location button into focus.
-
-----
-
-==Extension Control - Experimental Voice Commands==
-
-===Limitations===
-
-The [http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API], Google's implementation of which the Project metalmouth extension utilises for speech input, is still under development.  It is for this reason that the voice input function is marked as experimental - requiring the user to turn it on in Project metalmouth's options. 
-
-Several issues currently exist which degrade the usefulness of this API for people with visual disabilities - see [webkitSpeechAPIComments].
-
-Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers ([http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API]) regarding possible issues affecting people with visual disabilities.
-
-===Turning on voice input=== 
-
-As voice input for Project metalmouth is experimental the user needs to select to turn it on before they can use it.  To turn it on simply visit the options page, by clicking the options button in the Project metalmouth control panel.
-
-On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option (see image).
-
-[http://3.bp.blogspot.com/-pOetyvWP2xM/TrkoWBMfX-I/AAAAAAAAACE/LODEBLbhyKo/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B13.59.55.png]
-
-Select the 'turn on voice input' option if you want to try controlling the Project metalmouth extension using voice commands - remembering to save and close the options page using the 'save & close' button.
-
-===Using voice commands===
-
-If the option to 'turn on voice input' has been selected the next time the Project metalmouth control panel appears a voice input area will have been added as its first item (see image).  
-
-[http://1.bp.blogspot.com/-hbYxJzT70ew/TrkpCPqJ1-I/AAAAAAAAACQ/xGRI3ZcxDas/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B14.00.27.png]
-
-The voice input area will focus automatically, however, the page will not automatically start to be read out.
-
-The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
-
-Using the mouse: click on the microphone inside the voice input area and, after the 'speak now', speak the voice command (see Voice Commands).
-
-Using the keyboard: When the voice input is focused use the following shortkeys (from [http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=1407892]) - Ctrl+Shift+. (period) (Mac: ⌘-Shift-. (period)).
-
-Note: On the Mac under some circumstances the shortkeys do not appear to work - an issue has been raised with the Chromium Developers [http://code.google.com/p/chromium/issues/detail?id=97902].  
-
-As mentioned earlier, there are still several limitations for a person with a visual disability to use this voice input - visit [webkitSpeechAPIComments] and see if you can add more... 
-
-===Voice commands===
-
-Saying the following single words will execute the following commands:
-
-   * 'all' - Reads out all items;
-   * 'next' - Reads out the next item;
-   * ''previous' - Reads out the previous item;
-   * 'do' - Interact with the current item;
-   * 'stop' - Stop reading out all items.
-   * 'continue' - Continue to read out all items from the current position;
-   * 'jump' - Jump to the next heading;
-   * 'options' - Opens the options page;
-   * 'location' - Opens the navigation sub-menu.
-
-More and more use of the Speech Input API is planned, along with a change to the control panel which will aid both voice and keyboard users...
-
-===Recommendation: Use a headset===
-
-It is strongly recommended to use a headset (headphones + microphone) when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
-
 ----
 
 ===Change location===
 
 A single tab when in navigation mode brings the Change location button into focus.  As mentioned above, pressing the "esc" when the change location button is focused will take you back into "navigation mode".
 
-Pressing enter when the change location button is focused will cause a sub-menu to be shown. 
 
-This change location sub-menu holds two options a user can arrow through which allow the location of web page currently loaded in the browser to be changed.  
-
-*Sub menu option 1 - Back*
-
-By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
-
-*Sub menu option 2 - New url*
-
-By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
-
-When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
-
-When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 ----
 
 === Options ===
@@ -314,4 +260,64 @@ Some of these items can also be interacted with:
   *  *range input*: Interaction will open the interation area containing a 'increase value' button, a 'decrease value' button, an 'enter' button and a 'close menu' button.
   *  *audio*: Interaction will open the interaction area containing a 'play' button, 'pause' button, 'rewind' button and a 'close menu' button.
   *  *video*: Interaction same as audio.
+----
+
+==Extension Control - Experimental Voice Commands==
+
+===Limitations===
+
+The [http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API], Google's implementation of which the Project metalmouth extension utilises for speech input, is still under development.  It is for this reason that the voice input function is marked as experimental - requiring the user to turn it on in Project metalmouth's options. 
+
+Several issues currently exist which degrade the usefulness of this API for people with visual disabilities - see [webkitSpeechAPIComments].
+
+Limitations aside, it is without doubt that voice input will be increasingly important in the future for all users - especially those with disabilities.  It is hoped that Project metalmouth's early implementation of the webkit-speech API's will allow feedback to be provided to its developers ([http://lists.w3.org/Archives/Public/public-xg-htmlspeech/2011Feb/att-0020/api-draft.html HTML5 Speech Input API]) regarding possible issues affecting people with visual disabilities.
+
+===Turning on voice input=== 
+
+As voice input for Project metalmouth is experimental the user needs to select to turn it on before they can use it.  To turn it on simply visit the options page, by clicking the options button in the Project metalmouth control panel.
+
+On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option (see image).
+
+[http://3.bp.blogspot.com/-pOetyvWP2xM/TrkoWBMfX-I/AAAAAAAAACE/LODEBLbhyKo/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B13.59.55.png]
+
+Select the 'turn on voice input' option if you want to try controlling the Project metalmouth extension using voice commands - remembering to save and close the options page using the 'save & close' button.
+
+===Using voice commands===
+
+If the option to 'turn on voice input' has been selected the next time the Project metalmouth control panel appears a voice input area will have been added as its first item (see image).  
+
+[http://1.bp.blogspot.com/-hbYxJzT70ew/TrkpCPqJ1-I/AAAAAAAAACQ/xGRI3ZcxDas/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B14.00.27.png]
+
+The voice input area will focus automatically, however, the page will not automatically start to be read out.
+
+The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
+
+Using the mouse: click on the microphone inside the voice input area and, after the 'speak now', speak the voice command (see Voice Commands).
+
+Using the keyboard: When the voice input is focused use the following shortkeys (from [http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=1407892]) - Ctrl+Shift+. (period) (Mac: ⌘-Shift-. (period)).
+
+Note: On the Mac under some circumstances the shortkeys do not appear to work - an issue has been raised with the Chromium Developers [http://code.google.com/p/chromium/issues/detail?id=97902].  
+
+As mentioned earlier, there are still several limitations for a person with a visual disability to use this voice input - visit [webkitSpeechAPIComments] and see if you can add more... 
+
+===Voice commands===
+
+Saying the following single words will execute the following commands:
+
+   * 'all' - Reads out all items;
+   * 'next' - Reads out the next item;
+   * ''previous' - Reads out the previous item;
+   * 'do' - Interact with the current item;
+   * 'stop' - Stop reading out all items.
+   * 'continue' - Continue to read out all items from the current position;
+   * 'jump' - Jump to the next heading;
+   * 'options' - Opens the options page;
+   * 'location' - Opens the navigation sub-menu.
+
+More and more use of the Speech Input API is planned, along with a change to the control panel which will aid both voice and keyboard users...
+
+===Recommendation: Use a headset===
+
+It is strongly recommended to use a headset (headphones + microphone) when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
+
 ----
