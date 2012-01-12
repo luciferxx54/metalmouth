@@ -62,6 +62,7 @@ Fig 1
 
 Fig 2
 
+[https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_On.png]
 
 The metalmouth extension allows for multi-tab voice browsing.  You are free to use Chrome's own shortcuts for opening new tabs and closing existing tabs.  Changing the url of a tab will be covered later.  In case you don't yet know Chrome's shortcuts, please find below a mini-guide.
 
