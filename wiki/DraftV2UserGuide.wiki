@@ -54,13 +54,17 @@ As mentioned an new option is available to permanently keep the metalmouth exten
 
 ==Extension on==
 
-As soon as the metalmouth extension is turned on the metalmouth icon, visible in the Chrome Browser tool bar, changes from having a closed mouth (fig 1) to having an open mouth (fig 2). 
+As soon as the metalmouth extension is turned on the metalmouth icon, visible in the Chrome Browser tool bar (fig 1), changes from having a closed mouth (fig 2) to having an open mouth (fig 3). 
 
 Fig 1
 
-[https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_Off.png]
+[https://sites.google.com/site/projectmetalmouth/home/Screen%20shot%202012-01-12%20at%2016.54.39.png]
 
 Fig 2
+
+[https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_Off.png]
+
+Fig 3
 
 [https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_On.png]
 
