@@ -209,6 +209,8 @@ Fig 11.
 
 ===Multi select entry area===
 
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.28.04.png]
+
 Fig 12.
 
 ===HTML5 Audio control===
