@@ -185,29 +185,33 @@ A user is able to use the right arrow to cycle through headers in turn.  The fir
 
 ===Text input entry area (also: password, search, email, url, telephone, datetime, date, month, week, time, number)===
 
-===Range input entry area===
-
 Fig 8.
 
-===Check input entry area (checkbox and radio button)===
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.25.00.png]
+
+===Range input entry area===
 
 Fig 9.
 
-===Single select entry area===
+===Check input entry area (checkbox and radio button)===
 
 Fig 10.
 
-===Multi select entry area===
+===Single select entry area===
 
 Fig 11.
 
-===HTML5 Audio control===
+===Multi select entry area===
 
 Fig 12.
 
-===HTML5 Video control===
+===HTML5 Audio control===
 
 Fig 13.
+
+===HTML5 Video control===
+
+Fig 14.
 
 ----
 
@@ -225,7 +229,7 @@ Limitations aside, it is without doubt that voice input will be increasingly imp
 
 If the option to 'turn on voice input' has been selected the next time the Project metalmouth control panel appears a voice input area will have been added as its first item (see image).  
 
-Fig 14.
+Fig 15.
 
 
 The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
