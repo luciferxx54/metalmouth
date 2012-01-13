@@ -99,11 +99,11 @@ To close the top menu bar either arrow down to, and click, the close menu button
 
 This change location sub-menu holds three options a user can arrow through which allow the location of web page currently loaded in the browser to be changed or a url in a new tab to be opened.  
 
-*Sub menu option 1 - Back*
+*Sub menu option 1 - Previous url*
 
 By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-*Sub menu option 2 - New url*
+*Sub menu option 2 - Change url*
 
 By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
 
