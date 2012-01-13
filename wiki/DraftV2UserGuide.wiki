@@ -56,15 +56,15 @@ As mentioned an new option is available to permanently keep the metalmouth exten
 
 As soon as the metalmouth extension is turned on the metalmouth icon, visible in the Chrome Browser tool bar (fig 1), changes from having a closed mouth (fig 2) to having an open mouth (fig 3). 
 
-Fig 1
+Fig 1.
 
 [https://sites.google.com/site/projectmetalmouth/home/Screen%20shot%202012-01-12%20at%2016.56.09.png]
 
-Fig 2
+Fig 2.
 
 [https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_Off.png]
 
-Fig 3
+Fig 3.
 
 [https://sites.google.com/site/projectmetalmouth/home/MetalMouthLogo_On.png]
 
@@ -85,6 +85,8 @@ The metalmouth extension allows for multi-tab voice browsing.  You are free to u
 
 To open metalmouth's top menu simply press the tab key.  The top menu bar will then appear at the top of the current tab, just under Chrome browser's own controls (fig 4).
 
+Fig 4.
+
 [https://sites.google.com/site/projectmetalmouth/home/Screen%20shot%202012-01-12%20at%2016.59.41.png]
 
 The control panel contain three buttons - the Change location button, Options button and Close menu button.  The Change location button has focus when the top menu bar is opened.
@@ -97,21 +99,37 @@ To close the top menu bar either arrow down to, and click, the close menu button
 
 ===Change location menu===
 
-This change location sub-menu holds three options a user can arrow through which allow the location of web page currently loaded in the browser to be changed or a url in a new tab to be opened.  
+This change location sub-menu (fig 5) holds three options a user can arrow through which allow the location of web page currently loaded in the browser to be changed or a url in a new tab to be opened.  
 
-*Sub menu option 1 - Previous url*
+Fig 5.
+
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2009.37.00.png]
+
+====Previous url====
 
 By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-*Sub menu option 2 - Change url*
+====Change url====
 
-By pressing enter when the New url button is focused a url entry area and go button will appear, with the text area gaining focus.
+Pressing enter when the Change url button is focused opens the 'Change url entry area' (fig 6), with the text box in this area gaining focus.
 
-When the url entry area is focused a user can enter a url (which must include the http://, https://, etc...).  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
+Fig 6.
 
-When a url has been entered a user can tab once to the Go button.  By pressing enter when the Go button is focused the Chrome browser will be directed to the url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
 
-*Sub menu option 3 - New tab*
+
+A user can enter a url (which must include the http://, https://, etc...) into this text box.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
+
+When a url has been entered a user can use the down arrow to focus the Go button.  By pressing enter when the Go button is focused the url location of the current tab will be updated to the newly inputted url.  Once the page has loaded the metalmouth extension will, as usual, start to read all items.
+
+====New tab====
+
+Pressing enter when the New tab button is focused opens the 'New tab url entry area' (fig 7), with the text box in this area gaining focus.
+
+Fig 7.
+
+
+
+The process for entering a url is exactly the same as for changing a url, only this time a new tab will be created when the 'Go' button is focused and pressed.
 
 ----
 
