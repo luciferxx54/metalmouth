@@ -4,31 +4,31 @@ This short guide is intended to assist first time users of the Project metalmout
 
 ==Recommendation: Use a headset==
 
-It is strongly recommended to use a headset (headphones + microphone), both with regard to information security and when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
+It is strongly recommended to use a headset (headphones + microphone), both with regard to information security and when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.
 
 ----
 
 ==Starting the extension==
 
-Upon installation the metalmouth extension is automatically turned off.  To use the extension it must be turned on. Two methods exist for turning on the extension, the omnibox method and button method.  In addition, once the metalmouth extension is turned on, a new option "always-on" is available for permanently keeping it on. 
+Upon installation the metalmouth extension is automatically off.  To use the extension it must be turned on. Two methods exist for turning on the extension, the omnibox method and button method.  In addition, once the metalmouth extension is turned on, a new option "always-on" is available for permanently keeping it on. 
 
 ===Omnibox Method (Now only two key strokes)===
 
-It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.
+It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.  You can also focus the omnibar at any time using the relevant Chrome Shortcut: Windows / Linux: Ctrl+L or Mac: ⌘-L.
 
-  #  Press the m key twice.  The keyword 'mm' activates the extension.
+  # When the omnibar has focus, press the m key twice.  (The keyword 'mm' activates the extension).
 
 The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
 
 ===Extension Button Method===
 
-  #  Click on the Project metalmouth button (made from the Project metalmouth logo - with mouth closed) in the Chrome browser's toolbar.  
+  #  Click on the Project metalmouth button (made from the Project metalmouth logo - with mouth closed) in the Chrome browser's toolbar (fig 1).  
 
 The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
 
 ===If always-on option selected===
 
-As mentioned an new option is available to permanently keep the metalmouth extension turned on - called "always-on".  If this option is selected the omnibox and button start methods, of course, no longer function.  This option can be turned on or off at any time via the options page.
+As mentioned an new option is available to permanently keep the metalmouth extension turned on - called "always-on".  If this option is selected the omnibox and button start methods, of course, no longer function.  This option can be turned on or off at any time via the options page (covered later).
 
 ----
 
@@ -71,15 +71,15 @@ Fig 4.
 
 The control panel contain three buttons - the Change location button, Options button and Close menu button.  The Change location button has focus when the top menu bar is opened.
 
-Pressing enter when the Change location button is focused will cause a sub-menu to be shown.
-Pressing enter when the Options button is focused will open the metalmouth extension options page to open in a new tab.
+Pressing enter when the Change location button is focused will cause a sub-menu to be shown. Alternatively, pressing enter when the Options button is focused will open the metalmouth extension options page to open in a new tab.
+
 To close the top menu bar either arrow down to, and click, the close menu button or press ESC.
 
 ----
 
 ===Change location menu===
 
-This change location sub-menu (fig 5) holds three options a user can arrow through which allow the location of web page currently loaded in the browser to be changed or a url in a new tab to be opened.  
+The change location sub-menu (fig 5) contains three options a user can arrow through - visit the previous url from the current tab, change the location of current tab or open a url in a new tab to be opened.  
 
 Fig 5.
 
@@ -87,7 +87,7 @@ Fig 5.
 
 ====Previous url====
 
-By pressing enter when the Back button is focused the Chrome browser will be directed to the previous url and the Project metalmouth extension will reload.  The user will then be focused back into the control panel.
+By pressing enter when the Previous url button is focused the current tab will be directed to the previous url.  Once the page has loaded the metalmouth extension will, as usual, start to read all items.
 
 ====Change url====
 
@@ -134,7 +134,7 @@ When a new tab is opened the metalmouth extension will automatically update its 
 
 On Windows / Chrome the speech rate for Chrome's Text-To-Speech engine can be adjusted using the provided range input - selecting a low value will make metalmouth read out content more slowly.
 
-On Intel Macs an [http://code.google.com/p/chromium/issues/detail?id=99116 known issue] with Chromium / Chrome Text-To-Speech engine has caused unexpected crashes to Chrome, so another Text-To-Speech engine is being used instead.  Sadly this other Text-To-Speech engine does not have a changeable rate option - so on a Mac this option has been temporarily been disabled.    
+On Macs an [http://code.google.com/p/chromium/issues/detail?id=99116 known issue] with Chromium / Chrome Text-To-Speech engine has caused unexpected crashes to Chrome, so another Text-To-Speech engine is being used instead.  Sadly this other Text-To-Speech engine does not have a changeable rate option - so on a Mac this option has been temporarily been disabled.    
 
 ====Always-on option====
 
@@ -142,9 +142,7 @@ This new option allows a user to select, via a checkbox, to keep the metalmouth 
 
 ====Voice input option (experimental)====
 
-On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option.
-
-As voice input for Project metalmouth is experimental the user needs to select to turn it on before they can use it. 
+On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option.  As voice input for Project metalmouth is experimental the user needs to select to turn it on before they can use it. 
 
 Select the 'turn on voice input' option if you want to try controlling the Project metalmouth extension using voice commands - remembering to save and close the options page using the 'save & close' button.
 
@@ -154,13 +152,13 @@ Select the 'turn on voice input' option if you want to try controlling the Proje
 
 You automatically start off in "navigation mode".  In this mode a simple in-page navigation mechanism is provided (detailed directly below) which allows movement between items in the off-screen model - details of all items (including interactable items) are provided in the "Off-screen model" section in the Appendix at the bottom of the page. 
 
-You will only leave 'navigation mode' when you are navigating within a menu or interaction area - in which case the in-page navigation mechanism will be suspended.
+You will only leave 'navigation mode' when you are navigating within a metalmouth menu or interaction area - in which case the in-page navigation mechanism will be suspended.
 
 ====Up/down arrow====
 
 A user is able to use the up and down arrows at any time (even when the extension is reading) to navigate between items within a page. 
 
-In sub menus, you can use the up and down arrows to move between items.  Whilst in a sub menu, a user can hold down the "esc" key to bring focus to the "close menu" button - very helpful when there are a large number of options.
+In sub menus, you can use the up and down arrows to move between items.  Whilst in a sub menu, a user can hold down the ESC key to bring focus to the "close menu" button.
 
 ====Space bar====
 
@@ -201,13 +199,13 @@ When the user is satisfied with the text value they can use the down arrow to fo
 
 ====Range input entry area====
 
-Fig 9.
-
 Pressing enter when a range input related interactable item is focused opens the 'range input entry area' (fig 9), with the increase value button in this area gaining focus.  In addition, a decrease button, enter button and close menu button are available.
+
+Fig 9.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.28.04.png]
 
-A user uses the relevant arrow buttons to select to focus the increase button or decrease button.  Pressing enter when the increase button is focused will result in the value to be input being increased by one step.  Pressing enter when the decrease button is focused has the opposite effect.
+A user uses the relevant arrow buttons to select to focus the increase button or decrease button.  Pressing enter when the increase button is focused will result in the value to be input being increased by one step.  Pressing enter when the decrease button is focused has the opposite effect.  These buttons can be pressed multiple times, until the desired value is obtained or the value min/max limits have been reached. 
 
 When the user is satisfied with the value they wish to enter, they should use the relevant arrow key to focus the Enter button and press enter.  This will set the associated value of the element being viewed to the chosen value.  The interaction area will then close, and the user will be returned to 'navigation mode'.
 
@@ -243,7 +241,7 @@ Fig 12.
 
 The user can use the relevant arrow buttons to select to focus the Next option button or Previous option  button, if the initial option is unwanted.  Pressing enter when the Next option button is focused will result in the next available option being read out.  Pressing enter when the Previous option button is focused has the opposite effect.
 
-When the user is satisfied with an option they wish to select, they should use the relevant arrow key to focus the Check button and press enter.  This will mark the current option as selected. They can choose to unselect a selected option by focusing the Uncheck button and pressing enter. When all required options have been selected (and marked as such) the user should the relevant arrow buttons to focus the Enter button and press enter.  This will set the associated value of the element being viewed to the chosen option.  The interaction area will then close, and the user will be returned to 'navigation mode'.
+When the user is satisfied with an option they wish to select, they should use the relevant arrow key to focus the Check button and press enter.  This will mark the current option as selected. They can choose to unselect a selected option by focusing the Uncheck button and pressing enter. When all required options have been selected (and marked as such) the user should use the relevant arrow buttons to focus the Enter button and press enter.  This will set the associated values of the element being viewed to the chosen options.  The interaction area will then close, and the user will be returned to 'navigation mode'.
 
 ====HTML5 Audio control====
 
@@ -279,21 +277,19 @@ Limitations aside, it is without doubt that voice input will be increasingly imp
 
 ===Using voice commands===
 
-If the option to 'turn on voice input' has been selected the next time the Project metalmouth control panel appears a voice input area will have been added as its first item (see image).  
+After the option to 'turn on voice input' has been selected and the options page has been saved the user will be returned to the previous tab they where in.  Voice command input should not be activated.
+
+To use voice input right click on the mouse - the voice input box will automatically be centred under the mouse cursor (wherever the mouse is on the page).  If you are unsure if the cursor might have moved simply right click again, and the voice input box will re-centre.
 
 Fig 15.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.44.00.png]
 
-The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
+Now using the left mouse button to click - it will automatically be on the microphone if you made a right click first. After metalmouth has said 'speak now', speak the voice command (see Voice Commands). 
 
-Using the mouse: click on the microphone inside the voice input area and, after the 'speak now', speak the voice command (see Voice Commands).
+As mentioned earlier, there are still several limitations for a person with a visual disability to use this voice input - visit [webkitSpeechAPIComments] and see if you can add more...  Also, it is important to reemphasis the importance of using a headset (headphones + microphone).
 
-Using the keyboard: When the voice input is focused use the following shortkeys (from [http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=1407892]) - Ctrl+Shift+. (period) (Mac: ⌘-Shift-. (period)).
-
-Note: On the Mac under some circumstances the shortkeys do not appear to work - an issue has been raised with the Chromium Developers [http://code.google.com/p/chromium/issues/detail?id=97902].  
-
-As mentioned earlier, there are still several limitations for a person with a visual disability to use this voice input - visit [webkitSpeechAPIComments] and see if you can add more... 
+If voice input cannot hear what has been said after 10 secs a warning will be given - click once on the left mouse button, and try to enter the voice command again by clicking the left mouse button again. 
 
 ===Voice commands===
 
@@ -382,22 +378,23 @@ Some of these items can also be interacted with:
   *  *link*: Interaction will direct the Chrome browser to the new location and reload the Project metalmouth extension.
   *  *quote link*: Interaction same as link.
   *  *map area*: Interaction same as link.
-  *  *text box*: Interaction will open the interaction area containing a text box, an 'Enter' button and a 'Cancel' button.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed. By pressing enter when the 'Enter' button is focused the value written in the text box will be transferred into the live text box corresponding to the 'off-screen model' item which was read out.  pressing enter when the 'Cancel' button the interaction area will close with not further actions. 
-  *  *search box*: Interaction same as text box.
-  *  *password box*: Interaction same as text box.
-  *  *telephone box*: Interaction same as text box.
-  *  *url box*: Interaction same as text box.
-  *  *e-mail box*: Interaction same as text box.
-  *  *number box*: Interaction same as text box.
-  *  *datetime box*: Interaction same as text box.
-  *  *date box*: Interaction same as text box.
-  *  *month box*: Interaction same as text box.
-  *  *week box*: Interaction same as text box.
-  *  *time box*: Interaction same as text box.
+  *  *text box*: See Interaction area section above. 
+  *  *search box*: See Interaction area section above.
+  *  *password box*: See Interaction area section above.
+  *  *telephone box*: See Interaction area section above.
+  *  *url box*: See Interaction area section above.
+  *  *e-mail box*: See Interaction area section above.
+  *  *number box*: See Interaction area section above.
+  *  *datetime box*: See Interaction area section above.
+  *  *date box*: See Interaction area section above.
+  *  *month box*: See Interaction area section above.
+  *  *week box*: See Interaction area section above.
+  *  *time box*: See Interaction area section above.
   *  *button*: Interaction will click the live button corresponding to the 'off-screen model' object which was read out.
-  *  *check button*: Interaction will open the interaction area containing a 'Check' button, an 'Uncheck' button and a Cancel button. By pressing enter when the 'Check' button is focused the value of the live check box corresponding to the 'off-screen model' item which was read out will be changed to 'checked'.  The same is true for the 'Unchecked' button, although this will mean an 'unchecked' value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.
-  *  *single select*: Interaction will open the interaction area which will contain buttons corresponding to each available option in the live drop-down menu corresponding to the 'off-screen model' item which was read out.  A 'Cancel' button is also provided.  By pressing enter when one of these buttons is focused the value of the live drop-down menu corresponding to the 'off-screen model' item which was read out will be changed to that new value. By pressing enter when the 'Cancel' button the interaction area will close with not further actions.   
-  *  *range input*: Interaction will open the interation area containing a 'increase value' button, a 'decrease value' button, an 'enter' button and a 'close menu' button.
-  *  *audio*: Interaction will open the interaction area containing a 'play' button, 'pause' button, 'rewind' button and a 'close menu' button.
-  *  *video*: Interaction same as audio.
+  *  *check button*: See Interaction area section above.
+  *  *single select*:See Interaction area section above.
+  *  *multi select*: See Interaction area section above.
+  *  *range input*: See Interaction area section above.
+  *  *audio*: See Interaction area section above.
+  *  *video*: See Interaction area section above.
 ----
