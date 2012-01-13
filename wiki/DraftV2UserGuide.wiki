@@ -115,7 +115,7 @@ Pressing enter when the Change url button is focused opens the 'Change url entry
 
 Fig 6.
 
-
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2010.05.50.png]
 
 A user can enter a url (which must include the http://, https://, etc...) into this text box.  The Project metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
@@ -127,7 +127,7 @@ Pressing enter when the New tab button is focused opens the 'New tab url entry a
 
 Fig 7.
 
-
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2010.05.50.png]
 
 The process for entering a url is exactly the same as for changing a url, only this time a new tab will be created when the 'Go' button is focused and pressed.
 
