@@ -128,9 +128,17 @@ To save the values you have set click the save and close button (bottom of the p
 
 ====New tab page option====
 
+When a new tab is opened the metalmouth extension will automatically update its contents to show "Google's Accessible Search" page.  If another url is desired by the user they simply need to enter the url into the text box input provided next to this option.
+
 ====Speech rate option====
 
+On Windows / Chrome the speech rate for Chrome's Text-To-Speech engine can be adjusted using the provided range input - selecting a low value will make metalmouth read out content more slowly.
+
+On Intel Macs an issue with the Chrome Text-To-Speech engine has caused unexpected crashes to Chrome, so another Text-To-Speech engine is being used instead.  Sadly this other Text-To-Speech engine does not have a changeable rate option - so on a Mac this option has been temporarily been disabled.    
+
 ====Always-on option====
+
+This new option allows a user to select, via a checkbox, to keep the metalmouth extension permanently turned on. If this option is selected the omnibox and button start methods, of course, no longer function.
 
 ====Voice input option (experimental)====
 
@@ -172,6 +180,10 @@ A user is able to use the left arrow to be taken back to the start of the page.
 ====Right arrow====
 
 A user is able to use the right arrow to cycle through headers in turn.  The first header will be read again after the last header has been read.
+
+----
+
+==Interaction areas==
 
 ----
 
