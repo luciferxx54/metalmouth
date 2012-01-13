@@ -243,6 +243,7 @@ If the option to 'turn on voice input' has been selected the next time the Proje
 
 Fig 15.
 
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.44.00.png]
 
 The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
 
