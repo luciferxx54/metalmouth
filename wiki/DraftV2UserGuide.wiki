@@ -134,7 +134,7 @@ When a new tab is opened the metalmouth extension will automatically update its 
 
 On Windows / Chrome the speech rate for Chrome's Text-To-Speech engine can be adjusted using the provided range input - selecting a low value will make metalmouth read out content more slowly.
 
-On Intel Macs an issue with the Chrome Text-To-Speech engine has caused unexpected crashes to Chrome, so another Text-To-Speech engine is being used instead.  Sadly this other Text-To-Speech engine does not have a changeable rate option - so on a Mac this option has been temporarily been disabled.    
+On Intel Macs an [http://code.google.com/p/chromium/issues/detail?id=99116 known issue] with Chromium / Chrome Text-To-Speech engine has caused unexpected crashes to Chrome, so another Text-To-Speech engine is being used instead.  Sadly this other Text-To-Speech engine does not have a changeable rate option - so on a Mac this option has been temporarily been disabled.    
 
 ====Always-on option====
 
