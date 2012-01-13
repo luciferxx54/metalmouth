@@ -183,11 +183,21 @@ A user is able to use the right arrow to cycle through headers in turn.  The fir
 
 ==Interaction areas==
 
+As mentioned, user interaction is achieved via interaction areas - customised for the specific needs of the action being under taken i.e. inputting text, controlling a video, etc..
+
+All interaction areas can be closed without a resulting action, either by using the down arrow to focus the Close menu button and pressing enter, or by simply pressing ESC.
+
 ===Text input entry area (also: password, search, email, url, telephone, datetime, date, month, week, time, number)===
+
+Pressing enter when a text entry related interactable item is focused opens the relevant 'text input entry area' (fig 8), with the text box in this area gaining focus.
 
 Fig 8.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.25.00.png]
+
+A user can enter text into this text box.  The metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
+
+When the user is satisfied with the text value they can use the down arrow to focus the Enter button.  Clicking the Enter button will set the associated text value of the element being viewed to the chosen text value.
 
 ===Range input entry area===
 
