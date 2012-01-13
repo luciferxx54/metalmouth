@@ -2,30 +2,10 @@
 
 This short guide is intended to assist first time users of the Project metalmouth extension.  It is incomplete and will be added to over time.
 
-==Contents==
+==Recommendation: Use a headset==
 
-1) Starting the extension.
-1.1) Omnibox method (only two key strokes)
-1.2) metalmouth button method
-2) Extension starts
-3) Tab-level interaction 
-3.1) Creating new tab
-3.2) Closing current tab
-3.3) Cycling through open tabs
-4) metalmouth menu bar
-4.1) Overview - inc esc and close menu button
-5) Change location menu
-5.1) Overview - inc back, and esc 
-5.2) (Within current tab) Go to new url - inc esc
-5.3) Open url in new tab - inc esc
-6) metalmouth options page
-6.1) New tab page option
-6.2) Speech rate option
-6.3) always-on option
-6.4) Voice input (experimental) option
-7) Page navigation via keyboard
-8) Interaction with OSEM items
-9) Using voice commands (experimental)
+It is strongly recommended to use a headset (headphones + microphone), both with regard to information security and when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
+
 ----
 
 ==Starting the extension==
@@ -238,10 +218,6 @@ Saying the following single words will execute the following commands:
    * 'location' - Opens the navigation sub-menu.
 
 More and more use of the Speech Input API is planned, along with a change to the control panel which will aid both voice and keyboard users...
-
-===Recommendation: Use a headset===
-
-It is strongly recommended to use a headset (headphones + microphone) when giving voice commands as the sensitivity of the voice input area means it's accuracy is negatively affected by ambient noise.  In addition, Project metalmouth's 'speak now' addition (required for people with visual disabilities) can also be picked up by the voice input - something which does not happen if a headset is used. 
 
 ----
 
