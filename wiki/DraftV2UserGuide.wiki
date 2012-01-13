@@ -199,9 +199,13 @@ Fig 9.
 
 Fig 10.
 
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.28.04.png]
+
 ===Single select entry area===
 
 Fig 11.
+
+
 
 ===Multi select entry area===
 
