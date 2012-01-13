@@ -209,19 +209,21 @@ Fig 11.
 
 ===Multi select entry area===
 
-[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.35.20.png]
-
 Fig 12.
+
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.35.20.png]
 
 ===HTML5 Audio control===
 
-[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.38.25.png]
-
 Fig 13.
+
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.38.25.png]
 
 ===HTML5 Video control===
 
 Fig 14.
+
+[https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.40.33.png]
 
 ----
 
