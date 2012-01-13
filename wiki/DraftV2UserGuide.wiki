@@ -197,27 +197,41 @@ Fig 8.
 
 A user can enter text into this text box.  The metalmouth extension will say each letter as it is entered into the text box, and will say the letter plus "removed" if the letter has been removed.
 
-When the user is satisfied with the text value they can use the down arrow to focus the Enter button.  Clicking the Enter button will set the associated text value of the element being viewed to the chosen text value.
+When the user is satisfied with the text value they can use the down arrow to focus the Enter button.  Clicking the Enter button will set the associated text value of the element being viewed to the chosen text value. The interaction area will then close, and the user will be returned to 'navigation mode'.
 
 ====Range input entry area====
 
 Fig 9.
 
+Pressing enter when a range input related interactable item is focused opens the 'range input entry area' (fig 9), with the increase value button in this area gaining focus.  In addition, a decrease button, enter button and close menu button are available.
+
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.28.04.png]
 
+A user uses the relevant arrow buttons to select to focus the increase button or decrease button.  Pressing enter when the increase button is focused will result in the value to be input being increased by one step.  Pressing enter when the decrease button is focused has the opposite effect.
+
+When the user is satisfied with the value they wish to enter, they should use the relevant arrow key to focus the Enter button and press enter.  This will set the associated value of the element being viewed to the chosen value.  The interaction area will then close, and the user will be returned to 'navigation mode'.
+
 ====Check input entry area (checkbox and radio button)====
+
+Pressing enter when a check input related interactable item is focused opens the 'check input entry area' (fig 10), with the check button in this area gaining focus.  In addition, an uncheck button and close menu button are available.
 
 Fig 10.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.30.36.png]
 
+A user uses the relevant arrow buttons to select to focus the check button or uncheck button.  Pressing enter when the check button is focused will result in a check in the associated element being viewed - uncheck has the opposite effect.  In both cases, the interaction area will then close, and the user will be returned to 'navigation mode'.
+
 ====Single select entry area====
+
+Pressing enter when a single select menu related interactable item is focused opens the 'single select input entry area' (fig 11), with the Next option button in this area gaining focus.  In addition, a...
 
 Fig 11.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.33.33.png]
 
 ====Multi select entry area====
+
+Pressing enter when a multi select menu related interactable item is focused opens the 'multi select input entry area' (fig 12), with the Next option button in this area gaining focus.  In addition, a...
 
 Fig 12.
 
