@@ -142,9 +142,7 @@ This new option allows a user to select, via a checkbox, to keep the metalmouth 
 
 ====Voice input option (experimental)====
 
-On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option (see image).
-
-[http://3.bp.blogspot.com/-pOetyvWP2xM/TrkoWBMfX-I/AAAAAAAAACE/LODEBLbhyKo/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B13.59.55.png]
+On the options page a collection of items marked 'Experimental Features' can be found - containing the 'turn on voice input' option.
 
 As voice input for Project metalmouth is experimental the user needs to select to turn it on before they can use it. 
 
