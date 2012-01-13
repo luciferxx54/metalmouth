@@ -187,15 +187,27 @@ A user is able to use the right arrow to cycle through headers in turn.  The fir
 
 ===Range input entry area===
 
+Fig 8.
+
 ===Check input entry area (checkbox and radio button)===
+
+Fig 9.
 
 ===Single select entry area===
 
+Fig 10.
+
 ===Multi select entry area===
+
+Fig 11.
 
 ===HTML5 Audio control===
 
+Fig 12.
+
 ===HTML5 Video control===
+
+Fig 13.
 
 ----
 
@@ -213,9 +225,8 @@ Limitations aside, it is without doubt that voice input will be increasingly imp
 
 If the option to 'turn on voice input' has been selected the next time the Project metalmouth control panel appears a voice input area will have been added as its first item (see image).  
 
-[http://1.bp.blogspot.com/-hbYxJzT70ew/TrkpCPqJ1-I/AAAAAAAAACQ/xGRI3ZcxDas/s1600/Screen%2Bshot%2B2011-11-08%2Bat%2B14.00.27.png]
+Fig 14.
 
-The voice input area will focus automatically, however, the page will not automatically start to be read out.
 
 The voice input can be operated in two ways - via the mouse or via the keyboard, using shortkeys.
 
