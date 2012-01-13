@@ -169,7 +169,7 @@ The extension can be stopped from reading at any time by hitting the space bar a
 
 ====Enter====
 
-If the current item is interactable (the "interactable" keyword will be read out) a user simply needs to hit enter to start interacting.
+If the current item is interactable (the "interactable" keyword will be read out) a user simply needs to hit enter to start interacting.  Interaction is achieved via interaction areas - customised for the specific needs of the action being under taken i.e. inputting text, controlling a video, etc... For details on each of the interaction areas see the Interaction areas section below.
 
 ====Left arrow====
 
@@ -182,6 +182,20 @@ A user is able to use the right arrow to cycle through headers in turn.  The fir
 ----
 
 ==Interaction areas==
+
+===Text input entry area (also: password, search, email, url, telephone, datetime, date, month, week, time, number)===
+
+===Range input entry area===
+
+===Check input entry area (checkbox and radio button)===
+
+===Single select entry area===
+
+===Multi select entry area===
+
+===HTML5 Audio control===
+
+===HTML5 Video control===
 
 ----
 
