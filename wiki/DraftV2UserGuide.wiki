@@ -223,21 +223,31 @@ A user uses the relevant arrow buttons to select to focus the check button or un
 
 ====Single select entry area====
 
-Pressing enter when a single select menu related interactable item is focused opens the 'single select input entry area' (fig 11), with the Next option button in this area gaining focus.  In addition, a...
+Pressing enter when a single select menu related interactable item is focused opens the 'single select input entry area' (fig 11), with the Next option button in this area gaining focus.  In addition, a Previous button, Select button and Close menu button are available.
 
 Fig 11.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.33.33.png]
 
+The user can use the relevant arrow buttons to select to focus the Next option button or Previous option  button, if the initial option is unwanted.  Pressing enter when the Next option button is focused will result in the next available option being read out.  Pressing enter when the Previous option button is focused has the opposite effect.
+
+When the user is satisfied with the option they wish to enter, they should use the relevant arrow key to focus the Enter button and press enter.  This will set the associated value of the element being viewed to the chosen option.  The interaction area will then close, and the user will be returned to 'navigation mode'.
+
 ====Multi select entry area====
 
-Pressing enter when a multi select menu related interactable item is focused opens the 'multi select input entry area' (fig 12), with the Next option button in this area gaining focus.  In addition, a...
+Pressing enter when a multi select menu related interactable item is focused opens the 'multi select input entry area' (fig 12), with the Next option button in this area gaining focus.  In addition, a Previous button, Select button, Check button, Uncheck button and Close menu button are available.
 
 Fig 12.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.35.20.png]
 
+The user can use the relevant arrow buttons to select to focus the Next option button or Previous option  button, if the initial option is unwanted.  Pressing enter when the Next option button is focused will result in the next available option being read out.  Pressing enter when the Previous option button is focused has the opposite effect.
+
+When the user is satisfied with an option they wish to select, they should use the relevant arrow key to focus the Check button and press enter.  This will mark the current option as selected. They can choose to unselect a selected option by focusing the Uncheck button and pressing enter. When all required options have been selected (and marked as such) the user should the relevant arrow buttons to focus the Enter button and press enter.  This will set the associated value of the element being viewed to the chosen option.  The interaction area will then close, and the user will be returned to 'navigation mode'.
+
 ====HTML5 Audio control====
+
+
 
 Fig 13.
 
