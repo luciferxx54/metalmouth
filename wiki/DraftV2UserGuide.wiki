@@ -247,17 +247,23 @@ When the user is satisfied with an option they wish to select, they should use t
 
 ====HTML5 Audio control====
 
-
+Pressing enter when an HTML5 audio related interactable item is focused opens the 'audio interaction area' (fig 13), with the Play button in this area gaining focus.  In addition, a Pause button, Rewind button and Close menu button are available.
 
 Fig 13.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.38.25.png]
 
+The user should select to close the menu after they have finished interacting with the audio content.
+
 ====HTML5 Video control====
+
+Pressing enter when an HTML5 video related interactable item is focused opens the 'video interaction area' (fig 14), with the Play button in this area gaining focus.  In addition, a Pause button, Rewind button and Close menu button are available.
 
 Fig 14.
 
 [https://sites.google.com/site/projectaccessami/home/Screen%20shot%202012-01-13%20at%2011.40.33.png]
+
+The user should select to close the menu after they have finished interacting with the video content.
 
 ----
 
