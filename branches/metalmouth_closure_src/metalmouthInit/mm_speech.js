@@ -151,18 +151,11 @@ function AudioStackModel()
 				}
 			}
 			
-			var handlePlay = function()
-			{
-				audio.src = "";
-			}
-			
 			audio = new Audio();
-			audio.addEventListener("play", handlePlay, false);
 			
 			if (callback) {
 				audio.addEventListener('durationchange', handleOnDurationChange); // can add each time because it is a new Audio object each time
 			}
-
 			audio.src = "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=" + escape(utterance);
 			audio.play();
 		}
