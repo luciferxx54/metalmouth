@@ -22,8 +22,7 @@ goog.provide('metalmouthInit.load');
 goog.require('mm_applicationData');
 goog.require('mm_speech');
 
-metalmouthInit.load = function()
-{
+metalmouthInit.load = function() {
 	var mmOn = false; // initially off
 	
 	var portConnected;
@@ -36,8 +35,7 @@ metalmouthInit.load = function()
 	
 	addListeners();
 	
-	if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == true)
-	{
+	if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == true) {
 		portConnected = 0;
 		portListenerStatus = 0;
 		tabMessage = null;
@@ -51,33 +49,33 @@ metalmouthInit.load = function()
 		chrome.browserAction.setTitle({title:"metalmouth on"});
 		mm_speech.speak("metalmouth extension on", function(){mmOn = true;refreshAllTabsAtStart();}); // function
 	}
-	else
-	{	
+	else {	
 		chrome.browserAction.setIcon({path:"MetalMouthLogo_Off.png"});
 		chrome.browserAction.setTitle({title:"metalmouth off"});
 	}
 	
-	function addListeners()
-	{
+	function omniboxAction(text) {
+		if ((text == "on") || (text == "off")) {
+			startStopAction();
+		}
+	}
+	
+	function addListeners() {
 		chrome.browserAction.onClicked.addListener(startStopAction); // Button always on 
-		chrome.omnibox.onInputStarted.addListener(startStopAction); // omnibox always on
+		chrome.omnibox.onInputEntered.addListener(omniboxAction);
 	}
 	
-	function removeListeners()
-	{
+	function removeListeners() {
 		chrome.browserAction.onClicked.removeListener(startStopAction); // Button always on 
-		chrome.omnibox.onInputStarted.removeListener(startStopAction); // omnibox always on
+		chrome.omnibox.onInputEntered.removeListener(omniboxAction);
 	}
 	
-	function refreshCurrentTab()
-	{
+	function refreshCurrentTab() {
 		chrome.tabs.getSelected(null, function(tab){
 			var url = tab.url;
-			if (url == "chrome://newtab/")
-			{
+			if (url == "chrome://newtab/") {
 				url = mm_applicationData.getSpecificData('newTabPage');
-				if (url == "")
-				{
+				if (url == "") {
 					url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 				}
 			}
@@ -85,18 +83,14 @@ metalmouthInit.load = function()
 		});
 	}
 	
-	function refreshAllTabsAtStart()
-	{
+	function refreshAllTabsAtStart() {
 		chrome.tabs.getAllInWindow(null, function(tabs) {
-			for (var i = tabs.length; i--;)
-			{
+			for (var i = tabs.length; i--;) {
 				var tab = tabs[i];
 				var url = tab.url;
-				if (url == "chrome://newtab/")
-				{
+				if (url == "chrome://newtab/") {
 					url = mm_applicationData.getSpecificData('newTabPage');
-					if (url == "")
-					{
+					if (url == "") {
 						url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 					}
 				}
@@ -105,19 +99,16 @@ metalmouthInit.load = function()
 		});
 	}
 	
-	function refreshAllTabs() // removes injected metalmouth code from all open pages
-	{
+	function refreshAllTabs() { // removes injected metalmouth code from all open pages
 		chrome.tabs.getAllInWindow(null, function(tabs) {
-			for (var i = tabs.length; i--;)
-			{
+			for (var i = tabs.length; i--;) {
 				var tab = tabs[i];
 				chrome.tabs.update(tab.id, {url:tab.url});
 			}
 		});
 	}
 	
-	function mmStart()
-	{
+	function mmStart() {
 		removeListeners();
 		
 		portConnected = 0;
@@ -134,8 +125,7 @@ metalmouthInit.load = function()
 		mm_speech.speak("metalmouth extension on", function(){mmOn = true;addListeners();refreshCurrentTab();}); // add listeners
 	}
 	
-	function mmStop()
-	{
+	function mmStop() {
 		removeListeners();
 		chrome.tabs.onUpdated.removeListener(handler_OnUpdated);
 		chrome.tabs.onCreated.removeListener(handler_OnCreated);
@@ -148,16 +138,12 @@ metalmouthInit.load = function()
 		mm_speech.speak("metalmouth extension off", function(){mmOn = false;addListeners();}); // add listeners
 	} 
 	
-	function startStopAction() // this needs to be on a timer so that it waits until instable is true to change setting.
-	{
-		if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == false)
-		{
-			if (mmOn == false)
-			{
+	function startStopAction() { // this needs to be on a timer so that it waits until instable is true to change setting.
+		if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == false) {
+			if (mmOn == false) {
 				mmStart();
 			}
-			else
-			{
+			else {
 				mmStop();
 			}
 		}
@@ -181,8 +167,7 @@ metalmouthInit.load = function()
 		}
 	}
 	
-	function handler_OnCreated(tab)
-	{
+	function handler_OnCreated(tab) {
 		portListenerStatus = 0;
 		var tabUrl = tab.url;
 		if ((tabUrl.indexOf('chrome-extension://') != -1) && (tabUrl.indexOf('/options.html') != -1)) {
@@ -193,13 +178,11 @@ metalmouthInit.load = function()
 		}
 	}
 	
-	function handler_OnRemoved(tabId, removeInfo)
-	{
+	function handler_OnRemoved(tabId, removeInfo) {
 		tabMessage = "Closing tab moving focus to";
 	}
 	
-	function handler_OnActiveChanged(tabId, selectInfo)
-	{
+	function handler_OnActiveChanged(tabId, selectInfo) {
 		chrome.tabs.get(tabId, function(tab) {
 			var getTabMessage = function() {
 				var message = "moving focus to ";
@@ -210,14 +193,11 @@ metalmouthInit.load = function()
 				return message;
 			}
 						
-			var updatePageAppropriately = function()
-			{
+			var updatePageAppropriately = function() {
 				var newTabPage = tabUrl;
-				if (newTabPage == "chrome://newtab/")
-				{
+				if (newTabPage == "chrome://newtab/") {
 					newTabPage = mm_applicationData.getSpecificData('newTabPage');
-					if (newTabPage == "")
-					{
+					if (newTabPage == "") {
 						newTabPage = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 					}
 				}
@@ -247,18 +227,16 @@ metalmouthInit.load = function()
 		});
 	}
 	
-	function handler_OnConnect(port)
-	{
+	function handler_OnConnect(port) {
 		var handleDisconnect = function() {
 			portConnected = 0;
 		}
 		
 		var callableFunctions = {}
 		
-		callableFunctions['voice'] = function(sentValue){
+		callableFunctions['voice'] = function(sentValue) {
 			var callbackDirect = function() {
-				if (portConnected == 1)
-				{
+				if (portConnected == 1) {
 					port.postMessage({complete: "true"});
 				}
 				portListenerStatus = 0;
@@ -266,33 +244,31 @@ metalmouthInit.load = function()
 			mm_speech.speak(sentValue, callbackDirect);
 		}
 		
-		callableFunctions['openTab'] = function(sentValue){
+		callableFunctions['openTab'] = function(sentValue) {
 			portListenerStatus = 0;
 			chrome.tabs.create({url:sentValue});
 		}
 		
-		callableFunctions['retrieveData'] = function(sentValue){
-			if (portConnected == 1)
-			{
+		callableFunctions['retrieveData'] = function(sentValue) {
+			if (portConnected == 1) {
 				port.postMessage({complete: "true", results: JSON.stringify(mm_applicationData.getSpecificData(sentValue))});
 			}
 			portListenerStatus = 0;
 		}
 		
-		callableFunctions['optionsOpen'] = function(sentValue){
+		callableFunctions['optionsOpen'] = function(sentValue) {
 			portListenerStatus = 0;
 			chrome.tabs.create({url:"options.html"});
 		}
 		
-		callableFunctions['optionsGetData'] = function(sentValue){
-			if (portConnected == 1)
-			{
+		callableFunctions['optionsGetData'] = function(sentValue) {
+			if (portConnected == 1) {
 				port.postMessage({complete: "true", results: JSON.stringify(mm_applicationData.getData())});
 			}
 			portListenerStatus = 0;
 		}
 
-		callableFunctions['optionsClose'] = function(sentValue){
+		callableFunctions['optionsClose'] = function(sentValue) {
 			portListenerStatus = 0;
 			mm_applicationData.update(sentValue);
 			chrome.tabs.remove(port.tab.id, function(){refreshCurrentTab()});
@@ -306,8 +282,7 @@ metalmouthInit.load = function()
 				var backgroundFunction = JSON.parse(msg.backgroundFunction);
 				callableFunctions[backgroundFunction.name](backgroundFunction.value);
 			}
-			if (msg.injected == false)
-			{
+			if (msg.injected == false) {
 				refreshCurrentTab();
 			}
 		});
