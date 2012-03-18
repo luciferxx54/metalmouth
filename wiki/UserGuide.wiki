@@ -18,7 +18,7 @@ Upon installation the metalmouth extension is automatically off.  To use the ext
 
 It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.  You can also focus the omnibar at any time using the relevant Chrome Shortcut: Windows / Linux: Ctrl+L or Mac: ⌘-L.
 
-  # To turn on the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'on' and finally hit the return key.  (The keyword 'mm' activates the extension). The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
+  # To turn on the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'on' and finally hit the return key.  (The keyword 'mm' activates the extension). The Project metalmouth extension will turn on - saying "metalmouth extension on". Please read "Extension on" below.
 
   # To turn off the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'off' and finally hit the return key. The Project metalmouth extension will turn off - saying "metalmouth extension off".
 
@@ -26,7 +26,7 @@ It is assumed that the Chrome browser has just been started and that the home pa
 
   #  Click on the Project metalmouth button (made from the Project metalmouth logo - with mouth closed) in the Chrome browser's toolbar (fig 1).  
 
-The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
+The Project metalmouth extension will turn on - saying "metalmouth extension on". Please read "Extension on" below.
 
 ===If always-on option selected===
 
