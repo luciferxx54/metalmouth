@@ -20,7 +20,7 @@ It is assumed that the Chrome browser has just been started and that the home pa
 
   # To turn on the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'on' and finally hit the return key.  (The keyword 'mm' activates the extension). The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
 
-  # To turn off the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'off' and finally hit the return key.
+  # To turn off the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'off' and finally hit the return key. The Project metalmouth extension will turn off - saying "metalmouth extension off".
 
 ===Extension Button Method===
 
