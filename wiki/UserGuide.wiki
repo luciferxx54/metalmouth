@@ -14,13 +14,13 @@ It is strongly recommended to use a headset (headphones + microphone), both with
 
 Upon installation the metalmouth extension is automatically off.  To use the extension it must be turned on. Two methods exist for turning on the extension, the omnibox method and button method.  In addition, once the metalmouth extension is turned on, a new option "always-on" is available for permanently keeping it on. 
 
-===Omnibox Method (Now only two key strokes)===
+===Omnibox Method===
 
 It is assumed that the Chrome browser has just been started and that the home page or new tab page is being displayed - so the browser's omnibox/url area has focus.  You can also focus the omnibar at any time using the relevant Chrome Shortcut: Windows / Linux: Ctrl+L or Mac: ⌘-L.
 
-  # When the omnibar has focus, press the m key twice.  (The keyword 'mm' activates the extension).
+  # To turn on the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'on' and finally hit the return key.  (The keyword 'mm' activates the extension). The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
 
-The Project metalmouth extension will turn on - saying "starting metalmouth extension". Please read "Extension on" below.
+  # To turn off the extension:  When the omnibar has focus, press the m key twice, then the space bar once, type 'off' and finally hit the return key.
 
 ===Extension Button Method===
 
