@@ -18,10 +18,13 @@
 */
 
 {
+  "manifest_version": 2,
   "name": "metalmouth voice browser",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A voice browser for Chrome",
-  "background_page": "background.html",
+  "background": {
+        "page": "background.html"
+    },
   "options_page": "options.html",
   "browser_action": {
      "default_icon": "MetalMouthLogo.png",

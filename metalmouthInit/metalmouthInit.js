@@ -289,4 +289,6 @@ metalmouthInit.load = function() {
 	}
 }
 
-goog.exportSymbol('metalmouthInit.load', metalmouthInit.load);
+// goog.exportSymbol('metalmouthInit.load', metalmouthInit.load);
+
+metalmouthInit.load();
