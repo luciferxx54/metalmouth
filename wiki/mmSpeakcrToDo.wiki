@@ -2,6 +2,6 @@ Add make every node which creates an item in the OSM focusable by adding tabinde
 
 Implement a DOM observer to make any new post load created elements focusable
 
-Add elements which have been make clickable to tab order etc… 
+Make elements which have been made clickable (by eventListeners) focusable. 
 
-Use the arrows to navigate to items, however, we getFocus when an item is reached using .focus() and loose focus when navigated away from using .blur().
+As now, use the arrows to navigate to items, however, we getFocus when an item is reached using .focus() and loose focus when navigated away from using .blur(). This means that we can remove the outline style which we currently apply - as the inherent focus highlighter should be enough.
