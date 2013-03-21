@@ -1,15 +1,27 @@
-Add make every node which creates an item in the OSM focusable by adding tabindex=-1 
+=Document to record living ideas=
 
-Implement a DOM observer to make any new post load created elements focusable
+==Changes to architecture==
 
-Make elements which have been made clickable (by eventListeners) focusable. Note: It may not be necessary to inject code before page load, so the necessity of going over to a content script extension model might be avoidable.
+Checked (21/3) - a browser action and a content script can be referenced in the same manifest.
 
-Just check if you can have a browser action and a content script in the manifest.
+We inject a content script at (document start) which:
 
-* That said if you insert an observer - at _pageStart - and just allow this observer to amend each new relevant element - we could remove the DOMWalker.  As the available elements would always be available.  You could search for headers etc... directly.  This would make the code lighter.
+1) Decides whether or not to load a metalmouth-speakcr-nodeCode file - again at (document start).  The decision is - inject if metalmouth-speakcr is on.  
 
-The injected code would be a super lightweight script loader - if metalmouth is on the script loader then loads the Observer.  If metalmouth is off it does not load the observer.   
+Taking this approach keeps the code loaded into each matching page via the content script as small as possible.
 
-As now, use the arrows to navigate to items, however, we getFocus when an item is reached using .focus() and loose focus when navigated away from using .blur(). This means that we can remove the outline style which we currently apply - as the inherent focus highlighter should be enough.
+2) The metalmouth-speakcr-nodeCode creates a DOM Observer - which has two jobs: 
 
-When metalmouth-speakcr is switched off (by some key combination, or option) an option will become available in the context menu to "test page with metalmouth-speakcr" i.e. developer mode. 
+The first is to recognise when the HEAD element has been created, and then create a SCRIPT element as the first element in the HEAD element - the SCRIPT element contains code which changes the addEventListener function.
+
+The second is to recognise element nodes (as there are created) for which voice models will be created in the Off-Screen Model (OSM).  Each node will be made focusable by adding tabindex=-1. 
+
+===Additional note===
+
+These changes should also mean that we could remove the DOMWalker.  As the available elements would always be available.  You could search for headers etc... directly.  This would make the code lighter.  
+
+As now, the arrows would be used to navigate to OSM items, however, we getFocus when an item is reached using .focus() and loose focus when navigated away from using .blur(). This means that we can remove the outline style which we currently apply - as the inherent focus highlighter should be enough.
+
+==Developer mode==
+
+When metalmouth-speakcr is switched off (by some key combination, or button on toolbar) an option will become available in the context menu to "test page with metalmouth-speakcr" i.e. developer mode. 
