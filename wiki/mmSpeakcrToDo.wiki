@@ -4,4 +4,10 @@ Implement a DOM observer to make any new post load created elements focusable
 
 Make elements which have been made clickable (by eventListeners) focusable. Note: It may not be necessary to inject code before page load, so the necessity of going over to a content script extension model might be avoidable.
 
+* That said if you insert an observer - at _pageStart - and just allow this observer to amend each new relevant element - we could remove the DOMWalker.  As the available elements would always be available.  You could search for headers etc... directly.  This would make the code lighter.
+
+The injected code would be a super lightweight script loader - if metalmouth is on the script loader then loads the Observer.  If metalmouth is off it does not load the observer.   
+
 As now, use the arrows to navigate to items, however, we getFocus when an item is reached using .focus() and loose focus when navigated away from using .blur(). This means that we can remove the outline style which we currently apply - as the inherent focus highlighter should be enough.
+
+When metalmouth-speakcr is switched off (by some key combination, or option) an option will become available in the context menu to "test page with metalmouth-speakcr" i.e. developer mode. 
