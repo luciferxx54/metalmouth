@@ -4,6 +4,8 @@ Implement a DOM observer to make any new post load created elements focusable
 
 Make elements which have been made clickable (by eventListeners) focusable. Note: It may not be necessary to inject code before page load, so the necessity of going over to a content script extension model might be avoidable.
 
+Just check if you can have a browser action and a content script in the manifest.
+
 * That said if you insert an observer - at _pageStart - and just allow this observer to amend each new relevant element - we could remove the DOMWalker.  As the available elements would always be available.  You could search for headers etc... directly.  This would make the code lighter.
 
 The injected code would be a super lightweight script loader - if metalmouth is on the script loader then loads the Observer.  If metalmouth is off it does not load the observer.   
