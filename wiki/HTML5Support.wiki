@@ -1,1 +1,0 @@
-Will detail support for HTML5 elements distilled from use cases.
