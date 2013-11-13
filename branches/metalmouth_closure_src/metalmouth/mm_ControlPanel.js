@@ -32,10 +32,10 @@ function calcDeveloperWindowPosition()
 mm_ControlPanel.init = function()
 {
 	mm_ControlPanel.pageCulture = getPageCulture();
-	
+	console.log("tag1");
 	var highestZIndex = calcHighestZIndex();
 	var developerWindowPosition = calcDeveloperWindowPosition();
-	
+    console.log("tag2");
 	var headElement = document.querySelector("head");
 	
 	var mmStyleArea = document.createElement("style");
@@ -45,54 +45,57 @@ mm_ControlPanel.init = function()
 	headElement.appendChild(mmStyleArea);
 	
 	addBodyLevelKeyHandlers();
-	
-	var mmShieldImage = new Image();
+    console.log("tag3");
+	var mmShieldImage = document.createElement("img");
 	mmShieldImage.id = "_mm_ShieldImage";
 	mmShieldImage.setAttribute("data-mm-uicomponent", "");
 	document.body.insertBefore(mmShieldImage, document.body.children[1]);
-	
+	console.log("tag4");
 	var mmContainer = document.createElement("div");
 	mmContainer.id = "_mm_Container";
 	mmContainer.className = "_mm_Container"; 
 	mmContainer.setAttribute("data-mm-uicomponent", "");
 	document.body.appendChild(mmContainer);
-	
+	console.log("tag5");
 	var mmDeveloperWindow = document.createElement("div");
 	mmDeveloperWindow.id = "_mm_DeveloperWindow"; 
 	mmDeveloperWindow.setAttribute("data-mm-uicomponent", "");
 	mmContainer.appendChild(mmDeveloperWindow);
-	
+	console.log("tag6");
 	var mmDeveloperWindowItemLabel = document.createElement("div");
 	mmDeveloperWindowItemLabel.setAttribute("data-mm-uicomponent", "");
 	mmDeveloperWindowItemLabel.innerText = "OSEM Item:-"; 
 	mmDeveloperWindow.appendChild(mmDeveloperWindowItemLabel);
-	
+	console.log("tag7");
 	var mmDeveloperWindowItem = document.createElement("div");
 	mmDeveloperWindowItem.id = "_mm_DeveloperWindowItem"; 
 	mmDeveloperWindowItem.setAttribute("data-mm-uicomponent", "");
 	mmDeveloperWindow.appendChild(mmDeveloperWindowItem);
-	
+	console.log("tag8");
 	var mmDeveloperWindowRuler = document.createElement("hr");
 	mmDeveloperWindow.appendChild(mmDeveloperWindowRuler);
-	
+	console.log("tag9");
 	var mmDeveloperWindowOpeningTagLabel = document.createElement("div");
 	mmDeveloperWindowOpeningTagLabel.setAttribute("data-mm-uicomponent", "");
 	mmDeveloperWindowOpeningTagLabel.innerText = "DOM Node:-";
 	mmDeveloperWindow.appendChild(mmDeveloperWindowOpeningTagLabel);
-	
+	console.log("tag10");
 	var mmDeveloperWindowOpeningTag = document.createElement("div");
 	mmDeveloperWindowOpeningTag.id = "_mm_DeveloperWindowOpeningTag"; 
 	mmDeveloperWindowOpeningTag.setAttribute("data-mm-uicomponent", "");
 	mmDeveloperWindow.appendChild(mmDeveloperWindowOpeningTag);
-	
+	console.log("tag11");
 	var mmVoiceInput = new VoiceInputControlModel();
+    console.log("tag12");
 	mmContainer.appendChild(mmVoiceInput.asHtml());
-	
+	console.log("tag13");
+    
 	var mmInteractArea = document.createElement("div");
 	mmInteractArea.id = "_mm_InteractArea";
 	mmInteractArea.setAttribute("data-mm-uicomponent", "");
 	mmInteractArea.style.cssText = "display:none;";
 	mmContainer.appendChild(mmInteractArea);
+    console.log("tag14");
 }
 
 mm_ControlPanel.voiceInputOn = null;
@@ -1131,7 +1134,7 @@ mm_ControlPanel.showCurrentItem = function(osmType, liveElement)
 	window.scrollTo(0, scrollPosY - 40);
 	var currentStyle = liveElement.style.cssText;
 	liveElement.setAttribute("_mm_current", currentStyle);
-	liveElement.setAttribute("style", currentStyle + "outline:2px dashed #FF8C00;");
+	liveElement.setAttribute("style", currentStyle + "outline:2px solid #FF8C00;"); // might not be needed if elements are added to tab order
 	mm_ControlPanel.changeDevWindow(osmType, liveElement);
 }
 
@@ -1608,14 +1611,16 @@ function VoiceInputControlModel()
 										'style':'float:left;display:none;',
 										'title':'Voice input area'
 										});
-	
+	console.log("tag V1");
 	voiceInput.setAttribute('data-mm-uicomponent', '');
 	voiceInput.setAttribute('x-webkit-speech');
 	voiceInput.addEventListener("webkitspeechchange", function(e){voiceInput_Change(e);}, false);
 	voiceInput.addEventListener("click", voiceInput_Click, false);
-	
+	console.log("tag V2");
+    
 	this.asHtml = function()
 	{
+        console.log("tag V3");
 		return voiceInput;
 	}
 	
