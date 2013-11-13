@@ -78,3 +78,4 @@ metalmouthOptions.start = function()
 }
 
 goog.exportSymbol('metalmouthOptions.start', metalmouthOptions.start);
+metalmouthOptions.start();

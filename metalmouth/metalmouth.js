@@ -55,6 +55,7 @@ function sequencer()
 
 function removeExistingAccesskeys()
 {
+    console.log("removeExistingAccesskeys");
 	var elements = document.querySelectorAll('*[accesskey]'); // any element with an accesskey attribute
 	for (var i = elements.length; i--;)
 	{
@@ -65,24 +66,28 @@ function removeExistingAccesskeys()
 
 function preventContextMenu()
 {
+    console.log("preventContextMenu");
 	document.body.setAttribute("oncontextmenu", "return false;");
 	sequencer();
 }
 
 function initControlPanel()
 {
+    console.log("initControlPanel");
 	mm_ControlPanel.init();
 	sequencer();
 }
 
 function resetNavigator()
 {
+    console.log("resetNavigator");
 	mm_ControlPanel.resetNavigator();
 	sequencer();
 }
 
 function bringFocus()
 {
+    console.log("bringFocus");
 	mm_ControlPanel.bringFocus();
 }
 
