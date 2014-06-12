@@ -207,6 +207,10 @@ mm_OSEM.tagNameFilterFunctions['MENU'] = function(currentNode) {
 	return null;
 }
 
+mm_OSEM.tagNameFilterFunctions['MAIN'] = function(currentNode) {
+	return ["Main", MainContentAreaModel_ContentToRead];
+}
+
 mm_OSEM.tagNameFilterFunctions['ARTICLE'] = function(currentNode) {
 	return ["Article", ArticleModel_ContentToRead]; // should be the same for DIV
 }
