@@ -6,6 +6,60 @@ For quality assurance, starting from the soon to be release version 1.8.0 of the
 
 ==B1) OSEM items (on focus) - Non-WAI-ARIA based==
 
+===B0.1) Main content area===
+
+====B0.1.1) Formed from MAIN element - no contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<main></main>}}}
+
+Action(s):
+  # Press down arrow until last OSEM has been read.
+
+Expected outcome(s):
+   # No OSEM item should have been formed for this empty element.
+
+====B0.1.2) Formed from MAIN element - text only contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<main>}}}_text only contents_{{{</main>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "main content area".
+
+Expected outcome(s):
+  # metalmouth should say "Main content area".
+  # metalmouth should say "text only contents".
+
+====B0.1.3) Formed from MAIN element - some html contents====
+
+Precondition(s): 
+  # metalmouth extension is installed.
+  # metalmouth extension is on - metalmouth icon button shows an open mouth.
+  # New tab has been opened.
+  # metalmouth has started to read all.
+  # Space bar has been pressed.
+  # The following code should be present in the DOM:
+{{{<main>}}}_some html contents_{{{</main>}}}
+
+Action(s):
+  # Press down arrow until current OSEM is the defined "main content area".
+
+Expected outcome(s):
+  # metalmouth should say "main content area".
+
 ===B1.1) Page header area===
 
 ====B1.1.1) No content====
