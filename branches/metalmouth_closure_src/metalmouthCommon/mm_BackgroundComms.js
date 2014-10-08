@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,17 +19,14 @@
 
 goog.provide('mm_BackgroundComms');
 
-mm_BackgroundComms.call = function(name, value, cbFunction, cbResultsDependent)
-{
-	if (mm_BackgroundComms.port == undefined)
-	{
+mm_BackgroundComms.call = function(name, value, cbFunction, cbResultsDependent) {
+	if (mm_BackgroundComms.port == undefined) {
 		mm_BackgroundComms.connect();
 	}
 	mm_BackgroundComms.sendMsg(name, value, cbFunction, cbResultsDependent);
 }
 
-function BackgroundFunctionModel(name, value) // , values)
-{
+function BackgroundFunctionModel(name, value) { // , values)
 	this.name = name; 
 	this.value = value;
 }
@@ -38,29 +35,22 @@ mm_BackgroundComms.port = null;
 mm_BackgroundComms.callbackFunction = null;
 mm_BackgroundComms.callbackResultsDependent = null;
 
-mm_BackgroundComms.connect = function()
-{
+mm_BackgroundComms.connect = function() {
 	mm_BackgroundComms.callbackFunction = null;
 	mm_BackgroundComms.callbackResultsDependent = null;
 	mm_BackgroundComms.port = chrome.extension.connect();
 	mm_BackgroundComms.port.onMessage.addListener(function(msg) {
-		if (msg.complete == "true")
-		{
-			if (mm_BackgroundComms.callbackResultsDependent == true)
-			{
-				if (msg.results != null)
-				{
+		if (msg.complete == "true") {
+			if (mm_BackgroundComms.callbackResultsDependent == true) {
+				if (msg.results != null) {
 					var results = JSON.parse(msg.results);
-					if (mm_BackgroundComms.callbackFunction != null)
-					{
+					if (mm_BackgroundComms.callbackFunction != null) {
 						mm_BackgroundComms.callbackFunction(results);
 					}
 				}
 			}
-			else
-			{
-				if (mm_BackgroundComms.callbackFunction != null)
-				{
+			else {
+				if (mm_BackgroundComms.callbackFunction != null) {
 					mm_BackgroundComms.callbackFunction();
 				}
 			}
@@ -68,8 +58,7 @@ mm_BackgroundComms.connect = function()
 	});
 }
 
-mm_BackgroundComms.sendMsg = function(name, value, cbFunction, cbResultsDependent)
-{
+mm_BackgroundComms.sendMsg = function(name, value, cbFunction, cbResultsDependent) {
 	mm_BackgroundComms.callbackFunction = cbFunction;
 	mm_BackgroundComms.callbackResultsDependent = cbResultsDependent;
 	

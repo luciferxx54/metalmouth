@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -29,78 +29,62 @@ goog.require('mm_BackgroundComms');
 
 goog.require('goog.dom');
 
-console.log("loaded Metal Mouth");
+// console.log("loaded Metal Mouth");
  
 // start sequencer
 
-var startSequencerFunctions = 
-[
- removeExistingAccesskeys,
- preventContextMenu,
- initControlPanel,
- resetNavigator,
- bringFocus
-];
+var startSequencerFunctions = [removeExistingAccesskeys, preventContextMenu, initControlPanel, resetNavigator, bringFocus];
 
 var sequencerNextItem;
 var sequencerCurrentItem;
 var sequencerFunctions;
 
-function sequencer()
-{
+function sequencer() {
 	sequencerCurrentItem = sequencerNextItem;
 	sequencerNextItem = sequencerNextItem + 1;
 	sequencerFunctions[sequencerCurrentItem]();
 }
 
-function removeExistingAccesskeys()
-{
-    console.log("removeExistingAccesskeys");
+function removeExistingAccesskeys() {
+    // console.log("removeExistingAccesskeys");
 	var elements = document.querySelectorAll('*[accesskey]'); // any element with an accesskey attribute
-	for (var i = elements.length; i--;)
-	{
+	for (var i = elements.length; i--;) {
 		elements[i].removeAttribute("accesskey");
 	}
 	sequencer();
 }
 
-function preventContextMenu()
-{
-    console.log("preventContextMenu");
+function preventContextMenu() {
+    // console.log("preventContextMenu");
 	document.body.setAttribute("oncontextmenu", "return false;");
 	sequencer();
 }
 
-function initControlPanel()
-{
-    console.log("initControlPanel");
+function initControlPanel() {
+    // console.log("initControlPanel");
 	mm_ControlPanel.init();
 	sequencer();
 }
 
-function resetNavigator()
-{
-    console.log("resetNavigator");
+function resetNavigator() {
+    // console.log("resetNavigator");
 	mm_ControlPanel.resetNavigator();
 	sequencer();
 }
 
-function bringFocus()
-{
-    console.log("bringFocus");
+function bringFocus() {
+    // console.log("bringFocus");
 	mm_ControlPanel.bringFocus();
 }
 
-metalmouth.start = function()
-{
+metalmouth.start = function() {
 	sequencerNextItem = 0;
 	sequencerCurrentItem = 0;
 	sequencerFunctions = startSequencerFunctions;
 	sequencer();
 }
 
-metalmouth.injected = function()
-{
+metalmouth.injected = function() {
 	return true;
 }
 

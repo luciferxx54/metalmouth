@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,16 +21,12 @@ goog.provide('mm_ControlPanel');
 
 goog.require('mm_BackgroundComms');
 
-console.log("loaded controlPanel");
-
-function calcDeveloperWindowPosition()
-{
+function calcDeveloperWindowPosition() {
 	var xPos = document.body.clientWidth - 200;
 	return xPos;
 }
 
-mm_ControlPanel.init = function()
-{
+mm_ControlPanel.init = function() {
 	mm_ControlPanel.pageCulture = getPageCulture();
 	var highestZIndex = calcHighestZIndex();
 	var developerWindowPosition = calcDeveloperWindowPosition();
@@ -38,7 +34,7 @@ mm_ControlPanel.init = function()
 	
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.setAttribute("data-mm-uicomponent", "");
-	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}#_mm_VoiceInput{position:absolute;font-size:40px;width:40px;margin:0px;z-index:" + (highestZIndex + 4) + ";}"; // body{background-position:0px 22px;} #_mm_Highlighter{position:absolute;z-index:" + (highestZIndex + 3) + ";} #_mm_NavArea{position:fixed;top:0px;left:0px;width:2%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_InfoArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}    
+	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}#_mm_VoiceInput{position:absolute;font-size:40px;width:40px;margin:0px;z-index:" + (highestZIndex + 4) + ";}";   
 	
 	headElement.appendChild(mmStyleArea);
 	
@@ -86,29 +82,22 @@ mm_ControlPanel.init = function()
 
 mm_ControlPanel.voiceInputOn = null;
 
-mm_ControlPanel.resetNavigator = function()
-{
+mm_ControlPanel.resetNavigator = function() {
 	mm_Navigator.reset();
 }
 
-mm_ControlPanel.bringFocus = function()
-{
-	function handleMouseDown(e)
-	{
-		var readyVoiceInput = function()
-		{
+mm_ControlPanel.bringFocus = function() {
+	function handleMouseDown(e) {
+		var readyVoiceInput = function() {
 			var voiceInput = goog.dom.getElement('_mm_VoiceInput');		
 			voiceInput.style.cssText = "left:" + (e.pageX - 20 - document.body.scrollLeft) + "px;top:" + (e.pageY - 20 - document.body.scrollTop) + "px;position:fixed;";
 			mm_TTS.getAudio("voice input ready", null);
 		}
 		
-		if (!mm_ControlPanel.voiceInputOn)
-		{
-			var runOnce = function()
-			{
+		if (!mm_ControlPanel.voiceInputOn) {
+			var runOnce = function() {
 				mm_ControlPanel.voiceInputOn = true;
-				if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2))
-				{
+				if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2)) {
 					readyVoiceInput();
 				}
 			}
@@ -116,17 +105,14 @@ mm_ControlPanel.bringFocus = function()
 			mm_BackgroundComms.call("retrieveData", "turnOnVoiceInput", function(results){results.toString() == 'true' ? runOnce() : mm_ControlPanel.voiceInputOn = false}, true);
 		}
 		
-		if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2))
-		{
+		if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2)) {
 			readyVoiceInput();
 		}
 	}
 	
-	var cbFunction_BringFocus = function()
-	{
+	var cbFunction_BringFocus = function() {
 		var activeElement = document.activeElement;
-		if (activeElement)
-		{
+		if (activeElement) {
 			activeElement.blur();
 		}
 
@@ -138,8 +124,8 @@ mm_ControlPanel.bringFocus = function()
 	mm_TTS.getAudio(mm_ControlPanel.getPageTitle(), cbFunction_BringFocus);
 }
 
-mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredDataType) // node ref needed so enter can set the values in the model and in the live site
-{
+mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredDataType) { 
+    // node ref needed so enter can set the values in the model and in the live site
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea');
 	mmInteractionArea.innerHTML = ""; 
@@ -152,20 +138,17 @@ mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredData
 	
 	displayInteractionArea(enteredDataType + " entry area", null, true);
 	
-	function changeFocus()
-	{
+	function changeFocus() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio(enteredDataType + " entry area entered", changeFocus);
 	
-	function enter()
-	{
+	function enter() {
 		liveTextInputElement.value = document.getElementById("_mm_TBTextEntry").value;
 	}
 	
-	function TBTextEntry()
-	{
+	function TBTextEntry() {
 		// constructor
 		var textBox = new CP_TextBoxModel();
 		var tBTextEntry = textBox.template();
@@ -173,29 +156,26 @@ mm_ControlPanel.drawTextBoxInteract = function(liveTextInputElement, enteredData
 		tBTextEntry.setAttribute("data-mm-uicomponent", "");
 		tBTextEntry.setAttribute("title", enteredDataType);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(tBTextEntry);
 		}
 	}
 	
-	function TBEnterButton()
-	{
+	function TBEnterButton() {
 		var tBEnterButton = iap_Button.template();
 		tBEnterButton.id = "_mm_TBEnterButton";
 		tBEnterButton.setAttribute("data-mm-uicomponent", "");
 		tBEnterButton.setAttribute("value", "Enter");
 		tBEnterButton.addEventListener("click", function(){enter();goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(tBEnterButton);
 		}
 	}
 }
 
-mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - services radio button and checkboxes
-{
+mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) {
+    // - services radio button and checkboxes
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
 	mmInteractionArea.innerHTML = "";
@@ -208,56 +188,47 @@ mm_ControlPanel.drawCheckButtonInteract = function(liveCheckInputElement) // - s
 	
 	displayInteractionArea("check entry area", null, false);
 	
-	var changeFocus = function()
-	{
+	var changeFocus = function() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("check entry area entered", changeFocus); // mm_TTS callback
 	
-	function enter(e)
-	{
-		if (e.srcElement.value == "check")
-		{
+	function enter(e) {
+		if (e.srcElement.value == "check") {
 			liveCheckInputElement.checked = true;
 		}
-		else
-		{
+		else {
 			liveCheckInputElement.checked = false;
 		}
 	}
 	
-	function CheckButtonModel()
-	{
+	function CheckButtonModel() {
 		var checkButton = iap_Button.template();
 		checkButton.id = "_mm_CheckButton";
 		checkButton.setAttribute("data-mm-uicomponent", "");
 		checkButton.setAttribute("value", "check");
 		checkButton.addEventListener("click", function(e){enter(e);goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(checkButton);
 		}
 	}
 	
-	function UncheckButtonModel()
-	{
+	function UncheckButtonModel() {
 		var uncheckButton = iap_Button.template();
 		uncheckButton.id = "_mm_UncheckButton";
 		uncheckButton.setAttribute("data-mm-uicomponent", "");
 		uncheckButton.setAttribute("value", "uncheck");
 		uncheckButton.addEventListener("click", function(e){enter(e);goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(uncheckButton);
 		}
 	}
 }
 
-mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement)
-{
+mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement) {
 	var selectedIndex = 0;
 	var options = liveSelectInputElement.querySelectorAll('option');
 	var currentOptionText = options[0].innerText;
@@ -280,33 +251,28 @@ mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement)
 	
 	displayInteractionArea("single select", null, false);
 	
-	var changeFocus = function()
-	{
+	var changeFocus = function() {
 		mmInteractionArea.children[0].focus();
 	}
 	
-	var sayCurrentItem = function()
-	{
+	var sayCurrentItem = function() {
 		mm_TTS.getAudio("current option " + currentOptionText, changeFocus);
 	}
 	
 	mm_TTS.getAudio("single select menu entered", sayCurrentItem);
 	
-	function NextOptionButtonModel()
-	{
+	function NextOptionButtonModel() {
 		var nextOptionButton = iap_Button.template();
 		nextOptionButton.id = "_mm_NextOptionButton";
 		nextOptionButton.setAttribute("data-mm-uicomponent", "");
 		nextOptionButton.setAttribute("value", "Next option")
 		nextOptionButton.addEventListener("click", moveToNextOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(nextOptionButton);
 		}
 		
-		function moveToNextOption()
-		{
+		function moveToNextOption() {
 			if (options[selectedIndex + 1] != undefined) {
 				selectedIndex = selectedIndex + 1; 
 				mmOptionDisplay.setValue(options[selectedIndex].innerText, true);				
@@ -317,21 +283,18 @@ mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement)
 		}
 	}
 	
-	function PreviousOptionButtonModel()
-	{
+	function PreviousOptionButtonModel() {
 		var previousOptionButton = iap_Button.template();
 		previousOptionButton.id = "_mm_PreviousOptionButton";
 		previousOptionButton.setAttribute("data-mm-uicomponent", "");
 		previousOptionButton.setAttribute("value", "Previous options")
 		previousOptionButton.addEventListener("click", moveToPreviousOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(previousOptionButton);
 		}
 		
-		function moveToPreviousOption()
-		{
+		function moveToPreviousOption() {
 			if (options[selectedIndex - 1] != undefined) {
 				selectedIndex = selectedIndex - 1; 
 				mmOptionDisplay.setValue(options[selectedIndex].innerText, true);				
@@ -342,52 +305,44 @@ mm_ControlPanel.drawSingleSelectMenuInteract = function(liveSelectInputElement)
 		}
 	}
 	
-	function SelectButtonModel()
-	{
+	function SelectButtonModel() {
 		var selectButton = iap_Button.template();
 		selectButton.id = "_mm_SelectButton";
 		selectButton.setAttribute("data-mm-uicomponent", "");
 		selectButton.setAttribute("value", "Select");
 		selectButton.addEventListener("click", enterSelectedItem, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(selectButton);
 		}
 		
-		function enterSelectedItem()
-		{
+		function enterSelectedItem() {
 			goog.dom.getElement("_mm_CloseMenuButton").click();
 			liveSelectInputElement.selectedIndex = selectedIndex;
 		}
 	}
 	
-	function OptionDisplayModel()
-	{
+	function OptionDisplayModel() {
 		var displayBox = new IAP_DisplayBoxModel();
 		var currentItemDisplayArea = displayBox.template();
 		currentItemDisplayArea.id = "_mm_OptionDisplay";
 		currentItemDisplayArea.setAttribute("data-mm-uicomponent", "");
 		currentItemDisplayArea.setAttribute("title", "Option display");
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(currentItemDisplayArea);
 		}
 		
-		this.setValue = function(currentOptionText, say)
-		{
+		this.setValue = function(currentOptionText, say) {
 			currentItemDisplayArea.value = currentOptionText;
-			if (say == true)
-			{
+			if (say == true) {
 				mm_TTS.getAudio("option " + currentOptionText, null);
 			}
 		}
 	}
 }
 
-mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
-{
+mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement) {
 	var selection = {};
 	var selectedIndex = 0;
 	var options = liveSelectInputElement.querySelectorAll('option');
@@ -411,8 +366,7 @@ mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
 	var mmEnterButton = new EnterButtonModel();
 	mmEnterButton.add();
 	
-	for (var i = 0, len = options.length; i < len; i++)
-	{
+	for (var i = 0, len = options.length; i < len; i++) {
 		options[i].selected == true ? selection[i] = "checked" : selection[i] = "unchecked";
 	}
 
@@ -422,10 +376,8 @@ mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
 	
 	displayInteractionArea("multi select", null, false);
 	
-	var sayCurrentItem = function()
-	{
-		var changeFocus = function()
-		{
+	var sayCurrentItem = function() {
+		var changeFocus = function() {
 			mmInteractionArea.children[0].focus();
 		}
 		
@@ -434,21 +386,18 @@ mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
 	
 	mm_TTS.getAudio("multi select menu entered", sayCurrentItem);
 	
-	function NextOptionButtonModel()
-	{
+	function NextOptionButtonModel() {
 		var nextOptionButton = iap_Button.template();
 		nextOptionButton.id = "_mm_NextOptionButton";
 		nextOptionButton.setAttribute("data-mm-uicomponent", "");
 		nextOptionButton.setAttribute("value", "Next option")
 		nextOptionButton.addEventListener("click", moveToNextOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(nextOptionButton);
 		}
 		
-		function moveToNextOption()
-		{
+		function moveToNextOption() {
 			if (options[selectedIndex + 1] != undefined) {
 				selectedIndex = selectedIndex + 1; 
 				mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);			
@@ -459,21 +408,18 @@ mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
 		}
 	}
 	
-	function PreviousOptionButtonModel()
-	{
+	function PreviousOptionButtonModel() {
 		var previousOptionButton = iap_Button.template();
 		previousOptionButton.id = "_mm_PreviousOptionButton";
 		previousOptionButton.setAttribute("data-mm-uicomponent", "");
 		previousOptionButton.setAttribute("value", "Previous options")
 		previousOptionButton.addEventListener("click", moveToPreviousOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(previousOptionButton);
 		}
 		
-		function moveToPreviousOption()
-		{
+		function moveToPreviousOption() {
 			if (options[selectedIndex - 1] != undefined) {
 				selectedIndex = selectedIndex - 1; 
 				mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);				
@@ -484,96 +430,82 @@ mm_ControlPanel.drawMultiSelectMenuInteract = function(liveSelectInputElement)
 		}
 	}
 	
-	function CheckButtonModel()
-	{
+	function CheckButtonModel() {
 		var checkButton = iap_Button.template();
 		checkButton.id = "_mm_CheckButton";
 		checkButton.setAttribute("data-mm-uicomponent", "");
 		checkButton.setAttribute("value", "Check");
 		checkButton.addEventListener("click", checkOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(checkButton);
 		}
 		
-		function checkOption()
-		{
+		function checkOption() {
 			selection[selectedIndex] = "checked";
 			mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);
 		}
 	}
 	
-	function UncheckButtonModel()
-	{
+	function UncheckButtonModel() {
 		var uncheckButton = iap_Button.template();
 		uncheckButton.id = "_mm_UnheckButton";
 		uncheckButton.setAttribute("data-mm-uicomponent", "");
 		uncheckButton.setAttribute("value", "Uncheck");
 		uncheckButton.addEventListener("click", uncheckOption, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(uncheckButton);
 		}
 		
-		function uncheckOption()
-		{
+		function uncheckOption() {
 			selection[selectedIndex] = "unchecked";
 			mmOptionDisplay.setValue(selectedIndex, options[selectedIndex].innerText, true);
 		}
 	}
 	
-	function EnterButtonModel()
-	{
+	function EnterButtonModel() {
 		var enterButton = iap_Button.template();
 		enterButton.id = "_mm_EnterButton";
 		enterButton.setAttribute("data-mm-uicomponent", "");
 		enterButton.setAttribute("value", "Enter");
 		enterButton.addEventListener("click", enterSelectedItem, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(enterButton);
 		}
 		
-		function enterSelectedItem()
-		{
+		function enterSelectedItem() {
 			goog.dom.getElement("_mm_CloseMenuButton").click();
 			
-			for (var i = 0, len = options.length; i < len; i++)
-			{
+			for (var i = 0, len = options.length; i < len; i++) {
 				selection[i] == "checked" ? options[i].selected = true : options[i].selected = false;
 			}
 		}
 	}
 	
-	function OptionDisplayModel()
-	{
+	function OptionDisplayModel() {
 		var displayBox = new IAP_DisplayBoxModel();
 		var currentItemDisplayArea = displayBox.template();
 		currentItemDisplayArea.id = "_mm_OptionDisplay";
 		currentItemDisplayArea.setAttribute("data-mm-uicomponent", "");
 		currentItemDisplayArea.setAttribute("title", "Option display");
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(currentItemDisplayArea);
 		}
 		
-		this.setValue = function(selectedIndex, currentOptionText, say)
-		{ 
+		this.setValue = function(selectedIndex, currentOptionText, say) { 
 			currentItemDisplayArea.value = currentOptionText + " " + selection[selectedIndex];
-			if (say == true)
-			{
+			if (say == true) {
 				mm_TTS.getAudio("option " + currentOptionText + " " + selection[selectedIndex], null);
 			}
 		}
 	}
 }
 
-mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - services input elements with a type attribute set to range
-{
+mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) {
+    // - services input elements with a type attribute set to range
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea');
 	mmInteractionArea.innerHTML = ""; 
@@ -588,10 +520,8 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 	var step = liveTextInputElement.getAttribute("step");
 	step = (!step) ? 1 : asFloatOrInt(step);
 	
-	var toHowManyDecimalPlaces = function(num)
-	{
-		if (num.toString().indexOf('.') != -1)
-		{
+	var toHowManyDecimalPlaces = function(num) {
+		if (num.toString().indexOf('.') != -1) {
 			return num.toString().substring(num.toString().indexOf('.') + 1).length;
 		}
 		return 0;
@@ -612,110 +542,93 @@ mm_ControlPanel.drawRangeInputInteract = function(liveTextInputElement) // - ser
 	
 	displayInteractionArea("range entry area", null, false);
 	
-	var changeFocus = function()
-	{
+	var changeFocus = function() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("Range entry area entered", changeFocus); // mm_TTS callback
 	
-	function enter()
-	{
+	function enter() {
 		liveTextInputElement.value = currentValue;
 	}
 	
-	function asFloatOrInt(text)
-	{
+	function asFloatOrInt(text) {
 		return (text.toString().indexOf('.') != -1) ? parseFloat(text) : parseInt(text);
 	}
 	
-	function calculateSteps()
-	{
+	function calculateSteps() {
 		// to calculate steps (max - min / step * x) increasing x by 1 until answer > 20 remembering value usually starts in the middle
 		var x = 1; 
 		
-		while (((max - min)/(step * x)) > 20)
-		{
+		while (((max - min)/(step * x)) > 20) {
 			x++;
 		}
 		
 		return step * x; 
 	}
 	
-	function changeValue(action)
-	{
-		switch(action)
-		{
+	function changeValue(action) {
+		switch(action) {
 			case "increase":
-				if ((asFloatOrInt(currentValue) + changedStep).toFixed(howManyDecimalPlaces) <= max)
-				{
+				if ((asFloatOrInt(currentValue) + changedStep).toFixed(howManyDecimalPlaces) <= max) {
 					currentValue = (asFloatOrInt(currentValue) + changedStep).toFixed(howManyDecimalPlaces);
 					mm_TTS.getAudio("value to enter increased to " + currentValue, null);
 				}
-				else
-				{
+				else {
 					mm_TTS.getAudio("maximum value " + currentValue + " reached", null);
 				}
 				break;
 			case "decrease":
-				if ((asFloatOrInt(currentValue) - changedStep).toFixed(howManyDecimalPlaces) >= min)
-				{
+				if ((asFloatOrInt(currentValue) - changedStep).toFixed(howManyDecimalPlaces) >= min) {
 					currentValue = (asFloatOrInt(currentValue) - changedStep).toFixed(howManyDecimalPlaces);
 					mm_TTS.getAudio("value to enter decreased to " + currentValue, null);
 				}
-				else
-				{
+				else {
 					mm_TTS.getAudio("minimum value " + currentValue + " reached", null);
 				}
 				break;
 		}
 	}
 	
-	function IncreaseValueButtonModel()
-	{
+	function IncreaseValueButtonModel() {
 		var increaseValueButton = iap_Button.template();
 		increaseValueButton.id = "_mm_IncreaseButton";
 		increaseValueButton.setAttribute("data-mm-uicomponent", "");
 		increaseValueButton.setAttribute("value", "Increase value");
 		increaseValueButton.addEventListener("click", function(){changeValue("increase");}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(increaseValueButton);
 		}
 	}
 	
-	function DecreaseValueButtonModel()
-	{
+	function DecreaseValueButtonModel() {
 		var decreaseValueButton = iap_Button.template();
 		decreaseValueButton.id = "_mm_DecreaseButton";
 		decreaseValueButton.setAttribute("data-mm-uicomponent", "");
 		decreaseValueButton.setAttribute("value", "Decrease value");
 		decreaseValueButton.addEventListener("click", function(){changeValue("decrease");}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(decreaseValueButton);
 		}
 	}
 	
-	function RangeEnterButton()
-	{
+	function RangeEnterButton() {
 		var rangeEnterButton = iap_Button.template();
 		rangeEnterButton.id = "_mm_rangeEnterButton";
 		rangeEnterButton.setAttribute("data-mm-uicomponent", "");
 		rangeEnterButton.setAttribute("value", "Enter");
 		rangeEnterButton.addEventListener("click", function(){enter();goog.dom.getElement("_mm_CloseMenuButton").click();}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(rangeEnterButton);
 		}
 	}
 }
 
-mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - services video and audio
-{
+mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) {
+    // - services video and audio
 	// Should also handle track selection
 	
 	var iap_Button = new IAP_ButtonModel();
@@ -733,17 +646,14 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 	
 	displayInteractionArea(mediaType, null, false);
 	
-	var changeFocus = function()
-	{
+	var changeFocus = function() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio(mediaType + " control area entered", changeFocus);  // mm_TTS callback move to drawM
 	
-	function controlMedia(actionName)
-	{
-		switch(actionName)
-		{
+	function controlMedia(actionName) {
+		switch(actionName) {
 			case "play":
 				liveMediaElement.play();
 				mm_TTS.getAudio(mediaType + " playing", function(){document.getElementById("_mm_PauseButton").focus();}); // mm_TTS callback
@@ -760,51 +670,44 @@ mm_ControlPanel.drawMediaInteract = function(liveMediaElement, mediaType) // - s
 		}
 	}
 	
-	function PlayButtonModel()
-	{
+	function PlayButtonModel() {
 		var playButton = iap_Button.template();
 		playButton.id = "_mm_PlayButton";
 		playButton.setAttribute("data-mm-uicomponent", "");
 		playButton.setAttribute("value", "Play");
 		playButton.addEventListener("click", function(){controlMedia("play");}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(playButton);
 		}
 	}
 	
-	function PauseButtonModel()
-	{
+	function PauseButtonModel() {
 		var pauseButton = iap_Button.template();
 		pauseButton.id = "_mm_PauseButton";
 		pauseButton.setAttribute("data-mm-uicomponent", "");
 		pauseButton.setAttribute("value", "Pause");
 		pauseButton.addEventListener("click", function(){controlMedia("pause");}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(pauseButton);
 		}
 	}
 	
-	function RewindButtonModel()
-	{
+	function RewindButtonModel() {
 		var rewindButton = iap_Button.template();
 		rewindButton.id = "_mm_RewindButton";
 		rewindButton.setAttribute("data-mm-uicomponent", "");
 		rewindButton.setAttribute("value", "Rewind");
 		rewindButton.addEventListener("click", function(){controlMedia("rewind");}, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(rewindButton);
 		}
 	}
 }
 
-mm_ControlPanel.drawMMMenuInteract = function()
-{
+mm_ControlPanel.drawMMMenuInteract = function() {
 	var iap_Button = new IAP_ButtonModel();
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
 	mmInteractionArea.innerHTML = "";
@@ -817,15 +720,14 @@ mm_ControlPanel.drawMMMenuInteract = function()
 	
 	displayInteractionArea("Top", null, false);
 	
-	function changeFocus()
-	{
+	function changeFocus() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("Top menu entered", changeFocus); // mm_TTS callback
 	
-	function ChangeLocationButtonModel() // sits in change location sub menu
-	{
+	function ChangeLocationButtonModel() {
+        // sits in change location sub menu
 		// constructor
 		var changeLocationButton = iap_Button.template();
 		changeLocationButton.id = "_mm_ChangeLocationButton";
@@ -833,20 +735,18 @@ mm_ControlPanel.drawMMMenuInteract = function()
 		changeLocationButton.setAttribute("value", "Change location")
 		changeLocationButton.addEventListener("click", openChangeLocationMenu, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(changeLocationButton);
 		}
 		
-		function openChangeLocationMenu()
-		{
+		function openChangeLocationMenu() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			mm_ControlPanel.drawNavigationInteract();
 		}
 	}
 	
-	function OptionsButtonModel() // sits in change location sub menu
-	{
+	function OptionsButtonModel() {
+        // sits in change location sub menu
 		// constructor
 		var optionsButton = iap_Button.template();
 		optionsButton.id = "_mm_OptionsButton";
@@ -854,21 +754,18 @@ mm_ControlPanel.drawMMMenuInteract = function()
 		optionsButton.setAttribute("value", "Options")
 		optionsButton.addEventListener("click", openOptions, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(optionsButton);
 		}
 		
-		function openOptions()
-		{
+		function openOptions() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			mm_ControlPanel.openOptions();
 		}
 	}
 }
  
-mm_ControlPanel.drawNavigationInteract = function()
-{
+mm_ControlPanel.drawNavigationInteract = function() {
 	var iap_Button = new IAP_ButtonModel();
 	
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
@@ -885,15 +782,14 @@ mm_ControlPanel.drawNavigationInteract = function()
 	
 	displayInteractionArea("Change location", null, false);
 	
-	function changeFocus()
-	{
+	function changeFocus() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("Change location menu entered", changeFocus); // mm_TTS callback
 	
-	function PreviousUrlButtonModel() // sits in change location sub menu
-	{
+	function PreviousUrlButtonModel() {
+        // sits in change location sub menu
 		// constructor
 		var backButton = iap_Button.template();
 		backButton.id = "_mm_PreviousUrlButton";
@@ -901,61 +797,55 @@ mm_ControlPanel.drawNavigationInteract = function()
 		backButton.setAttribute("value", "Previous url")
 		backButton.addEventListener("click", previousUrl, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(backButton);
 		}
 		
-		function previousUrl()
-		{
+		function previousUrl() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			history.back();
 		}
 	}
 	
-	function ChangeUrlButtonModel() // sits in change location sub menu
-	{
+	function ChangeUrlButtonModel() {
+        
+        // sits in change location sub menu
 		var changeUrlButton = iap_Button.template();
 		changeUrlButton.id = "_mm_ChangeUrlButton";
 		changeUrlButton.setAttribute("data-mm-uicomponent", "");
 		changeUrlButton.setAttribute("value", "Change url");
 		changeUrlButton.addEventListener("click", changeUrl, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(changeUrlButton);
 		}
 		
-		function changeUrl()
-		{
+		function changeUrl() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			mm_ControlPanel.drawChangeUrlInteract();
 		}
 	}
 	
-	function OpenTabButtonModel() // sits in change location sub menu
-	{
+	function OpenTabButtonModel() {
+        // sits in change location sub menu
 		var openTabButton = iap_Button.template();
 		openTabButton.id = "_mm_OpenTabButton";
 		openTabButton.setAttribute("data-mm-uicomponent", "");
 		openTabButton.setAttribute("value", "New tab");
 		openTabButton.addEventListener("click", openTab, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.appendChild(openTabButton);
 		}
 		
-		function openTab()
-		{
+		function openTab() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			mm_ControlPanel.drawOpenTabInteract();
 		}
 	}
 }
 
-mm_ControlPanel.drawChangeUrlInteract = function()
-{
+mm_ControlPanel.drawChangeUrlInteract = function() {
 	var iap_Button = new IAP_ButtonModel();
 	
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
@@ -969,15 +859,13 @@ mm_ControlPanel.drawChangeUrlInteract = function()
 	
 	displayInteractionArea("Change url", null, true);
 	
-	function changeFocus()
-	{
+	function changeFocus() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("Change url menu entered", changeFocus); // mm_TTS callback	
 	
-	function URLTextEntry()
-	{
+	function URLTextEntry() {
 		// constructor
 		var textBox = new CP_TextBoxModel();
 		var uRLTextEntry = textBox.template();
@@ -985,19 +873,17 @@ mm_ControlPanel.drawChangeUrlInteract = function()
 		uRLTextEntry.setAttribute("data-mm-uicomponent", "");
 		uRLTextEntry.setAttribute("title", "u r l");
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.insertBefore(uRLTextEntry, mmInteractionArea.lastChild);
 		}
 		
-		this.focus = function()
-		{
+		this.focus = function() {
 			uRLTextEntry.focus();
 		}
 	}
 	
-	function UrlEnterButtonModel() // generic sits in change location sub menu
-	{
+	function UrlEnterButtonModel() {
+        // generic sits in change location sub menu
 		// constructor
 		var urlEnterButton = iap_Button.template();
 		urlEnterButton.id = "_mm_UrlEnterButton";
@@ -1005,18 +891,15 @@ mm_ControlPanel.drawChangeUrlInteract = function()
 		urlEnterButton.setAttribute("value", "Go");
 		urlEnterButton.addEventListener("click", enterUrl, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.insertBefore(urlEnterButton, mmInteractionArea.lastChild);
 		}
 		
-		function enterUrl()
-		{
+		function enterUrl() {
 			// changes the url of the tab page
 			
 			var userEnteredUrl = document.getElementById("_mm_URLTextEntry").value;
-			if (userEnteredUrl != "") // other checks are also needed
-			{
+			if (userEnteredUrl != "") { // other checks are also needed
 				goog.dom.getElement('_mm_CloseMenuButton').click();
 				document.location.href = userEnteredUrl;
 			}
@@ -1024,8 +907,7 @@ mm_ControlPanel.drawChangeUrlInteract = function()
 	}
 }
 
-mm_ControlPanel.drawOpenTabInteract = function()
-{
+mm_ControlPanel.drawOpenTabInteract = function() {
 	var iap_Button = new IAP_ButtonModel();
 	
 	var mmInteractionArea = goog.dom.getElement('_mm_InteractArea'); 
@@ -1039,15 +921,13 @@ mm_ControlPanel.drawOpenTabInteract = function()
 	
 	displayInteractionArea("Open tab", null, true);
 	
-	function changeFocus()
-	{
+	function changeFocus() {
 		mmInteractionArea.children[0].focus();
 	}
 	
 	mm_TTS.getAudio("Open tab menu entered", changeFocus); // mm_TTS callback	
 	
-	function URLTextEntry()
-	{
+	function URLTextEntry() {
 		// constructor
 		var textBox = new CP_TextBoxModel();
 		var uRLTextEntry = textBox.template();
@@ -1055,19 +935,16 @@ mm_ControlPanel.drawOpenTabInteract = function()
 		uRLTextEntry.setAttribute("data-mm-uicomponent", "");
 		uRLTextEntry.setAttribute("title", "u r l");
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.insertBefore(uRLTextEntry, mmInteractionArea.lastChild);
 		}
 		
-		this.focus = function()
-		{
+		this.focus = function() {
 			uRLTextEntry.focus();
 		}
 	}
 	
-	function UrlEnterButtonModel() // generic sits in change location sub menu
-	{
+	function UrlEnterButtonModel() { // generic sits in change location sub menu
 		// constructor
 		var urlEnterButton = iap_Button.template();
 		urlEnterButton.id = "_mm_UrlEnterButton";
@@ -1075,18 +952,15 @@ mm_ControlPanel.drawOpenTabInteract = function()
 		urlEnterButton.setAttribute("value", "Go");
 		urlEnterButton.addEventListener("click", enterUrl, false);
 		
-		this.add = function()
-		{
+		this.add = function() {
 			mmInteractionArea.insertBefore(urlEnterButton, mmInteractionArea.lastChild);
 		}
 		
-		function enterUrl()
-		{
+		function enterUrl() {
 			// changes the url of the tab page
 			
 			var userEnteredUrl = document.getElementById("_mm_URLTextEntry").value;
-			if (userEnteredUrl != "") // other checks are also needed
-			{
+			if (userEnteredUrl != "") {// other checks are also needed
 				goog.dom.getElement('_mm_CloseMenuButton').click();
 				mm_BackgroundComms.call("openTab", userEnteredUrl, null, false);
 			}
@@ -1094,16 +968,13 @@ mm_ControlPanel.drawOpenTabInteract = function()
 	}
 }
 
-mm_ControlPanel.getPageTitle = function()
-{
+mm_ControlPanel.getPageTitle = function() {
 	var titleElement = document.querySelector("title");
 	
 	var pageTitle = "Current page has no title";
 	
-	if (titleElement != null)
-	{
-		if (titleElement.innerText != "")
-		{
+	if (titleElement != null) {
+		if (titleElement.innerText != "") {
 			pageTitle = titleElement.innerText;
 		}
 	}	
@@ -1112,8 +983,7 @@ mm_ControlPanel.getPageTitle = function()
 
 mm_ControlPanel.pageCulture = null;
 
-mm_ControlPanel.showCurrentItem = function(osmType, liveElement)
-{
+mm_ControlPanel.showCurrentItem = function(osmType, liveElement) {
 	restoreHighlighter(); // removes outline from old live
 	liveElement.scrollIntoView();
 	var scrollPosY = window.scrollY;
@@ -1124,8 +994,7 @@ mm_ControlPanel.showCurrentItem = function(osmType, liveElement)
 	mm_ControlPanel.changeDevWindow(osmType, liveElement);
 }
 
-mm_ControlPanel.changeDevWindow = function(osmType, currentNode)
-{
+mm_ControlPanel.changeDevWindow = function(osmType, currentNode) {
 	var mmDeveloperWindowItem = document.getElementById("_mm_DeveloperWindowItem");
 	var mmDeveloperWindowOpeningTag = document.getElementById("_mm_DeveloperWindowOpeningTag");
 	
@@ -1150,43 +1019,33 @@ mm_ControlPanel.changeDevWindow = function(osmType, currentNode)
 	mmDeveloperWindowOpeningTag.setAttribute("style", "");
 }
 
-mm_ControlPanel.openOptions = function()
-{
+mm_ControlPanel.openOptions = function() {
 	mm_BackgroundComms.call("optionsOpen", null, null, false);
 }
 
-function restoreHighlighter()
-{
+function restoreHighlighter() {
 	var oldLive = document.querySelector('[_mm_current]');
-	if (oldLive)
-	{
+	if (oldLive) {
 		var oldStyle = oldLive.getAttribute("_mm_current");
-		if (oldStyle != "")
-		{
+		if (oldStyle != "") {
 			oldLive.style.cssText = oldStyle;
 		}
-		else
-		{
+		else {
 			oldLive.removeAttribute("style");
 		}
 		oldLive.removeAttribute("_mm_current");
 	}
 }
 
-function getPageCulture()
-{
+function getPageCulture() {
 	var culture = "en-US";
 	var metaElements = document.querySelectorAll('meta');
 	var len = metaElements.length;
-	if (len > 0)
-	{
-		for (var i = len; i--;)
-		{
+	if (len > 0) {
+		for (var i = len; i--;) {
 			var metaElement = metaElements[i];
-			if (metaElement.tagName == "META")
-			{
-				if (metaElement.hasAttribute("http-equiv") && metaElement.hasAttribute("content"))
-				{
+			if (metaElement.tagName == "META") {
+				if (metaElement.hasAttribute("http-equiv") && metaElement.hasAttribute("content")) {
 					culture = metaElement.getAttribute("content");
 					break;
 				}
@@ -1196,8 +1055,7 @@ function getPageCulture()
 	return culture;
 }
 
-function displayInteractionArea(name, buttonName, allowOtherKeyInput)
-{
+function displayInteractionArea(name, buttonName, allowOtherKeyInput) {
 	// add a closebutton
 	
 	var mmCloseMenuButton = new CloseMenuButtonModel(name, buttonName);
@@ -1215,8 +1073,7 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 	
 	mmInteractionArea.style.cssText = "";
 	
-	function CloseMenuButtonModel(menuName, menuButtonName) // generic sits in change location sub menu
-	{
+	function CloseMenuButtonModel(menuName, menuButtonName) {// generic sits in change location sub menu 
 		// constructor
 		var iap_Button = new IAP_ButtonModel();
 		var closeMenuButton = iap_Button.template();
@@ -1225,15 +1082,12 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 		closeMenuButton.setAttribute("value", "Close menu");
 		closeMenuButton.addEventListener("click", function(){closeMenu()}, false);
 		
-		this.asHtml = function()
-		{
+		this.asHtml = function() {
 			return closeMenuButton;
 		}
 		
-		function closeMenu()  // this needs to be passed in to this function - it should reside in the 
-		{
-			if (menuName.indexOf("entry area") == -1)
-			{
+		function closeMenu() { // this needs to be passed in to this function - it should reside in the 
+			if (menuName.indexOf("entry area") == -1) {
 				menuName = menuName + " menu";
 			}
 			
@@ -1249,13 +1103,11 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 			mm_ControlPanel.bodyLevelKeyHandlersActive = true; // restart body level event handlers
 		}
 		
-		this.focus = function()
-		{
+		this.focus = function() {
 			closeMenuButton.focus();
 		}
 		
-		this.click = function()
-		{
+		this.click = function() {
 			closeMenu();
 		}
 	}
@@ -1269,20 +1121,16 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 	var alreadyBusy = false; 
 	var arrowSelected;
 	
-	function hotKeyDown_Handler(e)
-	{
-		if (allowOtherKeyInput == false)
-		{
+	function hotKeyDown_Handler(e) {
+		if (allowOtherKeyInput == false) {
 			window.event.returnValue = false;
 		}
-		if (alreadyBusy == false)
-		{
+		if (alreadyBusy == false) {
 			alreadyBusy = true;
 			
 			var selected = false; 
 			keyBeingTimed = e.keyIdentifier.toString();
-			switch(keyBeingTimed)
-			{
+			switch(keyBeingTimed) {
 				case "Up":
 					selected = true;
 					arrowSelected = "Up"; 
@@ -1303,8 +1151,7 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 					window.event.returnValue = true;
 					break;
 				default: 
-					if (selected == false)
-					{
+					if (selected == false) {
 						alreadyBusy = false;
 					}
 					break;
@@ -1312,36 +1159,29 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 		}
 	}
 	
-	function hotKeyUp_Handler(e)
-	{
+	function hotKeyUp_Handler(e) {
 		clearTimeout(hotKeyTimer);
 		alreadyBusy = false;
 	}
 	
-	function specialCasesFunctionToRun()
-	{
-		if (arrowSelected == "Up")
-		{
+	function specialCasesFunctionToRun() {
+		if (arrowSelected == "Up") {
 			var previousSibling = document.activeElement.previousElementSibling;
 			
-			if (previousSibling)
-			{
+			if (previousSibling) {
 				previousSibling.focus();
 			}
 		}
 		
-		if (arrowSelected == "Down")
-		{
+		if (arrowSelected == "Down") {
 			var nextSibling = document.activeElement.nextElementSibling;
 			
-			if (nextSibling)
-			{
+			if (nextSibling) {
 				nextSibling.focus();
 			}
 		}
 		
-		if (arrowSelected == "ESC")
-		{
+		if (arrowSelected == "ESC") {
 			document.getElementById('_mm_CloseMenuButton').click();
 		}
 	}
@@ -1349,8 +1189,7 @@ function displayInteractionArea(name, buttonName, allowOtherKeyInput)
 
 mm_ControlPanel.bodyLevelKeyHandlersActive = null;
 
-function addBodyLevelKeyHandlers()
-{
+function addBodyLevelKeyHandlers() {
 	var hotKeyTimer;
 	var keyBeingTimed;
 	var buttonId; // this needs changing
@@ -1364,22 +1203,18 @@ function addBodyLevelKeyHandlers()
 	body.addEventListener("keydown", hotKeyDown = function(e){hotKeyDown_Handler(e);}, false);
 	body.addEventListener("keyup", hotKeyUp = function(e){hotKeyUp_Handler(e);}, false);
 	
-	function hotKeyDown_Handler(e)
-	{
-		if (mm_ControlPanel.bodyLevelKeyHandlersActive == true)
-		{
+	function hotKeyDown_Handler(e) {
+		if (mm_ControlPanel.bodyLevelKeyHandlersActive == true) {
 			window.event.returnValue = false;
 			
-			if (alreadyBusy == false)
-			{
+			if (alreadyBusy == false) {
 				setAlreadyBusy(true);
 				
 				var selected = false;
 				
 				keyBeingTimed = e.keyIdentifier.toString();
 				
-				switch(keyBeingTimed)
-				{
+				switch(keyBeingTimed) {
 					case "Up": // ReadPrevButton
 						selected = true;
 						selectedIndex = 0;
@@ -1417,8 +1252,7 @@ function addBodyLevelKeyHandlers()
 						break;
 					default: 
 						// if this is not one of the above we need to set alreadybusy to false... 
-						if (selected == false)
-						{
+						if (selected == false) {
 							setAlreadyBusy(false);
 						}
 						break;
@@ -1427,8 +1261,7 @@ function addBodyLevelKeyHandlers()
 		}
 	}
 	
-	function hotKeyUp_Handler(e)
-	{
+	function hotKeyUp_Handler(e) {
 		clearTimeout(hotKeyTimer);
 		setAlreadyBusy(false);
 	}
@@ -1443,8 +1276,7 @@ function addBodyLevelKeyHandlers()
 		mm_ControlPanel.drawMMMenuInteract
 	];
 	
-	function specialCasesFunctionToRun() // this is for down and up arrowing
-	{
+	function specialCasesFunctionToRun() { // this is for down and up arrowing
 		commandFunctions[selectedIndex]();
 	}
 	
@@ -1454,10 +1286,8 @@ function addBodyLevelKeyHandlers()
 	}
 }
 
-function CP_TextBoxModel()
-{
-	this.template = function()
-	{
+function CP_TextBoxModel() {
+	this.template = function() {
 		var textBox = document.createElement("input");
 		textBox.setAttribute("type", "text");
 		textBox.style.cssText = "float:left;width:400px;";
@@ -1466,13 +1296,10 @@ function CP_TextBoxModel()
 		return textBox; 
 	}		
 	
-	function inputHasFocus(e)
-	{
-		if ((e.srcElement.tagName == "INPUT") && (e.srcElement.type == "text"))
-		{
+	function inputHasFocus(e) {
+		if ((e.srcElement.tagName == "INPUT") && (e.srcElement.type == "text")) {
 			var title = e.srcElement.getAttribute("title");
-			if (title)
-			{
+			if (title) {
 				mm_TTS.getAudio(title + " entry area has focus", null);
 			}
 			
@@ -1486,10 +1313,8 @@ function CP_TextBoxModel()
 		}
 	}
 	
-	function inputLostFocus(e)
-	{
-		if ((e.srcElement.tagName == "INPUT") && (e.srcElement.type == "text"))
-		{
+	function inputLostFocus(e) {
+		if ((e.srcElement.tagName == "INPUT") && (e.srcElement.type == "text")) {
 			e.srcElement.removeEventListener("keyup", keyUp, false);
 			e.srcElement.removeEventListener("keydown", keyDown, false);
 		}
@@ -1499,19 +1324,15 @@ function CP_TextBoxModel()
 	
 	var userInput = "";
 	
-	function keyUp_Handler(e)
-	{
-		if (e.srcElement.value != userInput)
-		{
-			if (e.srcElement.value.length > userInput.length)
-			{
+	function keyUp_Handler(e) {
+		if (e.srcElement.value != userInput) {
+			if (e.srcElement.value.length > userInput.length) {
 				// character added
 				enteredCharacter = e.srcElement.value;
 				enteredCharacter = enteredCharacter[enteredCharacter.length - 1];
 				mm_TTS.getAudio(getTextForAddedCharacter(enteredCharacter), null);
 			}
-			else
-			{
+			else {
 				// character removed
 				removedCharacter = userInput[userInput.length - 1];
 				mm_TTS.getAudio(getTextForRemovedCharacter(removedCharacter), null);
@@ -1519,47 +1340,38 @@ function CP_TextBoxModel()
 		}
 	}
 	
-	function keyDown_Handler(e)
-	{
+	function keyDown_Handler(e) {
 		userInput = e.srcElement.value;
 	}
 	
-	function characterToText(character)
-	{
+	function characterToText(character) {
+        // need to convert ! to exclamation mark etc...
 		var text = character; 
 		
 		var characterLookUp = [["!", "exclamation mark"], ['"', "double quote"], [" ", "space"], ["'", "single quote"], ["?", "question mark"], [":", "colon"], ["/", "forward slash"], [".", "dot"], ["@", "at"]]; // needs adding to
 		
-		for (var i = characterLookUp.length; i--;)
-		{
-			if (characterLookUp[i][0] == character)
-			{
+		for (var i = characterLookUp.length; i--;) {
+			if (characterLookUp[i][0] == character) {
 				text = characterLookUp[i][1];
 				break;
 			}
 		}
 		
 		return text;
-		
-		// need to convert ! to exclamation mark etc...
 	}
 	
-	function getTextForAddedCharacter(enteredCharacter)
-	{
+	function getTextForAddedCharacter(enteredCharacter) {
 		return characterToText(enteredCharacter); 
 	}
 	
-	function getTextForRemovedCharacter(removedCharacter)
-	{
+	function getTextForRemovedCharacter(removedCharacter) {
 		var text = characterToText(removedCharacter) + " removed";
 		return text;
 	}
 }
 
-function IAP_ButtonModel()
-{
-	this.template = function()
-	{
+function IAP_ButtonModel() {
+	this.template = function() {
 		var button = document.createElement("input");
 		button.setAttribute("type", "button");
 		button.style.cssText = "float:left;"; 
@@ -1567,20 +1379,16 @@ function IAP_ButtonModel()
 		return button; 
 	}
 	
-	function buttonHasFocus(e)
-	{
+	function buttonHasFocus(e) {
 		var value = e.srcElement.getAttribute("value");
-		if (value)
-		{
+		if (value) {
 			mm_TTS.getAudio(value + " button has focus", null); // null needs to be replaced with the function to attach event - so on blur un attaches event 
 		}
 	}
 }
 
-function IAP_DisplayBoxModel()
-{
-	this.template = function()
-	{
+function IAP_DisplayBoxModel() {
+	this.template = function() {
 		var textBox = document.createElement("input");
 		textBox.setAttribute("type", "text");
 		textBox.setAttribute("readonly", "readonly")
@@ -1589,8 +1397,7 @@ function IAP_DisplayBoxModel()
 	}
 }
 
-function VoiceInputControlModel()
-{
+function VoiceInputControlModel() {
 	var voiceInput = goog.dom.createDom('input', {
 										'type':'text',
 										'id':'_mm_VoiceInput',
@@ -1602,32 +1409,25 @@ function VoiceInputControlModel()
 	voiceInput.addEventListener("webkitspeechchange", function(e){voiceInput_Change(e);}, false);
 	voiceInput.addEventListener("click", voiceInput_Click, false);
     
-	this.asHtml = function()
-	{
+	this.asHtml = function() {
 		return voiceInput;
 	}
 	
-	function voiceInput_Change(e) // please use headphones - warning...
-	{
+	function voiceInput_Change(e) { // please use headphones - warning...
 		clearTimeout(voiceInputTimer);
 		var commandRecognised = false;
 		
-		var findWordFromSimilarWords = function() // this will locate similar words from those used to simplistically train the speech engine
-		{
+		var findWordFromSimilarWords = function() { // this will locate similar words from those used to simplistically train the speech engine
 			var mmVoiceCommands = ['next', 'previous', 'do', 'continue', 'jump', 'options', 'location'];
 			
-			for (var i = 0, len = e.results.length; i < len; i++)
-			{
+			for (var i = 0, len = e.results.length; i < len; i++) {
 				var utterance = e.results[i].utterance;
-				if (utterance != undefined)
-				{
-					if (mmVoiceCommands.indexOf(utterance) != -1) // best guess this is what people were after 
-					{
+				if (utterance != undefined) {
+					if (mmVoiceCommands.indexOf(utterance) != -1) { // best guess this is what people were after 
 						return utterance;
 					}
 				}
-				else
-				{
+				else {
 					break;
 				}
 			}
@@ -1640,8 +1440,7 @@ function VoiceInputControlModel()
 		// reset box
 		e.srcElement.value = "";
 		
-		switch(command) // stops anyway... stop and all removed
-		{
+		switch(command) { // stops anyway... stop and all removed
 			case 'next':
 				commandRecognised = true;
 				mm_TTS.getAudio("recognised command next", mm_Navigator.readNextNode);  // mm_TTS callback
@@ -1674,8 +1473,7 @@ function VoiceInputControlModel()
 				commandRecognised = true;
 				break;
 			default:
-				if (commandRecognised == false)
-				{
+				if (commandRecognised == false) {
 					mm_TTS.getAudio("command not recognised", null);
 				}
 				break;
@@ -1684,28 +1482,22 @@ function VoiceInputControlModel()
 	
 	var voiceInputTimer = null;
 	
-	function voiceInput_Click()
-	{
+	function voiceInput_Click() {
 		mm_TTS.getAudio("speak now", function(){voiceInputTimer = setTimeout(function(){voiceInput.focus();mm_TTS.getAudio("no speech heard, try again", null);}, 7000)});
 	}
 }
 
-function calcHighestZIndex()
-{
+function calcHighestZIndex() {
 	var highestZ = 0;
 	var elements = document.body.querySelectorAll('*'); // document.all;
 	var view = document.defaultView;
-	for (var i = elements.length; i--;)
-	{
+	for (var i = elements.length; i--;) {
 		var element = elements[i];
-		if (element.clientHeight > 0)
-		{
+		if (element.clientHeight > 0) {
 			var computerStyle = view.getComputedStyle(element);
 			var zIndex = parseInt(computerStyle.getPropertyValue("z-index"));
-			if (zIndex != NaN)
-			{
-				if (zIndex > highestZ)
-				{
+			if (zIndex != NaN) {
+				if (zIndex > highestZ) {
 					highestZ = zIndex;
 				}
 			}

@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,50 +21,43 @@ goog.provide('mm_applicationData');
 
 var applicationData;
 
-mm_applicationData.connect = function()
-{
-	if (localStorage.getItem("MetalmouthApplicationData") == null)
-	{
+mm_applicationData.connect = function() {
+	if (localStorage.getItem("MetalmouthApplicationData") == null) {
 		applicationData = new ApplicationDataModel(); // set up with default values
 	}
-	else
-	{
+	else {
 		applicationData = new ApplicationDataModel(JSON.parse(localStorage.getItem("MetalmouthApplicationData")));
 	}
 }
 
-mm_applicationData.update = function(optionsData)
-{
+mm_applicationData.update = function(optionsData) {
 	localStorage.setItem("MetalmouthApplicationData", JSON.stringify(optionsData));
 	applicationData = new ApplicationDataModel(JSON.parse(localStorage.getItem("MetalmouthApplicationData")));
 }
 
-mm_applicationData.getSpecificData = function(key)
-{
+mm_applicationData.getSpecificData = function(key) {
 	return applicationData[key];
 }
 
-mm_applicationData.getData = function()
-{
+mm_applicationData.getData = function() {
 	return applicationData;
 }
 
-function ApplicationDataModel(data)
-{
+function ApplicationDataModel(data) {
 	var applicationDataModel; 
 	
-	if (data == undefined){
+	if (data == undefined) {
 		data = {};
 	}
 	
 	// this preserves localStorage data from previous versions
-	if (!data.newTabPage){
+	if (!data.newTabPage) {
 		data.newTabPage = '';
 	}
-	if (!data.turnOnMetalmouthAlwaysOn){
+	if (!data.turnOnMetalmouthAlwaysOn) {
 		data.turnOnMetalmouthAlwaysOn = false;
 	}
-	if (!data.speechRate){
+	if (!data.speechRate) {
 		data.speechRate = '0.9';
 	}
 	if (!data.turnOnVoiceInput){
