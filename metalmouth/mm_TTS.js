@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ goog.provide('mm_TTS');
 
 goog.require('mm_BackgroundComms');
 
-console.log("loaded tts");
-
-mm_TTS.getAudio = function(text, callbackFunction)
-{
+mm_TTS.getAudio = function(text, callbackFunction) {
 	mm_BackgroundComms.call("voice", text, callbackFunction, false);
 }

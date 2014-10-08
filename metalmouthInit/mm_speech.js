@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ goog.require('mm_applicationData');
 var audioStack = null;
 var howToSayUtterance = null;
 
-function urlBasedSpeechAvailable()
-{
+function urlBasedSpeechAvailable() {
 	var req = new XMLHttpRequest();
 	req.open("GET", "http://www.google.com/speech-api/v1/synthesize?lang=en-us&text=", false);
 	req.send();
@@ -34,17 +33,13 @@ function urlBasedSpeechAvailable()
 
 mm_speech.speechFunction = null;
 
-mm_speech.speak = function(utterance, callback)
-{
-	if (!mm_speech.speechFunction)
-	{
-		if ((navigator.platform == "MacIntel") && (urlBasedSpeechAvailable() == true))
-		{
+mm_speech.speak = function(utterance, callback) {
+	if (!mm_speech.speechFunction) {
+		if ((navigator.platform == "MacIntel") && (urlBasedSpeechAvailable() == true)) {
 			audioStack = new AudioStackModel();
 			mm_speech.speechFunction = speakExtTTS;
 		}
-		else
-		{
+		else {
 			mm_speech.speechFunction = speakIntTTS;
 		}
 	}
@@ -66,8 +61,7 @@ mm_speech.speak = function(utterance, callback)
 	mm_speech.speechFunction(utterance, callback);
 }
 
-function speakIntTTS(utterance, callback)
-{
+function speakIntTTS(utterance, callback) {
 	chrome.tts.stop();
 	
 	var howToSayUtterance = {
@@ -76,17 +70,14 @@ function speakIntTTS(utterance, callback)
 		enqueue: false
 	};
 	
-	var functionToRun = function()
-	{
+	var functionToRun = function() {
 		callback();
 	};
 	
-	if (callback != null)
-	{
+	if (callback != null) {
 		howToSayUtterance['onEvent'] = function(event) {
 			if (event.type == 'interrupted') {
-				functionToRun = function()
-				{
+				functionToRun = function() {
 				};
 			}			
 			if (event.type == 'end') {
@@ -95,8 +86,7 @@ function speakIntTTS(utterance, callback)
 		}
 	}
 	
-	if (utterance != null)
-	{
+	if (utterance != null) {
 		chrome.tts.speak(
 			utterance,
 			howToSayUtterance
@@ -104,49 +94,38 @@ function speakIntTTS(utterance, callback)
 	}
 }
 
-function speakExtTTS(utterance, callback)
-{
+function speakExtTTS(utterance, callback) {
 	audioStack.speakDirectly(utterance, callback);
 }
 
-function AudioStackModel()
-{
+function AudioStackModel() {
 	var audio = null;
 	
-	this.speakDirectly = function(utterance, callback)
-	{	
-		var handleOnTimeUpdate = function()
-		{
-			if (audio.currentTime == 9223372013568)
-			{
+	this.speakDirectly = function(utterance, callback) {	
+		var handleOnTimeUpdate = function() {
+			if (audio.currentTime == 9223372013568) {
 				audio.removeEventListener('timeupdate', handleOnTimeUpdate);
 				callback();
 			}
 		}
 		
-		var handleOnEnded = function()
-		{
+		var handleOnEnded = function() {
 			audio.removeEventListener('ended', handleOnEnded);
 			callback();
 		}
 		
-		var handleOnDurationChange = function()
-		{
-			if (audio.duration == "Infinity")
-			{
+		var handleOnDurationChange = function() {
+			if (audio.duration == "Infinity") {
 				audio.addEventListener('timeupdate', handleOnTimeUpdate);
 			}
-			else
-			{
+			else {
 				audio.addEventListener('ended', handleOnEnded);
 			}
 		}
 		
-		if (utterance != null)
-		{
-			if (audio){
-				if (audio.ended == false)
-				{
+		if (utterance != null) {
+			if (audio) {
+				if (audio.ended == false) {
 					audio.pause();
 				}
 			}

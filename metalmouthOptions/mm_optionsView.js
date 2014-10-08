@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -24,11 +24,8 @@ goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('mm_BackgroundComms');
 
-mm_optionsView.init = function() 
-{	
-	var optionsFieldset = goog.dom.createDom('fieldset', {
-		
-	}); 
+mm_optionsView.init = function()  {	
+	var optionsFieldset = goog.dom.createDom('fieldset', {}); 
 	
 	goog.dom.appendChild(document.body, optionsFieldset);
 	
@@ -103,8 +100,7 @@ mm_optionsView.init = function()
 	
 	goog.dom.appendChild(option3, speechRate);
 	
-	if (navigator.platform == "MacIntel")
-	{
+	if (navigator.platform == "MacIntel") {
 		// hide speech rate, just until TTS issues resolved - http://code.google.com/p/chromium/issues/detail?id=99116
 		speechRateLabel.outerHTML = "";
 		speechRate.outerHTML = "<p>Speech rate option is currently disabled for MAC users due to <a href='http://code.google.com/p/chromium/issues/detail?id=99116'>Chromium issue</a></p>"; 
@@ -112,9 +108,7 @@ mm_optionsView.init = function()
 	
 	// Experimental features
 	
-	var experimentalFeaturesFieldset = goog.dom.createDom('fieldset', {
-											 
-											 }); 
+	var experimentalFeaturesFieldset = goog.dom.createDom('fieldset', {}); 
 	
 	goog.dom.appendChild(document.body, experimentalFeaturesFieldset);
 	
@@ -160,39 +154,31 @@ mm_optionsView.init = function()
 	
 	goog.events.listen(saveButton, 
 		goog.events.EventType.CLICK,
-		function(){
-					   
+		function() {
 			var data = {
 				newTabPage: document.getElementById('_mmOptions_newTabPage').value,
 				turnOnMetalmouthAlwaysOn: document.getElementById('_mmOptions_turnOnMetalmouthAlwaysOn').checked,
 				speechRate: navigator.platform == "MacIntel" ? "0.5" : document.getElementById('_mmOptions_speechRate').value,
 				turnOnVoiceInput: document.getElementById('_mmOptions_turnOnVoiceInput').checked
 			}
-
 			mm_BackgroundComms.call("optionsClose", data, null, false);
 		});
 }
 
-mm_optionsView.update = function(data)
-{
-	if (data.newTabPage)
-	{
+mm_optionsView.update = function(data) {
+	if (data.newTabPage) {
 		document.getElementById('_mmOptions_newTabPage').value = data.newTabPage;
 	}
-	if (data.turnOnMetalmouthAlwaysOn)
-	{
+	if (data.turnOnMetalmouthAlwaysOn) {
 		document.getElementById('_mmOptions_turnOnMetalmouthAlwaysOn').checked = data.turnOnMetalmouthAlwaysOn;
 	}
-	if (data.speechRate)
-	{
+	if (data.speechRate) {
 		var speechRate = document.getElementById('_mmOptions_speechRate');
-		if (speechRate)
-		{
+		if (speechRate) {
 			speechRate.value = data.speechRate;
 		}
 	}
-	if (data.turnOnVoiceInput)
-	{
+	if (data.turnOnVoiceInput) {
 		document.getElementById('_mmOptions_turnOnVoiceInput').checked = data.turnOnVoiceInput;
 	}
 }

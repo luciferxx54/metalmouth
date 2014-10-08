@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,74 +19,60 @@
 
 goog.provide('mm_Navigator');
 
-console.log("loaded navigator");
-
-mm_Navigator.reset = function()
-{
+mm_Navigator.reset = function() {
 	initWalker();
 	initJump();
 }
 
-mm_Navigator.startOrStop = function()
-{
-	if (readNodesStop == true)
-	{
+mm_Navigator.startOrStop = function() {
+	if (readNodesStop == true) {
 		mm_Navigator.startReadingNodes();
 	}
-	else
-	{
+	else {
 		mm_Navigator.stopReadingNodes();
 	}
 }
 
-mm_Navigator.startReadingNodes = function()
-{
+mm_Navigator.startReadingNodes = function() {
 	readNodesStop = false;
 	readOn();
 	
-	function readOn()
-	{
+	function readOn() {
 		walkerElementPlusText.currentNode = walker.currentNode;
 		walker = walkerElementPlusText;
 		
-		if (readNodesStop != true)
-		{
+		if (readNodesStop != true) {
 			walker.nextNode();
 		}
 		
-		if (osmType == null)
-		{
+		if (osmType == null) {
 			goBackToStart();
 		}
 		else
 		{
-			if (readNodesStop != true)
-			{
+			if (readNodesStop != true) {
 				readNodeContents(contentComponents, readOn);
 			}
 		}
 	}
 }
 
-mm_Navigator.stopReadingNodes = function() // navigator.
-{
+mm_Navigator.stopReadingNodes = function() {
 	readNodesStop = true;
 }
 
-mm_Navigator.backToStart = function() // navigator. click and it enables and focuses on stop 
-{
+mm_Navigator.backToStart = function() { 
+    // navigator. click and it enables and focuses on stop 
 	initWalker();
 	restoreHighlighter();
 	mm_TTS.getAudio("Page start", null);
 }
 
-mm_Navigator.jump = function() // navigator.
-{	
+mm_Navigator.jump = function() {	
 	jump();
 }
 
-mm_Navigator.readPrevNode = function() // navigator.
-{
+mm_Navigator.readPrevNode = function() {
 	readNodesStop = true; // to stop reading on
 	
 	walkerElementPlusText.currentNode = walker.currentNode;
@@ -94,18 +80,15 @@ mm_Navigator.readPrevNode = function() // navigator.
 	
 	walker.previousNode();
 	
-	if (osmType == null)
-	{
+	if (osmType == null) {
 		goBackToStart();
 	}
-	else
-	{
+	else {
 		readNodeContents(contentComponents);
 	}
 }
 
-mm_Navigator.readNextNode = function() // navigator.
-{
+mm_Navigator.readNextNode = function() {
 	readNodesStop = true; // to stop reading on
 	
 	walkerElementPlusText.currentNode = walker.currentNode;
@@ -113,12 +96,10 @@ mm_Navigator.readNextNode = function() // navigator.
 	
 	walker.nextNode();
 	
-	if (osmType == null)
-	{
+	if (osmType == null) {
 		goBackToStart();
 	}
-	else
-	{
+	else {
 		readNodeContents(contentComponents);
 	}
 }
@@ -126,53 +107,45 @@ mm_Navigator.readNextNode = function() // navigator.
 mm_Navigator.interactFunctions = {}
 
 mm_Navigator.interactFunctions['Link'] = function(currentNode) {
-	var linkInteraction = function(liveElementToInteractWith)
-	{
+	var linkInteraction = function(liveElementToInteractWith) {
 		document.location.href = liveElementToInteractWith.getAttribute("href"); // this should look at the background code open the page using opener and see if it contains a meta refresh
 	} 
 	return linkInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['New_Tab_Map_Area'] = function(currentNode) {
-	var newTabMapAreaInteraction = function(liveElementToInteractWith)
-	{
+	var newTabMapAreaInteraction = function(liveElementToInteractWith) {
 		mm_BackgroundComms.call("openTab", liveElementToInteractWith.getAttribute("href"), null, false);
 	} 
 	return newTabMapAreaInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['New_Tab_Link'] = function(currentNode) {
-	var newTabLinkInteraction = function(liveElementToInteractWith)
-	{
+	var newTabLinkInteraction = function(liveElementToInteractWith) {
 		mm_BackgroundComms.call("openTab", liveElementToInteractWith.getAttribute("href"), null, false);
 	} 
 	return newTabLinkInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['Quote_Link'] = function(currentNode) {
-	var linkInteraction = function(liveElementToInteractWith)
-	{
+	var linkInteraction = function(liveElementToInteractWith) {
 		document.location.href = liveElementToInteractWith.getAttribute("cite"); // this should look at the background code open the page using opener and see if it contains a meta refresh
 	} 
 	return linkInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['Map_Area'] = function(currentNode) {
-	var linkInteraction = function(liveElementToInteractWith)
-	{
+	var linkInteraction = function(liveElementToInteractWith) {
 		document.location.href = liveElementToInteractWith.getAttribute("href"); // this should look at the background code open the page using opener and see if it contains a meta refresh
 	} 
 	return linkInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['Skip_Link'] = function(currentNode) {
-	
-	var skipLinkInteraction = function(liveElementToInteractWith)
-	{
+	var skipLinkInteraction = function(liveElementToInteractWith) {
 		var targetHref = liveElementToInteractWith.getAttribute("href").replace("#", "");
 		moveTo(targetHref);
 	}
-	
 	return skipLinkInteraction(currentNode);
 }
 
@@ -229,40 +202,35 @@ mm_Navigator.interactFunctions['Range_Input'] = function(currentNode) {
 }
 
 mm_Navigator.interactFunctions['Button'] = function(currentNode) {
-	var buttonInteraction = function(liveElementToInteractWith)
-	{
+	var buttonInteraction = function(liveElementToInteractWith) {
 		liveElementToInteractWith.click();
 	}
 	return buttonInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['Input_Button'] = function(currentNode) {
-	var buttonInteraction = function(liveElementToInteractWith)
-	{
+	var buttonInteraction = function(liveElementToInteractWith) {
 		liveElementToInteractWith.click();
 	}
 	return buttonInteraction(currentNode);
 }
 
 mm_Navigator.interactFunctions['Image_Button'] = function(currentNode) {
-	var buttonInteraction = function(liveElementToInteractWith)
-	{
+	var buttonInteraction = function(liveElementToInteractWith) {
 		liveElementToInteractWith.click();
 	}
 	return buttonInteraction(currentNode);
 }
 	
 mm_Navigator.interactFunctions['Submit_Button'] = function(currentNode) {
-	var buttonInteraction = function(liveElementToInteractWith)
-	{
+	var buttonInteraction = function(liveElementToInteractWith) {
 		liveElementToInteractWith.click();
 	}
 	return buttonInteraction(currentNode);
 }
 		
 mm_Navigator.interactFunctions['Reset_Button'] = function(currentNode) {
-	var buttonInteraction = function(liveElementToInteractWith)
-	{
+	var buttonInteraction = function(liveElementToInteractWith) {
 		liveElementToInteractWith.click();
 	}
 	return buttonInteraction(currentNode);
@@ -288,10 +256,8 @@ mm_Navigator.interactFunctions['Video'] = function(currentNode) {
 	return mm_ControlPanel.drawMediaInteract(currentNode, "video");
 }
 
-mm_Navigator.interact = function() // navigator.
-{
-	if (osmType != null)
-	{
+mm_Navigator.interact = function()  {
+	if (osmType != null) {
 		mm_Navigator.interactFunctions[osmType](walker.currentNode);
 	}
 }
@@ -299,62 +265,64 @@ mm_Navigator.interact = function() // navigator.
 var osmType;
 var contentComponents;
 
-function goBackToStart()
-{
+function goBackToStart() {
 	initWalker();
 	restoreHighlighter();
 	mm_TTS.getAudio("Page start", null);
 }
 
-function jump()
-{
-	if (jumpAvailable == true)
-	{
+function jump() {
+	if (jumpAvailable == true) {
 		walkerJump.currentNode = walker.currentNode;
 		walker = walkerJump;
 		walker.nextNode();
-		if (osmType != null) 
-		{
+		if (osmType != null) {
 			readNodeContents(contentComponents);
 		}
-		else
-		{
+		else {
 			initWalker(); // should allow a loop of headers
 			jump();
 		}
 	}
-	else
-	{
+	else {
 		mm_TTS.getAudio("page does not contain headers", null);
 	} 
 }
 
-function osmItemChecker(node) 
-{	
-	function textNodeOnlyChild()
-	{
-		if(node.parentElement.childNodes.length == 1)
-		{
+function osmItemChecker(node) {	
+	function textNodeOnlyChild() {
+		if(node.parentElement.childNodes.length == 1) {
 			return true;
 		}
 		return false;
 	}
 	
-	function nodeInSpecificElement()
-	{
+	function nodeInSpecificElement() {
 		var specificElements = ["AUDIO", "VIDEO", "CANVAS", "IFRAME", "BUTTON"]; // any which contain text to display if they are unsupported - removed CANVAS and OBJECT as text alternatives can be placed in the body - will also be useful for handling TRACK elements
 		
-		if(specificElements.indexOf(node.parentElement.tagName) != -1)
-		{
+		if(specificElements.indexOf(node.parentElement.tagName) != -1) {
 			return true;
 		}
 		return false;
 	}
+    
+    function nodeNotVisible() {
+        // check the ancestor of the node to make sure that it is not display:none or visibility:hidden
+        var parent = node.parentElement;
+        while (parent.tagName != "BODY") {
+            var comp = document.defaultView.getComputedStyle(parent);
+            if ((comp.getPropertyValue("display") == "none") || (comp.getPropertyValue("visibility") == "hidden")) {
+                return true;
+            }
+            parent = parent.parentElement;
+        }
+        return false;
+    }
 	
-	function empty() // void elements are intended to be empty
-	{
+	function empty() { 
+        // void elements are intended to be empty
 		var voidHtmlElements = ["AREA", "BASE", "BR", "COL", "COMMAND", "EMBED", "HR", "IMG", "INPUT", "KEYGEN", "LINK", "META", "PARAM", "SOURCE", "TRACK", "WBR"];
-		var htmlsWeAllowToBeEmpty = ["VIDEO", "AUDIO", "CANVAS"]; // any others? we don't support OBJECT currently?
+		var htmlsWeAllowToBeEmpty = ["VIDEO", "AUDIO", "CANVAS", "TEXTAREA"]; // any others? we don't support OBJECT currently?
 		
 		if ((voidHtmlElements.indexOf(node.nodeName) == -1) && (htmlsWeAllowToBeEmpty.indexOf(node.nodeName) == -1) && (node.childNodes.length == 0))  
 		{
@@ -366,18 +334,16 @@ function osmItemChecker(node)
 	osmType = null; // reset each time due to interact()
 	contentComponents = [];
 	
-	if(node.nodeName != "#text")
-	{
+	if(node.nodeName != "#text") {
 		// detect and remove empty elements which are not designed to be empty
-		if ((empty() == false) && (nodeInSpecificElement() == false)) // last condition added 
-		{
+		if ((empty() == false) && (nodeInSpecificElement() == false) && (nodeNotVisible() == false)) {
+            // last condition added 
 			// need to skip over our tags 
-			if (node.hasAttribute("data-mm-uicomponent") == false) // data-mm-uicomponent on each metalmouth component 
-			{
+			if (node.hasAttribute("data-mm-uicomponent") == false) {
+                // data-mm-uicomponent on each metalmouth component 
 				var osmItemModel = mm_OSEM.filter(node);
 		
-				if (osmItemModel != null) 
-				{
+				if (osmItemModel != null) {
 					osmType = osmItemModel.osmType;
 					mm_ControlPanel.showCurrentItem(osmType, node);
 					contentComponents = osmItemModel.osmContentComponents;
@@ -386,12 +352,10 @@ function osmItemChecker(node)
 			}
 		}
 	}
-	else
-	{
-		if ((textNodeOnlyChild() == false)&&(nodeInSpecificElement() == false))
-		{
-			if (node.data.trim() != "") // node.data != "\n"
-			{
+	else {
+		if ((textNodeOnlyChild() == false)&&(nodeInSpecificElement() == false)) {
+			if (node.data.trim() != "") {
+                // node.data != "\n"
 				osmType = "Text";
 				mm_ControlPanel.showCurrentItem(osmType, node.parentElement);
 				contentComponents[0] = node.data;
@@ -402,17 +366,15 @@ function osmItemChecker(node)
 	return NodeFilter.FILTER_SKIP;
 }
 
-function jumpChecker(node) // jump to headers - this is what people do
-{
+function jumpChecker(node) {
+    // jump to headers - this is what people do
 	osmType = null; // reset each time due to interact()
 	contentComponents = [];
 	
-	if ((node.nodeName == "H1")||(node.nodeName == "H2")||(node.nodeName == "H3")||(node.nodeName == "H4")||(node.nodeName == "H5")||(node.nodeName == "H6"))
-	{
+	if ((node.nodeName == "H1")||(node.nodeName == "H2")||(node.nodeName == "H3")||(node.nodeName == "H4")||(node.nodeName == "H5")||(node.nodeName == "H6")) {
 		var osmItemModel = mm_OSEM.filter(node);
 		
-		if (osmItemModel != null) 
-		{
+		if (osmItemModel != null) {
 			osmType = osmItemModel.osmType;
 			mm_ControlPanel.showCurrentItem(osmType, node);
 			contentComponents = osmItemModel.osmContentComponents;
@@ -428,8 +390,7 @@ var walkerFirstChild;
 var walkerLastChild;
 var walker;
 
-function initWalker()
-{
+function initWalker() {
 	var walkerUnfiltered = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT, null, false);
 	walkerFirstChild = walkerUnfiltered.firstChild();
 	walkerLastChild = walkerUnfiltered.lastChild();
@@ -442,32 +403,27 @@ function initWalker()
 
 var jumpAvailable = false;
 
-function initJump()
-{
+function initJump() {
 	var headers = document.body.querySelectorAll("h1,h2,h3,h4,h5,h6");
-	if (headers.length > 0)
-	{
+	if (headers.length > 0) {
 		jumpAvailable = true;
 	}
 }
 
 var readNodesStop;
 
-function moveTo(elementReference) // id or name, this is used for internal links
-{
-	function moveToChecker(node)
-	{
-		if ((node.hasAttribute("id"))||(node.hasAttribute("name")))
-		{
-			if ((node.getAttribute("id") == elementReference)||(node.getAttribute("name") == elementReference))
-			{
+function moveTo(elementReference) {
+    // id or name, this is used for internal links
+
+	function moveToChecker(node) {
+		if ((node.hasAttribute("id"))||(node.hasAttribute("name"))) {
+			if ((node.getAttribute("id") == elementReference)||(node.getAttribute("name") == elementReference)) {
 				osmType = null; // reset each time due to interact()
 				contentComponents = [];
 				
 				var osmItemModel = mm_OSEM.filter(node);
 				
-				if (osmItemModel != null) 
-				{
+				if (osmItemModel != null) {
 					osmType = osmItemModel.osmType;
 					mm_ControlPanel.showCurrentItem(osmType, node);
 					contentComponents = osmItemModel.osmContentComponents;
@@ -484,12 +440,10 @@ function moveTo(elementReference) // id or name, this is used for internal links
 	readNodeContents(contentComponents);
 }
 
-function readNodeContents(contentComponentsFromModel, callbackFunction)
-{	
+function readNodeContents(contentComponentsFromModel, callbackFunction) {	
 	var textToRead = "";
 	for (var i = 0, len = contentComponentsFromModel.length; i < len; i++) {
 		textToRead = textToRead + " " + contentComponentsFromModel[i];
 	}
-	
 	mm_TTS.getAudio(textToRead.trim(), callbackFunction); // mm_TTS callback changed textToRead.trim() to just textToRead
 }

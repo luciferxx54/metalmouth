@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,19 +19,13 @@
 
 goog.provide('mm_OSEM_Helper');
 
-console.log("loaded OSEM Helper");
-
-mm_OSEM_Helper.textNodeContents = function(originalElement)
-{
-	if (originalElement.childNodes.length == 1)
-	{
+mm_OSEM_Helper.textNodeContents = function(originalElement) {
+	if (originalElement.childNodes.length == 1) {
 		var childNode = originalElement.childNodes[0];
 		
-		if (childNode.nodeName == "#text")
-		{
+		if (childNode.nodeName == "#text") {
 			var data = childNode.data.trim();
-			if (data != "")
-			{
+			if (data != "") {
 				return data;
 			}
 		}
@@ -39,46 +33,44 @@ mm_OSEM_Helper.textNodeContents = function(originalElement)
 	return null;
 }
 
-mm_OSEM_Helper.labelValue = function(originalElement) // we could amend this to check for wai-aria label attributes
-{	
+mm_OSEM_Helper.labelValue = function(originalElement) { // we could amend this to check for wai-aria label attributes
 	var label = "Unlabelled";
 	var id = originalElement.getAttribute("id");
-	if (id)
-	{
+	if (id) {
 		var labelElement = document.querySelector('[for=' + id + ']');
-		if (labelElement)
-		{
+		if (labelElement) {
 			var labelText = labelElement.innerText;
-			if (labelText != "")
-			{
+			if (labelText != "") {
 				label = labelText;
 			}
 		}
 	}
+    if (label == "Unlabelled")  {
+        var title = originalElement.getAttribute("title");
+        if (title) {
+            if (title != "") {
+                label = title;
+            }
+        }
+    }
 	return label;
 }
 
-mm_OSEM_Helper.attributeValue = function(originalElement, attributeName, valueIfNoValue, prefixedText)
-{
+mm_OSEM_Helper.attributeValue = function(originalElement, attributeName, valueIfNoValue, prefixedText) {
 	// title forms part of the text to read out
 	
 	var attValue = originalElement.getAttribute(attributeName);
 	
-	if ((attValue == null) || (attValue == ""))
-	{
-		if (valueIfNoValue == undefined)
-		{
+	if ((attValue == null) || (attValue == "")) {
+		if (valueIfNoValue == undefined) {
 			attValue = "";
 		}
-		else
-		{
+		else {
 			attValue = valueIfNoValue;
 		}
 	}
-	else
-	{
-		if (prefixedText != undefined)
-		{
+	else {
+		if (prefixedText != undefined) {
 			attValue = prefixedText + " " + attValue;
 		}
 	}
@@ -86,33 +78,27 @@ mm_OSEM_Helper.attributeValue = function(originalElement, attributeName, valueIf
 	return attValue;
 }
 
-mm_OSEM_Helper.numberOfChildren = function(originalElement)
-{
+mm_OSEM_Helper.numberOfChildren = function(originalElement) {
 	var number = originalElement.children.length;
 	
 	var text = "items";
 	
-	if (number == 0)
-	{
+	if (number == 0) {
 		number = "No";
 	}
 	
-	if (number == 1)
-	{
+	if (number == 1) {
 		text = "item"
 	}
 	
 	return number + " " + text + " listed";
 }
 
-mm_OSEM_Helper.findPositionInList = function(originalElement)
-{
+mm_OSEM_Helper.findPositionInList = function(originalElement) {
 	var parent = originalElement.parentElement;
 	var children = parent.children;
-	for(var i = children.length; i--;)
-	{
-		if (children[i] == originalElement)
-		{
+	for(var i = children.length; i--;) {
+		if (children[i] == originalElement) {
 			return i + 1; // corrects to say right position
 		}
 	}

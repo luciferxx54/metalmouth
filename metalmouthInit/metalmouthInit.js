@@ -1,7 +1,7 @@
 /*
 
  Project metalmouth - Developing a voice browser extension for Chrome (http://code.google.com/p/metalmouth/)
- Copyright (C) 2013 - Alistair Garrison
+ Copyright (C) 2014 - Alistair Garrison
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -84,6 +84,7 @@ metalmouthInit.load = function() {
 	}
 	
 	function refreshAllTabsAtStart() {
+        // send a message to each tab
 		chrome.tabs.getAllInWindow(null, function(tabs) {
 			for (var i = tabs.length; i--;) {
 				var tab = tabs[i];
@@ -103,11 +104,17 @@ metalmouthInit.load = function() {
 		chrome.tabs.getAllInWindow(null, function(tabs) {
 			for (var i = tabs.length; i--;) {
 				var tab = tabs[i];
-				chrome.tabs.update(tab.id, {url:tab.url});
+                var url = tab.url;
+                if (url.substring(0,6) != "chrome") {
+                    chrome.tabs.executeScript(tab.id, {code:"var injectedResult = true;try{metalmouth.injected();}catch(e){injectedResult = false};if (injectedResult == true){window.location.href='" + tab.url + "';}"}, null);
+                }
+                // chrome.tabs.update(tab.id, {url:tab.url});
 			}
 		});
 	}
 	
+    console.log("hello");
+    
 	function mmStart() {
 		removeListeners();
 		
