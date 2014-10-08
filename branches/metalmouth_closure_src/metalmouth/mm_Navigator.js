@@ -307,6 +307,14 @@ function osmItemChecker(node) {
 	}
     
     function nodeNotVisible() {
+        var comp = document.defaultView.getComputedStyle(node);
+        if ((comp.getPropertyValue("display") == "none") || (comp.getPropertyValue("visibility") == "hidden")) {
+            return true;
+        }
+        return false;
+    }
+    
+    function parentNodeNotVisible() {
         // check the ancestor of the node to make sure that it is not display:none or visibility:hidden
         var parent = node.parentElement;
         while (parent.tagName != "BODY") {
@@ -336,7 +344,7 @@ function osmItemChecker(node) {
 	
 	if(node.nodeName != "#text") {
 		// detect and remove empty elements which are not designed to be empty
-		if ((empty() == false) && (nodeInSpecificElement() == false) && (nodeNotVisible() == false)) {
+		if ((empty() == false) && (nodeInSpecificElement() == false) && (nodeNotVisible() == false) && (parentNodeNotVisible() == false)) {
             // last condition added 
 			// need to skip over our tags 
 			if (node.hasAttribute("data-mm-uicomponent") == false) {
