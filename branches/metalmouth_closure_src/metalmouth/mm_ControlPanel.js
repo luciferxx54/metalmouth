@@ -685,9 +685,6 @@ mm_ControlPanel.drawMMMenuInteract = function() {
 	var mmChangeLocationButton = new ChangeLocationButtonModel(); // option to open in new tab or open in current
 	mmChangeLocationButton.add();
 	
-	var mmOptionsButton = new OptionsButtonModel();
-	mmOptionsButton.add();
-	
 	displayInteractionArea("Top", null, false);
 	
 	function changeFocus() {
@@ -712,25 +709,6 @@ mm_ControlPanel.drawMMMenuInteract = function() {
 		function openChangeLocationMenu() {
 			goog.dom.getElement('_mm_CloseMenuButton').click();
 			mm_ControlPanel.drawNavigationInteract();
-		}
-	}
-	
-	function OptionsButtonModel() {
-        // sits in change location sub menu
-		// constructor
-		var optionsButton = iap_Button.template();
-		optionsButton.id = "_mm_OptionsButton";
-		optionsButton.setAttribute("data-mm-uicomponent", "");
-		optionsButton.setAttribute("value", "Options")
-		optionsButton.addEventListener("click", openOptions, false);
-		
-		this.add = function() {
-			mmInteractionArea.appendChild(optionsButton);
-		}
-		
-		function openOptions() {
-			goog.dom.getElement('_mm_CloseMenuButton').click();
-			mm_ControlPanel.openOptions();
 		}
 	}
 }
@@ -987,10 +965,6 @@ mm_ControlPanel.changeDevWindow = function(osmType, currentNode) {
 	mmDeveloperWindowOpeningTag.innerHTML = domNodeInfo;
 	mmDeveloperWindowItem.setAttribute("style", "");
 	mmDeveloperWindowOpeningTag.setAttribute("style", "");
-}
-
-mm_ControlPanel.openOptions = function() {
-	mm_BackgroundComms.call("optionsOpen", null, null, false);
 }
 
 function restoreHighlighter() {
