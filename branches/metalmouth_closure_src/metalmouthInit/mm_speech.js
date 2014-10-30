@@ -19,7 +19,7 @@
 
 goog.provide('mm_speech');
 
-goog.require('mm_applicationData');
+// goog.require('mm_applicationData');
 
 var audioStack = null;
 var howToSayUtterance = null;
@@ -66,7 +66,7 @@ function speakIntTTS(utterance, callback) {
 	
 	var howToSayUtterance = {
 		lang: 'en-US', 
-		rate: parseFloat(mm_applicationData.getSpecificData('speechRate')),
+		rate: '0.9', // parseFloat(mm_applicationData.getSpecificData('speechRate')),
 		enqueue: false
 	};
 	

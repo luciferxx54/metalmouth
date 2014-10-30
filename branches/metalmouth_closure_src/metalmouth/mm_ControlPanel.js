@@ -34,7 +34,7 @@ mm_ControlPanel.init = function() {
 	
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.setAttribute("data-mm-uicomponent", "");
-	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}#_mm_VoiceInput{position:absolute;font-size:40px;width:40px;margin:0px;z-index:" + (highestZIndex + 4) + ";}";   
+	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}"; 
 	
 	headElement.appendChild(mmStyleArea);
 	
@@ -70,9 +70,6 @@ mm_ControlPanel.init = function() {
 	mmDeveloperWindowOpeningTag.id = "_mm_DeveloperWindowOpeningTag"; 
 	mmDeveloperWindowOpeningTag.setAttribute("data-mm-uicomponent", "");
 	mmDeveloperWindow.appendChild(mmDeveloperWindowOpeningTag);
-	var mmVoiceInput = new VoiceInputControlModel();
-	mmContainer.appendChild(mmVoiceInput.asHtml());
-    
 	var mmInteractArea = document.createElement("div");
 	mmInteractArea.id = "_mm_InteractArea";
 	mmInteractArea.setAttribute("data-mm-uicomponent", "");
@@ -80,44 +77,17 @@ mm_ControlPanel.init = function() {
 	mmContainer.appendChild(mmInteractArea);
 }
 
-mm_ControlPanel.voiceInputOn = null;
-
 mm_ControlPanel.resetNavigator = function() {
 	mm_Navigator.reset();
 }
 
 mm_ControlPanel.bringFocus = function() {
-	function handleMouseDown(e) {
-		var readyVoiceInput = function() {
-			var voiceInput = goog.dom.getElement('_mm_VoiceInput');		
-			voiceInput.style.cssText = "left:" + (e.pageX - 20 - document.body.scrollLeft) + "px;top:" + (e.pageY - 20 - document.body.scrollTop) + "px;position:fixed;";
-			mm_TTS.getAudio("voice input ready", null);
-		}
-		
-		if (!mm_ControlPanel.voiceInputOn) {
-			var runOnce = function() {
-				mm_ControlPanel.voiceInputOn = true;
-				if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2)) {
-					readyVoiceInput();
-				}
-			}
-			
-			mm_BackgroundComms.call("retrieveData", "turnOnVoiceInput", function(results){results.toString() == 'true' ? runOnce() : mm_ControlPanel.voiceInputOn = false}, true);
-		}
-		
-		if ((mm_ControlPanel.voiceInputOn == true) && (e.button == 2)) {
-			readyVoiceInput();
-		}
-	}
-	
+
 	var cbFunction_BringFocus = function() {
 		var activeElement = document.activeElement;
 		if (activeElement) {
 			activeElement.blur();
 		}
-
-		// voice input
-		document.body.addEventListener("mousedown", function(e){handleMouseDown(e);}, false); // handles the positioning of the microphone under the cursor
 		mm_TTS.getAudio("Reading all items", function(){mm_Navigator.startReadingNodes();});
 	}
 	
@@ -1394,96 +1364,6 @@ function IAP_DisplayBoxModel() {
 		textBox.setAttribute("readonly", "readonly")
 		textBox.style.cssText = "float:left;width:400px;";
 		return textBox; 
-	}
-}
-
-function VoiceInputControlModel() {
-	var voiceInput = goog.dom.createDom('input', {
-										'type':'text',
-										'id':'_mm_VoiceInput',
-										'style':'float:left;display:none;',
-										'title':'Voice input area'
-										});
-	voiceInput.setAttribute('data-mm-uicomponent', '');
-	voiceInput.setAttribute('x-webkit-speech', '');
-	voiceInput.addEventListener("webkitspeechchange", function(e){voiceInput_Change(e);}, false);
-	voiceInput.addEventListener("click", voiceInput_Click, false);
-    
-	this.asHtml = function() {
-		return voiceInput;
-	}
-	
-	function voiceInput_Change(e) { // please use headphones - warning...
-		clearTimeout(voiceInputTimer);
-		var commandRecognised = false;
-		
-		var findWordFromSimilarWords = function() { // this will locate similar words from those used to simplistically train the speech engine
-			var mmVoiceCommands = ['next', 'previous', 'do', 'continue', 'jump', 'options', 'location'];
-			
-			for (var i = 0, len = e.results.length; i < len; i++) {
-				var utterance = e.results[i].utterance;
-				if (utterance != undefined) {
-					if (mmVoiceCommands.indexOf(utterance) != -1) { // best guess this is what people were after 
-						return utterance;
-					}
-				}
-				else {
-					break;
-				}
-			}
-			
-			return null;
-		}
-		
-		var command = findWordFromSimilarWords(command);
-		
-		// reset box
-		e.srcElement.value = "";
-		
-		switch(command) { // stops anyway... stop and all removed
-			case 'next':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command next", mm_Navigator.readNextNode);  // mm_TTS callback
-				break;
-			case 'previous':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command previous", mm_Navigator.readPrevNode); // mm_TTS callback
-				break;
-			case 'do': // needs to be all actions which are available play, pause, rewind, etc...
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command do", mm_Navigator.interact); // mm_TTS callback
-				break;
-			case 'continue':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command continue", mm_Navigator.startReadingNodes); // mm_TTS callback
-				break;
-			case 'jump':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command jump", mm_Navigator.jump); // mm_TTS callback
-				break;
-			case 'options':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command options", mm_ControlPanel.openOptions); // mm_TTS callback
-				break;
-			case 'location':
-				commandRecognised = true;
-				mm_TTS.getAudio("recognised command location", mm_ControlPanel.drawNavigationInteract); // mm_TTS callback
-				break;
-			case 'no speech heard':
-				commandRecognised = true;
-				break;
-			default:
-				if (commandRecognised == false) {
-					mm_TTS.getAudio("command not recognised", null);
-				}
-				break;
-		}
-	}
-	
-	var voiceInputTimer = null;
-	
-	function voiceInput_Click() {
-		mm_TTS.getAudio("speak now", function(){voiceInputTimer = setTimeout(function(){voiceInput.focus();mm_TTS.getAudio("no speech heard, try again", null);}, 7000)});
 	}
 }
 

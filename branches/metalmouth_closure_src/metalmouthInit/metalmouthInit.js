@@ -18,8 +18,6 @@
 */
 
 goog.provide('metalmouthInit.load');
-
-goog.require('mm_applicationData');
 goog.require('mm_speech');
 
 metalmouthInit.load = function() {
@@ -28,56 +26,27 @@ metalmouthInit.load = function() {
 	var portConnected;
 	var portListenerStatus;
 	var tabMessage;
-	
-	mm_applicationData.connect();
-	
+    
+    addListeners();
+    
 	// setUp - Run Once when mm reloaded in chrome://extensions
-	
-	addListeners();
-	
-	if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == true) {
-		portConnected = 0;
-		portListenerStatus = 0;
-		tabMessage = null;
-		
-		chrome.tabs.onUpdated.addListener(handler_OnUpdated);
-		chrome.tabs.onCreated.addListener(handler_OnCreated);
-		chrome.tabs.onRemoved.addListener(handler_OnRemoved);
-		chrome.tabs.onActiveChanged.addListener(handler_OnActiveChanged);
-		chrome.extension.onConnect.addListener(handler_OnConnect);
-		chrome.browserAction.setIcon({path:"MetalMouthLogo_On.png"});
-		chrome.browserAction.setTitle({title:"metalmouth on"});
-		mm_speech.speak("metalmouth extension on", function(){mmOn = true;refreshAllTabsAtStart();}); // function
-	}
-	else {	
-		chrome.browserAction.setIcon({path:"MetalMouthLogo_Off.png"});
-		chrome.browserAction.setTitle({title:"metalmouth off"});
-	}
-	
-	function omniboxAction(text) {
-		if ((text == "on") || (text == "off")) {
-			startStopAction();
-		}
-	}
+    
+    chrome.browserAction.setIcon({path:"MetalMouthLogo_Off.png"});
+    chrome.browserAction.setTitle({title:"metalmouth off"});
 	
 	function addListeners() {
 		chrome.browserAction.onClicked.addListener(startStopAction); // Button always on 
-		chrome.omnibox.onInputEntered.addListener(omniboxAction);
 	}
 	
 	function removeListeners() {
 		chrome.browserAction.onClicked.removeListener(startStopAction); // Button always on 
-		chrome.omnibox.onInputEntered.removeListener(omniboxAction);
 	}
 	
 	function refreshCurrentTab() {
 		chrome.tabs.getSelected(null, function(tab){
 			var url = tab.url;
 			if (url == "chrome://newtab/") {
-				url = mm_applicationData.getSpecificData('newTabPage');
-				if (url == "") {
-					url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
-				}
+                url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 			}
 			chrome.tabs.update(tab.id, {'url':url, selected: true});
 		});
@@ -90,10 +59,7 @@ metalmouthInit.load = function() {
 				var tab = tabs[i];
 				var url = tab.url;
 				if (url == "chrome://newtab/") {
-					url = mm_applicationData.getSpecificData('newTabPage');
-					if (url == "") {
-						url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
-					}
+                    url = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 				}
 				chrome.tabs.update(tab.id, {'url':url, selected: true});
 			}
@@ -108,12 +74,9 @@ metalmouthInit.load = function() {
                 if (url.substring(0,6) != "chrome") {
                     chrome.tabs.executeScript(tab.id, {code:"var injectedResult = true;try{metalmouth.injected();}catch(e){injectedResult = false};if (injectedResult == true){window.location.href='" + tab.url + "';}"}, null);
                 }
-                // chrome.tabs.update(tab.id, {url:tab.url});
 			}
 		});
 	}
-	
-    console.log("hello");
     
 	function mmStart() {
 		removeListeners();
@@ -146,14 +109,12 @@ metalmouthInit.load = function() {
 	} 
 	
 	function startStopAction() { // this needs to be on a timer so that it waits until instable is true to change setting.
-		if (mm_applicationData.getSpecificData('turnOnMetalmouthAlwaysOn') == false) {
-			if (mmOn == false) {
-				mmStart();
-			}
-			else {
-				mmStop();
-			}
-		}
+        if (mmOn == false) {
+            mmStart();
+        }
+        else {
+            mmStop();
+        }
 	}
 	
 	// Event Handlers
@@ -203,10 +164,7 @@ metalmouthInit.load = function() {
 			var updatePageAppropriately = function() {
 				var newTabPage = tabUrl;
 				if (newTabPage == "chrome://newtab/") {
-					newTabPage = mm_applicationData.getSpecificData('newTabPage');
-					if (newTabPage == "") {
-						newTabPage = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
-					}
+                    newTabPage = "http://www.google.com/cse/home?cx=000183394137052953072%3Azc1orsc6mbq";
 				}
 				mm_speech.speak(getTabMessage() + "tab", function(){chrome.tabs.update(tab.id, {url:newTabPage, selected: true});});	
 			}			
@@ -256,31 +214,6 @@ metalmouthInit.load = function() {
 			chrome.tabs.create({url:sentValue});
 		}
 		
-		callableFunctions['retrieveData'] = function(sentValue) {
-			if (portConnected == 1) {
-				port.postMessage({complete: "true", results: JSON.stringify(mm_applicationData.getSpecificData(sentValue))});
-			}
-			portListenerStatus = 0;
-		}
-		
-		callableFunctions['optionsOpen'] = function(sentValue) {
-			portListenerStatus = 0;
-			chrome.tabs.create({url:"options.html"});
-		}
-		
-		callableFunctions['optionsGetData'] = function(sentValue) {
-			if (portConnected == 1) {
-				port.postMessage({complete: "true", results: JSON.stringify(mm_applicationData.getData())});
-			}
-			portListenerStatus = 0;
-		}
-
-		callableFunctions['optionsClose'] = function(sentValue) {
-			portListenerStatus = 0;
-			mm_applicationData.update(sentValue);
-			chrome.tabs.remove(port.tab.id, function(){refreshCurrentTab()});
-		}
-		
 		port.onDisconnect.addListener(handleDisconnect);
 		port.onMessage.addListener(function(msg) {
 			if (msg.backgroundFunction != undefined) {
@@ -295,7 +228,5 @@ metalmouthInit.load = function() {
 		});
 	}
 }
-
-// goog.exportSymbol('metalmouthInit.load', metalmouthInit.load);
 
 metalmouthInit.load();
