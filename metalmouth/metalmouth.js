@@ -56,7 +56,7 @@ function removeExistingAccesskeys() {
 
 function preventContextMenu() {
     // console.log("preventContextMenu");
-	document.body.setAttribute("oncontextmenu", "return false;");
+	document.addEventListener("contextmenu", function(e) {e.preventDefault();}, false);
 	sequencer();
 }
 
