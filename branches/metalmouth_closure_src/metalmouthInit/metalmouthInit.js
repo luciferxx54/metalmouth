@@ -66,6 +66,7 @@ metalmouthInit.load = function() {
 		});
 	}
 	
+    /*
 	function refreshAllTabs() { // removes injected metalmouth code from all open pages
 		chrome.tabs.getAllInWindow(null, function(tabs) {
 			for (var i = tabs.length; i--;) {
@@ -76,6 +77,16 @@ metalmouthInit.load = function() {
                 }
 			}
 		});
+	}
+    */
+    
+    function refreshAllTabs() {
+		chrome.tabs.getAllInWindow(null, function(tabs) {
+            for (var i = tabs.length; i--;) {
+                var tab = tabs[i];
+                chrome.tabs.update(tab.id, {url:tab.url});
+            }
+        });
 	}
     
 	function mmStart() {
