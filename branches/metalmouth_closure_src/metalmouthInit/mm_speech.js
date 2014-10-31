@@ -66,7 +66,7 @@ function speakIntTTS(utterance, callback) {
 	
 	var howToSayUtterance = {
 		lang: 'en-US', 
-		rate: '0.9', // parseFloat(mm_applicationData.getSpecificData('speechRate')),
+		rate: parseFloat('0.9'),
 		enqueue: false
 	};
 	
