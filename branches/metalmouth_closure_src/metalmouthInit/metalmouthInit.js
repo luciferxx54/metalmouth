@@ -27,20 +27,27 @@ metalmouthInit.load = function() {
 	var portListenerStatus;
 	var tabMessage;
     
-    addListeners();
+    // addListeners();
     
 	// setUp - Run Once when mm reloaded in chrome://extensions
     
     chrome.browserAction.setIcon({path:"MetalMouthLogo_Off.png"});
     chrome.browserAction.setTitle({title:"metalmouth off"});
-	
+    chrome.browserAction.onClicked.addListener(startStopAction);
+    
+    /*
 	function addListeners() {
+        console.log("browserAction listen");
 		chrome.browserAction.onClicked.addListener(startStopAction); // Button always on 
 	}
+    */
 	
+    /*
 	function removeListeners() {
+        console.log("browserAction not listening");
 		chrome.browserAction.onClicked.removeListener(startStopAction); // Button always on 
 	}
+    */
 	
 	function refreshCurrentTab() {
 		chrome.tabs.getSelected(null, function(tab){
@@ -90,8 +97,6 @@ metalmouthInit.load = function() {
 	}
     
 	function mmStart() {
-		removeListeners();
-		
 		portConnected = 0;
 		portListenerStatus = 0;
 		tabMessage = null;
@@ -103,11 +108,11 @@ metalmouthInit.load = function() {
 		chrome.extension.onConnect.addListener(handler_OnConnect);
 		chrome.browserAction.setIcon({path:"MetalMouthLogo_On.png"});
 		chrome.browserAction.setTitle({title:"metalmouth on"});
-		mm_speech.speak("metalmouth extension on", function(){mmOn = true;addListeners();refreshCurrentTab();}); // add listeners
+        runFunc = mmStop;
+		mm_speech.speak("metalmouth extension on", function(){refreshCurrentTab();}); // add listeners
 	}
 	
 	function mmStop() {
-		removeListeners();
 		chrome.tabs.onUpdated.removeListener(handler_OnUpdated);
 		chrome.tabs.onCreated.removeListener(handler_OnCreated);
 		chrome.tabs.onRemoved.removeListener(handler_OnRemoved);
@@ -115,17 +120,24 @@ metalmouthInit.load = function() {
 		chrome.extension.onConnect.removeListener(handler_OnConnect);
 		chrome.browserAction.setIcon({path:"MetalMouthLogo_Off.png"});
 		chrome.browserAction.setTitle({title:"metalmouth off"});
-		refreshAllTabs();
-		mm_speech.speak("metalmouth extension off", function(){mmOn = false;addListeners();}); // add listeners
+        refreshAllTabs();
+        runFunc = mmStart;
+		mm_speech.speak("metalmouth extension off", function(){}); // add listeners
 	} 
 	
+    var runFunc = mmStart;
+    
 	function startStopAction() { // this needs to be on a timer so that it waits until instable is true to change setting.
+        runFunc();
+        /*
+         
         if (mmOn == false) {
             mmStart();
         }
         else {
             mmStop();
         }
+        */
 	}
 	
 	// Event Handlers

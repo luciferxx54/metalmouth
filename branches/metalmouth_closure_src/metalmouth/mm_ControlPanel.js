@@ -30,14 +30,14 @@ mm_ControlPanel.init = function() {
 	mm_ControlPanel.pageCulture = getPageCulture();
 	var highestZIndex = calcHighestZIndex();
 	var developerWindowPosition = calcDeveloperWindowPosition();
-	var headElement = document.querySelector("head");
-	
+    
+    var headElement = document.querySelector("head");
 	var mmStyleArea = document.createElement("style");
 	mmStyleArea.setAttribute("data-mm-uicomponent", "");
 	mmStyleArea.innerText = "ins{display:inline-block;}del{display:inline-block;}code{display:inline-block;}abbr{display:inline-block;}span{display:inline-block;}a{display:inline-block;}#_mm_ShieldImage{position:absolute;top:0px;left:0px;z-index:" + (highestZIndex + 1) + ";" + "width:"  + document.body.scrollWidth + "px;height:" + document.body.scrollHeight + "px;" + "}#_mm_InteractArea{position:fixed;top:0px;left:0px;width:100%;height:22px;background-color:#C0C0C0;border:1px solid #808080;z-index:" + (highestZIndex + 2) + ";padding:0px;}#_mm_DeveloperWindow{position:fixed;top:50px;left:" + developerWindowPosition + "px;z-index:" + (highestZIndex + 3) + ";width:200px;border:1px solid #828282;font-family:courier;font-size:10pt;background-color:#FFF68F;}"; 
 	
 	headElement.appendChild(mmStyleArea);
-	
+    
 	addBodyLevelKeyHandlers();
 	var mmShieldImage = document.createElement("img");
 	mmShieldImage.id = "_mm_ShieldImage";
