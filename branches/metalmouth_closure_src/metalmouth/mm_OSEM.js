@@ -159,6 +159,10 @@ mm_OSEM.tagNameFilterFunctions['EM'] = function(currentNode) {
 	return ["Bold_Text", EmModel_ContentToRead];
 }
 
+mm_OSEM.tagNameFilterFunctions['STRONG'] = function(currentNode) {
+	return ["Bold_Text", StrongModel_ContentToRead];
+}
+
 mm_OSEM.tagNameFilterFunctions['SPAN'] = function(currentNode) {
 	var parent = currentNode.parentElement;
 	var parentTagname = parent.tagName;
@@ -901,6 +905,17 @@ function IModel_ContentToRead(originalElement) {
 }
 
 function EmModel_ContentToRead(originalElement) {
+	var contentComponentsArray = [];
+	
+	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);
+	if (textNodeContents) { // need to add these to elements which can hold content, but which are not layout elements 
+		contentComponentsArray[0] = textNodeContents;
+	}
+	
+	return contentComponentsArray;
+}
+
+function StrongModel_ContentToRead(originalElement) {
 	var contentComponentsArray = [];
 	
 	var textNodeContents = mm_OSEM_Helper.textNodeContents(originalElement);

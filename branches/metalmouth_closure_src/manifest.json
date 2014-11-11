@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "metalmouth",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "A simplified screen-reader",
   "background": {
         "scripts": ["metalmouthInit-compiled.js"]
